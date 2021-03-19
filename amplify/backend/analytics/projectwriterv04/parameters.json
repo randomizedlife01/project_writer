@@ -1,0 +1,21 @@
+{
+    "appName": "projectwriterv04",
+    "roleName": "pinpointLambdaRole623bef84",
+    "cloudformationPolicyName": "cloudformationPolicy623bef84",
+    "cloudWatchPolicyName": "cloudWatchPolicy623bef84",
+    "pinpointPolicyName": "pinpointPolicy623bef84",
+    "authPolicyName": "pinpoint_amplify_623bef84",
+    "unauthPolicyName": "pinpoint_amplify_623bef84",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    }
+}
