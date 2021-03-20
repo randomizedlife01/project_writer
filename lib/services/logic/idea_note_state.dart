@@ -7,18 +7,19 @@ abstract class IdeaState extends Equatable {
   List<Object> get props => [];
 }
 
-class IdeaLoading extends IdeaState {}
+class IdeaLoadingInProgress extends IdeaState {}
 
-class IdeaLoaded extends IdeaState {
+class IdeasLoadSuccess extends IdeaState {
   final List<IdeaMemo> ideaMemo;
+  final List<SearchTags> tags;
 
-  const IdeaLoaded([this.ideaMemo = const []]);
-
-  @override
-  List<Object> get props => [ideaMemo];
+  const IdeasLoadSuccess({this.ideaMemo, this.tags});
 
   @override
-  String toString() => 'Idea Load Success { Idea: $ideaMemo }';
+  List<Object> get props => [ideaMemo, tags];
+
+  @override
+  String toString() => 'Idea Load Success { Idea: $ideaMemo }, Tag LoadSuccess { Tags : $tags }';
 }
 
 class IdeaError extends IdeaState {}

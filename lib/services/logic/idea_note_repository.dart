@@ -1,5 +1,6 @@
 import 'package:amplify_flutter/amplify.dart';
 import 'package:project_writer_v04/models/IdeaMemo.dart';
+import 'package:project_writer_v04/models/ModelProvider.dart';
 
 class IdeaRepository {
   Future<IdeaMemo> createIdea({String memo, String tags, int length}) async {
@@ -9,6 +10,7 @@ class IdeaRepository {
       tags: tags,
     );
 
+    //TODO: 태그 저장용 만들고 분할 태그 만들고... 그리고 CRUD 및 검색하기 추가
     print(ideaObject);
 
     try {
@@ -20,20 +22,20 @@ class IdeaRepository {
     }
   }
 
-  Stream<List<IdeaMemo>> ideas() {
+  Future<List<IdeaMemo>> ideas() async {
     try {
-      return Amplify.DataStore.query(IdeaMemo.classType).asStream();
+      return await Amplify.DataStore.query(IdeaMemo.classType);
     } catch (e) {
       return e;
     }
   }
 
-  Future<IdeaMemo> readByIdIdea({String id}) async {
+  Future<IdeaMemo> readByIdIdea({int index}) async {
     try {
       final ideaObjects = await Amplify.DataStore.query(
         IdeaMemo.classType,
         where: IdeaMemo.ID.eq(
-          'idea_id' + id,
+          'idea_Id' + index.toString(),
         ),
       );
 
@@ -51,8 +53,8 @@ class IdeaRepository {
     }
   }
 
-  Future<IdeaMemo> update({String id}) async {
-    final ideaObject = await readByIdIdea(id: id);
+  Future<IdeaMemo> update({int index}) async {
+    final ideaObject = await readByIdIdea(index: index);
     final updateIdea = ideaObject.copyWith(memo: 'new DocName');
 
     await Amplify.DataStore.save(updateIdea);
@@ -60,9 +62,9 @@ class IdeaRepository {
     return updateIdea;
   }
 
-  Future<IdeaMemo> delete({String id}) async {
+  Future<IdeaMemo> delete({int index}) async {
     try {
-      final ideaObject = await readByIdIdea(id: id);
+      final ideaObject = await readByIdIdea(index: index);
       await Amplify.DataStore.delete(ideaObject);
 
       // List<StorySummary> listData = await Amplify.DataStore.query(

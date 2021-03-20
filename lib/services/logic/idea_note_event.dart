@@ -1,5 +1,7 @@
 part of 'idea_note_bloc.dart';
 
+//++++++++++++++++++아이디어 노트 이벤트+++++++++++++++++++++//
+
 abstract class IdeaEvent extends Equatable {
   const IdeaEvent();
 
@@ -7,7 +9,7 @@ abstract class IdeaEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class IdeaLoadSuccess extends IdeaEvent {}
+class IdeasLoaded extends IdeaEvent {}
 
 class IdeaAdded extends IdeaEvent {
   final IdeaMemo ideaMemo;
@@ -22,7 +24,7 @@ class IdeaAdded extends IdeaEvent {
 }
 
 class IdeaUpdated extends IdeaEvent {
-  final List<IdeaMemo> ideas;
+  final IdeaMemo ideas;
 
   const IdeaUpdated(this.ideas);
 

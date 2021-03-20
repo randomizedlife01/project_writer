@@ -9,14 +9,9 @@ class CommonCreatePop extends StatelessWidget {
   final String nameLabelText;
   final String descHintText;
   final String nameHintText;
+  final int index;
 
-  CommonCreatePop({
-    Key key,
-    this.descLabelText,
-    this.nameLabelText,
-    this.descHintText,
-    this.nameHintText,
-  }) : super(key: key);
+  CommonCreatePop({Key key, this.descLabelText, this.nameLabelText, this.descHintText, this.nameHintText, this.index}) : super(key: key);
 
   final _formKey = GlobalKey<FormState>();
 
@@ -63,6 +58,7 @@ class CommonCreatePop extends StatelessWidget {
                                 BlocProvider.of<IdeaBloc>(context).add(
                                   IdeaAdded(
                                     IdeaMemo(
+                                      id: 'idea_Id' + index.toString(),
                                       memo: _memoController.text ?? '',
                                       tags: _tagsController.text ?? '',
                                     ),

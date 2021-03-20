@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:project_writer_v04/models/IdeaMemo.dart';
 import 'package:project_writer_v04/services/logic/idea_note_bloc.dart';
-import 'package:project_writer_v04/services/logic/idea_note_repository.dart';
 
 //기본 메뉴 버튼
 class BasicMenuButton extends StatelessWidget {
@@ -72,7 +73,7 @@ class BasicAppBar extends StatelessWidget {
   }
 }
 
-//기본 좌하단 플로팅 버튼
+//기본 우하단 플로팅 버튼
 class BasicFloatingButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
@@ -334,7 +335,6 @@ class SearchResultsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<IdeaBloc>(context)..add(IdeaLoadSuccess());
     if (BlocProvider.of<IdeaBloc>(context).state.props == null) {
       return Center(
         child: Column(
@@ -357,7 +357,7 @@ class SearchResultsListView extends StatelessWidget {
 
     return BlocBuilder<IdeaBloc, IdeaState>(
       builder: (context, state) {
-        if (state is IdeaLoaded) {
+        if (state is IdeasLoadSuccess) {
           return ListView.separated(
             padding: EdgeInsets.only(top: fsb.value.height + fsb.value.margins.vertical),
             shrinkWrap: true,
@@ -367,9 +367,27 @@ class SearchResultsListView extends StatelessWidget {
               return Divider();
             },
             itemBuilder: (context, index) {
-              return ListTile(
-                title: Text('${state.ideaMemo[index].memo}'),
-                subtitle: Text(state.ideaMemo[index].tags),
+              return Slidable(
+                actionPane: SlidableStrechActionPane(),
+                enabled: true,
+                secondaryActions: [
+                  IconSlideAction(
+                    caption: '미정',
+                    color: Colors.transparent,
+                    icon: Icons.archive,
+                    onTap: () {},
+                  ),
+                  IconSlideAction(
+                    caption: '삭제',
+                    color: Color(0xFFe23e57),
+                    icon: Icons.delete,
+                    onTap: () => BlocProvider.of<IdeaBloc>(context)..add(IdeaDeleted(IdeaMemo(id: 'story_Id' + index.toString()))),
+                  ),
+                ],
+                child: ListTile(
+                  title: Text('${state.ideaMemo[index].memo}' ?? ''),
+                  subtitle: Text(state.ideaMemo[index].tags ?? ''),
+                ),
               );
             },
           );

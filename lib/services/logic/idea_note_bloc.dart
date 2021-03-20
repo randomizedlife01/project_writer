@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_writer_v04/models/IdeaMemo.dart';
+import 'package:project_writer_v04/models/SearchTags.dart';
 import 'package:project_writer_v04/services/logic/idea_note_repository.dart';
 
 part 'idea_note_event.dart';
@@ -15,11 +16,11 @@ class IdeaBloc extends Bloc<IdeaEvent, IdeaState> {
   IdeaBloc({@required IdeaRepository ideaRepository})
       : assert(ideaRepository != null),
         _ideaRepository = ideaRepository,
-        super(IdeaLoading());
+        super(IdeaLoadingInProgress());
 
   @override
   Stream<IdeaState> mapEventToState(IdeaEvent event) async* {
-    if (event is IdeaLoadSuccess) {
+    if (event is IdeasLoaded) {
       yield* _mapLoadIdeasToState();
     } else if (event is IdeaAdded) {
       yield* _mapIdeaAddToState(event);
@@ -31,24 +32,32 @@ class IdeaBloc extends Bloc<IdeaEvent, IdeaState> {
   }
 
   Stream<IdeaState> _mapLoadIdeasToState() async* {
-    _ideaSubscription?.cancel();
-    _ideaSubscription = _ideaRepository.ideas().listen(
-          (idea) => add(IdeaUpdated(idea)),
-        );
+    try {
+      final ideas = this._ideaRepository.ideas();
+      yield IdeasLoadSuccess(ideaMemo: await ideas);
+    } catch (_) {
+      yield IdeaError();
+    }
   }
 
-  //TODO: bloc 업데이트가 안되고 리스트가 추가가 아닌 덮어쓰기됨.
   Stream<IdeaState> _mapIdeaAddToState(IdeaAdded event) async* {
-    print(event.props.length);
-    _ideaRepository..createIdea(memo: event.ideaMemo.memo, tags: event.ideaMemo.tags, length: event.props.length);
+    if (state is IdeasLoadSuccess) {
+      final data = await this._ideaRepository.createIdea(memo: event.ideaMemo.memo, tags: event.ideaMemo.tags, length: event.props.length);
+      final List<IdeaMemo> updatedIdea = List.from((state as IdeasLoadSuccess).ideaMemo)..add(data);
+      yield IdeasLoadSuccess(ideaMemo: updatedIdea);
+    }
   }
 
   Stream<IdeaState> _mapReadIdeasToState(IdeaUpdated event) async* {
-    yield IdeaLoaded(event.ideas);
+    //yield IdeaLoaded(event.ideas);
   }
 
   Stream<IdeaState> _mapDeleteIdeasToState(IdeaDeleted event) async* {
-    _ideaRepository..delete(id: event.ideaMemo.id);
+    if (state is IdeasLoadSuccess) {
+      final data = await this._ideaRepository.delete(index: event.props.length);
+      final List<IdeaMemo> updatedIdea = List.from((state as IdeasLoadSuccess).ideaMemo)..remove(data);
+      yield IdeasLoadSuccess(ideaMemo: updatedIdea);
+    }
   }
 
   @override
