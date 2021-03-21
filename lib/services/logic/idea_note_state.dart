@@ -1,4 +1,5 @@
-part of 'idea_note_bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:project_writer_v04/models/IdeaMemo.dart';
 
 abstract class IdeaState extends Equatable {
   const IdeaState();
@@ -11,15 +12,14 @@ class IdeaLoadingInProgress extends IdeaState {}
 
 class IdeasLoadSuccess extends IdeaState {
   final List<IdeaMemo> ideaMemo;
-  final List<SearchTags> tags;
 
-  const IdeasLoadSuccess({this.ideaMemo, this.tags});
-
-  @override
-  List<Object> get props => [ideaMemo, tags];
+  const IdeasLoadSuccess([this.ideaMemo = const []]);
 
   @override
-  String toString() => 'Idea Load Success { Idea: $ideaMemo }, Tag LoadSuccess { Tags : $tags }';
+  List<Object> get props => [ideaMemo];
+
+  @override
+  String toString() => 'Idea Load Success { Idea: $ideaMemo }';
 }
 
 class IdeaError extends IdeaState {}

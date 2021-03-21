@@ -1,6 +1,7 @@
-part of 'idea_note_bloc.dart';
-
 //++++++++++++++++++아이디어 노트 이벤트+++++++++++++++++++++//
+
+import 'package:equatable/equatable.dart';
+import 'package:project_writer_v04/models/IdeaMemo.dart';
 
 abstract class IdeaEvent extends Equatable {
   const IdeaEvent();

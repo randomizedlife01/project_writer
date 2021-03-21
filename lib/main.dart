@@ -11,6 +11,7 @@ import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
 import 'package:project_writer_v04/services/auth/auth_service.dart';
 import 'package:project_writer_v04/services/logic/bloc_observer.dart';
 import 'package:project_writer_v04/services/logic/idea_note_bloc.dart';
+import 'package:project_writer_v04/services/logic/idea_note_event.dart';
 import 'package:project_writer_v04/services/logic/idea_note_repository.dart';
 import 'amplifyconfiguration.dart';
 import 'pages/auth_pages/login_page.dart';
@@ -21,11 +22,14 @@ import 'theme/theme_data.dart';
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.white));
   Bloc.observer = SimpleBlocObserver();
-  runApp(BlocProvider(
+  runApp(
+    BlocProvider(
       create: (context) {
         return IdeaBloc(ideaRepository: IdeaRepository())..add(IdeasLoaded());
       },
-      child: MyApp()));
+      child: MyApp(),
+    ),
+  );
 }
 
 // 1

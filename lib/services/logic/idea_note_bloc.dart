@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_writer_v04/models/IdeaMemo.dart';
-import 'package:project_writer_v04/models/SearchTags.dart';
 import 'package:project_writer_v04/services/logic/idea_note_repository.dart';
-
-part 'idea_note_event.dart';
-part 'idea_note_state.dart';
+import 'package:project_writer_v04/services/logic/idea_note_state.dart';
+import 'package:project_writer_v04/services/logic/idea_note_event.dart';
 
 class IdeaBloc extends Bloc<IdeaEvent, IdeaState> {
   final IdeaRepository _ideaRepository;
@@ -34,7 +31,7 @@ class IdeaBloc extends Bloc<IdeaEvent, IdeaState> {
   Stream<IdeaState> _mapLoadIdeasToState() async* {
     try {
       final ideas = this._ideaRepository.ideas();
-      yield IdeasLoadSuccess(ideaMemo: await ideas);
+      yield IdeasLoadSuccess(await ideas);
     } catch (_) {
       yield IdeaError();
     }
@@ -44,7 +41,7 @@ class IdeaBloc extends Bloc<IdeaEvent, IdeaState> {
     if (state is IdeasLoadSuccess) {
       final data = await this._ideaRepository.createIdea(memo: event.ideaMemo.memo, tags: event.ideaMemo.tags, length: event.props.length);
       final List<IdeaMemo> updatedIdea = List.from((state as IdeasLoadSuccess).ideaMemo)..add(data);
-      yield IdeasLoadSuccess(ideaMemo: updatedIdea);
+      yield IdeasLoadSuccess(updatedIdea);
     }
   }
 
@@ -56,7 +53,7 @@ class IdeaBloc extends Bloc<IdeaEvent, IdeaState> {
     if (state is IdeasLoadSuccess) {
       final data = await this._ideaRepository.delete(index: event.props.length);
       final List<IdeaMemo> updatedIdea = List.from((state as IdeasLoadSuccess).ideaMemo)..remove(data);
-      yield IdeasLoadSuccess(ideaMemo: updatedIdea);
+      yield IdeasLoadSuccess(updatedIdea);
     }
   }
 
