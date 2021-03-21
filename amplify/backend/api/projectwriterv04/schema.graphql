@@ -1,10 +1,12 @@
-type SearchTags @model @auth(rules: [{allow: public}]) {
+type SearchTags @model @auth(rules: [{allow: public}]) @key(name: "byIdeaMemo", fields: ["ideamemoID"]) {
   id: ID!
   tag: String
+  ideamemoID: ID
 }
 
 type IdeaMemo @model @auth(rules: [{allow: public}]) {
   id: ID!
   memo: String
-  tags: String
+  SearchTags: [SearchTags] @connection(keyName: "byIdeaMemo", fields: ["id"])
 }
+ 

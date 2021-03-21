@@ -37,7 +37,9 @@ class TagsBloc extends Bloc<TagsEvent, TagsCustomState> {
   //TODO: 태그와 메모 결합중... 참고해서 할 것.
   Stream<TagsCustomState> _mapUpdateTagsToState(TagsLoaded event) async* {}
 
-  Stream<TagsCustomState> _mapIdeaUpdatedToState(IdeasLoaded event) async* {}
+  Stream<TagsCustomState> _mapIdeaUpdatedToState(IdeasLoaded event) async* {
+    yield TagsLoadSuccess();
+  }
 
   @override
   Future<void> close() {
