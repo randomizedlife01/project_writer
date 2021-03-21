@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:project_writer_v04/models/IdeaMemo.dart';
-import 'package:project_writer_v04/models/SearchTags.dart';
+part of 'idea_tags_bloc.dart';
 
 abstract class TagsCustomState extends Equatable {
   const TagsCustomState();

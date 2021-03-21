@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_writer_v04/models/IdeaMemo.dart';
+import 'package:project_writer_v04/models/SearchTags.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/services/logic/idea_note_bloc.dart';
-import 'package:project_writer_v04/services/logic/idea_note_event.dart';
 import 'package:project_writer_v04/services/logic/idea_tags_bloc.dart';
-import 'package:project_writer_v04/services/logic/idea_tags_event.dart';
 
 class CommonCreatePop extends StatelessWidget {
   final String descLabelText;

@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project_writer_v04/models/IdeaMemo.dart';
+import 'package:project_writer_v04/models/SearchTags.dart';
 import 'package:project_writer_v04/services/logic/idea_note_bloc.dart';
-import 'package:project_writer_v04/services/logic/idea_note_state.dart';
-import 'package:project_writer_v04/services/logic/idea_tags_event.dart';
-import 'package:project_writer_v04/services/logic/idea_tags_state.dart';
+
+part 'idea_tags_state.dart';
+part 'idea_tags_event.dart';
 
 class TagsBloc extends Bloc<TagsEvent, TagsCustomState> {
   final IdeaBloc _ideasBloc;
@@ -29,7 +32,7 @@ class TagsBloc extends Bloc<TagsEvent, TagsCustomState> {
   Stream<TagsCustomState> mapEventToState(TagsEvent event) async* {
     if (event is TagsLoaded) {
       yield* _mapUpdateTagsToState(event);
-    } else if (event is IdeasLoaded) {
+    } else if (event is TagsIdeasLoaded) {
       yield* _mapIdeaUpdatedToState(event);
     }
   }
@@ -37,7 +40,7 @@ class TagsBloc extends Bloc<TagsEvent, TagsCustomState> {
   //TODO: 태그와 메모 결합중... 참고해서 할 것.
   Stream<TagsCustomState> _mapUpdateTagsToState(TagsLoaded event) async* {}
 
-  Stream<TagsCustomState> _mapIdeaUpdatedToState(IdeasLoaded event) async* {
+  Stream<TagsCustomState> _mapIdeaUpdatedToState(TagsIdeasLoaded event) async* {
     yield TagsLoadSuccess();
   }
 

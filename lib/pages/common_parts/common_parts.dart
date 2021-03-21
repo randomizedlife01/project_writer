@@ -6,8 +6,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:project_writer_v04/models/IdeaMemo.dart';
 import 'package:project_writer_v04/services/logic/idea_note_bloc.dart';
-import 'package:project_writer_v04/services/logic/idea_note_state.dart';
-import 'package:project_writer_v04/services/logic/idea_note_event.dart';
 
 //기본 메뉴 버튼
 class BasicMenuButton extends StatelessWidget {
@@ -388,7 +386,6 @@ class SearchResultsListView extends StatelessWidget {
                 ],
                 child: ListTile(
                   title: Text('${state.ideaMemo[index].memo}' ?? ''),
-                  subtitle: Text(state.ideaMemo[index].tags ?? ''),
                 ),
               );
             },

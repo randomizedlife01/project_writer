@@ -1,8 +1,6 @@
 //++++++++++++++++++태그 이벤트+++++++++++++++++++++//
 
-import 'package:equatable/equatable.dart';
-import 'package:project_writer_v04/models/IdeaMemo.dart';
-import 'package:project_writer_v04/models/SearchTags.dart';
+part of 'idea_tags_bloc.dart';
 
 abstract class TagsEvent extends Equatable {
   const TagsEvent();
@@ -59,10 +57,10 @@ class TagDeleted extends TagsEvent {
   String toString() => 'tag Deleted { tag: $tag }';
 }
 
-class IdeasLoaded extends TagsEvent {
+class TagsIdeasLoaded extends TagsEvent {
   final List<IdeaMemo> ideas;
 
-  const IdeasLoaded(this.ideas);
+  const TagsIdeasLoaded(this.ideas);
 
   @override
   List<Object> get props => [ideas];

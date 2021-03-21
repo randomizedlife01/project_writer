@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/pages/common_parts/common_create_pop.dart';
 import 'package:project_writer_v04/services/logic/idea_note_bloc.dart';
-import 'package:project_writer_v04/services/logic/idea_note_state.dart';
 
 class FreeWritePage extends StatelessWidget {
   final String appBarTitle;

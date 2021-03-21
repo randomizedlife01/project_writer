@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_writer_v04/models/IdeaMemo.dart';
 import 'package:project_writer_v04/services/logic/idea_note_repository.dart';
-import 'package:project_writer_v04/services/logic/idea_note_state.dart';
-import 'package:project_writer_v04/services/logic/idea_note_event.dart';
+
+part 'idea_note_state.dart';
+part 'idea_note_event.dart';
 
 class IdeaBloc extends Bloc<IdeaEvent, IdeaState> {
   final IdeaRepository _ideaRepository;
@@ -39,7 +41,7 @@ class IdeaBloc extends Bloc<IdeaEvent, IdeaState> {
 
   Stream<IdeaState> _mapIdeaAddToState(IdeaAdded event) async* {
     if (state is IdeasLoadSuccess) {
-      final data = await this._ideaRepository.createIdea(memo: event.ideaMemo.memo, tags: event.ideaMemo.tags, length: event.props.length);
+      final data = await this._ideaRepository.createIdea(memo: event.ideaMemo.memo, length: event.props.length);
       final List<IdeaMemo> updatedIdea = List.from((state as IdeasLoadSuccess).ideaMemo)..add(data);
       yield IdeasLoadSuccess(updatedIdea);
     }

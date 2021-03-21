@@ -1,5 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:project_writer_v04/models/IdeaMemo.dart';
+part of 'idea_note_bloc.dart';
 
 abstract class IdeaState extends Equatable {
   const IdeaState();
