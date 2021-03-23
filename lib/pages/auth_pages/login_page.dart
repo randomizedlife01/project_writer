@@ -8,7 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_writer_v04/services/analytics/analytics_events.dart';
 import 'package:project_writer_v04/services/analytics/analytics_service.dart';
 import 'package:project_writer_v04/services/auth/auth_credentials.dart';
-import 'package:project_writer_v04/services/logic/auth_bloc.dart';
+import 'package:project_writer_v04/services/auth/auth_bloc.dart';
 
 import 'parts/auth_source.dart';
 

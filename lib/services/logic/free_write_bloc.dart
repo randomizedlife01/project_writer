@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:project_writer_v04/models/IdeaMemo.dart';
 import 'package:project_writer_v04/models/ModelProvider.dart';
-import 'package:project_writer_v04/services/logic/idea_note_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
 class MovieUserFavourite {
@@ -16,8 +15,6 @@ class MovieUserFavourite {
 class FreeWriteBloc {
   final _ideasSubject = BehaviorSubject<List<IdeaMemo>>.seeded([]);
   final _tagsSubject = BehaviorSubject<List<SearchTags>>.seeded([]);
-
-  IdeaRepository ideaRepository;
 
   Stream<List<MovieUserFavourite>> moviesUserFavouritesStream() {
     return Rx.combineLatest2(ideasStream(), tagsStream(), (List<IdeaMemo> movies, List<SearchTags> userFavourites) {

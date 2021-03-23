@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:project_writer_v04/services/logic/note_bloc.dart';
+import 'package:project_writer_v04/services/logic/free_write_bloc.dart';
 
 //기본 메뉴 버튼
 class BasicMenuButton extends StatelessWidget {
