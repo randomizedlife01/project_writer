@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:project_writer_v04/models/IdeaMemo.dart';
-import 'package:project_writer_v04/services/logic/idea_note_bloc.dart';
+import 'package:project_writer_v04/services/logic/note_bloc.dart';
 
 //기본 메뉴 버튼
 class BasicMenuButton extends StatelessWidget {
@@ -330,77 +328,84 @@ class _SearchBarState extends State<SearchBar> {
 //검색 결과 리스트 뷰
 class SearchResultsListView extends StatelessWidget {
   final String searchTerm;
+  final dataBloc = FreeWriteBloc();
 
-  const SearchResultsListView({Key key, this.searchTerm}) : super(key: key);
+  SearchResultsListView({Key key, this.searchTerm}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (BlocProvider.of<IdeaBloc>(context).state.props == null) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.search,
-              size: 64,
-            ),
-            Text(
-              'Start Searching',
-              style: Theme.of(context).textTheme.bodyText1,
-            ),
-          ],
-        ),
-      );
-    }
+    // if (BlocProvider.of<IdeaBloc>(context).state.props == null) {
+    //   return Center(
+    //     child: Column(
+    //       mainAxisSize: MainAxisSize.min,
+    //       children: [
+    //         Icon(
+    //           Icons.search,
+    //           size: 64,
+    //         ),
+    //         Text(
+    //           'Start Searching',
+    //           style: Theme.of(context).textTheme.bodyText1,
+    //         ),
+    //       ],
+    //     ),
+    //   );
+    // }
 
     final fsb = FloatingSearchBar.of(context);
 
-    return BlocBuilder<IdeaBloc, IdeaState>(
-      builder: (context, state) {
-        if (state is IdeasLoadSuccess) {
-          return ListView.separated(
-            padding: EdgeInsets.only(top: fsb.value.height + fsb.value.margins.vertical),
-            shrinkWrap: true,
-            physics: ScrollPhysics(),
-            itemCount: state.ideaMemo.length,
-            separatorBuilder: (context, index) {
-              return Divider();
-            },
-            itemBuilder: (context, index) {
-              return Slidable(
-                actionPane: SlidableStrechActionPane(),
-                enabled: true,
-                secondaryActions: [
-                  IconSlideAction(
-                    caption: '미정',
-                    color: Colors.transparent,
-                    icon: Icons.archive,
-                    onTap: () {},
+    //TODO: RxDart로 리스트 데이터 받아오는 부분
+    return StreamBuilder<List<MovieUserFavourite>>(
+        stream: dataBloc.moviesUserFavouritesStream(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            return ListView.separated(
+              padding: EdgeInsets.only(top: fsb.value.height + fsb.value.margins.vertical),
+              shrinkWrap: true,
+              physics: ScrollPhysics(),
+              //TODO: 아이템 카운트
+              itemCount: 10,
+              separatorBuilder: (context, index) {
+                return Divider();
+              },
+              itemBuilder: (context, index) {
+                return Slidable(
+                  actionPane: SlidableStrechActionPane(),
+                  enabled: true,
+                  secondaryActions: [
+                    IconSlideAction(
+                      caption: '미정',
+                      color: Colors.transparent,
+                      icon: Icons.archive,
+                      onTap: () {},
+                    ),
+                    IconSlideAction(
+                      caption: '삭제',
+                      color: Color(0xFFe23e57),
+                      icon: Icons.delete,
+                      onTap: () {
+                        //BlocProvider.of<IdeaBloc>(context)..add(IdeaDeleted(IdeaMemo(id: state.ideaMemo[index].id)));
+                      },
+                    ),
+                  ],
+                  //TODO: RxDart 데이터 리스트타일
+                  child: ListTile(
+                    title: Text(snapshot.hasData ? snapshot.data[index].idea.memo : ''),
+                    subtitle: Text(snapshot.hasData ? snapshot.data[index].tags.tag : ''),
                   ),
-                  IconSlideAction(
-                    caption: '삭제',
-                    color: Color(0xFFe23e57),
-                    icon: Icons.delete,
-                    onTap: () => BlocProvider.of<IdeaBloc>(context)..add(IdeaDeleted(IdeaMemo(id: 'story_Id' + index.toString()))),
-                  ),
-                ],
-                child: ListTile(
-                  title: Text('${state.ideaMemo[index].memo}' ?? ''),
-                ),
-              );
-            },
-          );
-        } else {
-          return Center(
-            child: Container(
-              width: 50.0,
-              height: 50.0,
+                );
+              },
+            );
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
               child: CircularProgressIndicator(),
-            ),
-          );
-        }
-      },
-    );
+            );
+          } else {
+            return Center(
+              child: Text('ERROR!'),
+            );
+          }
+        });
   }
 }
 

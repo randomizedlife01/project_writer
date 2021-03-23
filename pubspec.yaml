@@ -36,11 +36,12 @@ dependencies:
   email_validator: ^1.0.6
   flutter_keyboard_visibility: ^4.0.3
   font_awesome_flutter: ^8.11.0
-  flutter_bloc: ^6.1.3
   material_floating_search_bar: ^0.3.3
   flutter_tags: ^0.4.9+1
   equatable: ^1.0.0
   flutter_slidable: ^0.5.7
+  rxdart: ^0.26.0
+
 
 dev_dependencies:
   flutter_test:

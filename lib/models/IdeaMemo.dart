@@ -27,6 +27,7 @@ class IdeaMemo extends Model {
   final String id;
   final String memo;
   final List<SearchTags> searchTags;
+  final String tags;
 
   @override
   getInstanceType() => classType;
@@ -36,14 +37,17 @@ class IdeaMemo extends Model {
     return id;
   }
 
-  const IdeaMemo._internal({@required this.id, this.memo, this.searchTags});
+  const IdeaMemo._internal(
+      {@required this.id, this.memo, this.searchTags, this.tags});
 
-  factory IdeaMemo({String id, String memo, List<SearchTags> searchTags}) {
+  factory IdeaMemo(
+      {String id, String memo, List<SearchTags> searchTags, String tags}) {
     return IdeaMemo._internal(
         id: id == null ? UUID.getUUID() : id,
         memo: memo,
         searchTags:
-            searchTags != null ? List.unmodifiable(searchTags) : searchTags);
+            searchTags != null ? List.unmodifiable(searchTags) : searchTags,
+        tags: tags);
   }
 
   bool equals(Object other) {
@@ -56,7 +60,8 @@ class IdeaMemo extends Model {
     return other is IdeaMemo &&
         id == other.id &&
         memo == other.memo &&
-        DeepCollectionEquality().equals(searchTags, other.searchTags);
+        DeepCollectionEquality().equals(searchTags, other.searchTags) &&
+        tags == other.tags;
   }
 
   @override
@@ -68,17 +73,20 @@ class IdeaMemo extends Model {
 
     buffer.write("IdeaMemo {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("memo=" + "$memo");
+    buffer.write("memo=" + "$memo" + ", ");
+    buffer.write("tags=" + "$tags");
     buffer.write("}");
 
     return buffer.toString();
   }
 
-  IdeaMemo copyWith({String id, String memo, List<SearchTags> searchTags}) {
+  IdeaMemo copyWith(
+      {String id, String memo, List<SearchTags> searchTags, String tags}) {
     return IdeaMemo(
         id: id ?? this.id,
         memo: memo ?? this.memo,
-        searchTags: searchTags ?? this.searchTags);
+        searchTags: searchTags ?? this.searchTags,
+        tags: tags ?? this.tags);
   }
 
   IdeaMemo.fromJson(Map<String, dynamic> json)
@@ -89,12 +97,14 @@ class IdeaMemo extends Model {
                 .map((e) =>
                     SearchTags.fromJson(new Map<String, dynamic>.from(e)))
                 .toList()
-            : null;
+            : null,
+        tags = json['tags'];
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'memo': memo,
-        'searchTags': searchTags?.map((e) => e?.toJson())?.toList()
+        'searchTags': searchTags?.map((e) => e?.toJson())?.toList(),
+        'tags': tags
       };
 
   static final QueryField ID = QueryField(fieldName: "ideaMemo.id");
@@ -103,6 +113,7 @@ class IdeaMemo extends Model {
       fieldName: "searchTags",
       fieldType: ModelFieldType(ModelFieldTypeEnum.model,
           ofModelName: (SearchTags).toString()));
+  static final QueryField TAGS = QueryField(fieldName: "tags");
   static var schema =
       Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "IdeaMemo";
@@ -129,6 +140,11 @@ class IdeaMemo extends Model {
         isRequired: false,
         ofModelName: (SearchTags).toString(),
         associatedKey: SearchTags.IDEAMEMOID));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: IdeaMemo.TAGS,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
   });
 }
 

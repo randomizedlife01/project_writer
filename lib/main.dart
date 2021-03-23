@@ -4,14 +4,11 @@ import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:project_writer_v04/models/ModelProvider.dart';
 import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
-import 'package:project_writer_v04/services/auth/auth_service.dart';
-import 'package:project_writer_v04/services/logic/bloc_observer.dart';
-import 'package:project_writer_v04/services/logic/idea_note_bloc.dart';
-import 'package:project_writer_v04/services/logic/idea_note_repository.dart';
+import 'package:project_writer_v04/services/logic/auth_bloc.dart';
+import 'package:project_writer_v04/services/logic/note_bloc.dart';
 import 'amplifyconfiguration.dart';
 import 'pages/auth_pages/login_page.dart';
 import 'pages/auth_pages/signup_page.dart';
@@ -20,15 +17,8 @@ import 'theme/theme_data.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.white));
-  Bloc.observer = SimpleBlocObserver();
-  runApp(
-    BlocProvider(
-      create: (context) {
-        return IdeaBloc(ideaRepository: IdeaRepository())..add(IdeasLoaded());
-      },
-      child: MyApp(),
-    ),
-  );
+  //Bloc.observer = SimpleBlocObserver();
+  runApp(MyApp());
 }
 
 // 1

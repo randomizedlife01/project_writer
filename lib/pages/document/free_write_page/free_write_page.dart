@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/pages/common_parts/common_create_pop.dart';
-import 'package:project_writer_v04/services/logic/idea_note_bloc.dart';
 
 class FreeWritePage extends StatelessWidget {
   final String appBarTitle;
@@ -32,37 +30,33 @@ class FreeWritePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<IdeaBloc, IdeaState>(
-      builder: (context, state) {
-        return Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(50.0),
-            child: BasicAppBar(
-              appBarTitle: appBarTitle,
-            ),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SearchBar(),
-          ),
-          floatingActionButton: BasicFloatingButton(
-            icon: Icons.add,
-            onPressed: () => showDialog(
-              context: context,
-              builder: (context) {
-                //도큐멘트 생성 팝업
-                return CommonCreatePop(
-                  nameHintText: '메모를 입력하세요',
-                  nameLabelText: '아이디어 메모 작성',
-                  descHintText: '(#제외 검색용 단어 입력)',
-                  descLabelText: '태그',
-                  index: (state as IdeasLoadSuccess).ideaMemo.length,
-                );
-              },
-            ),
-          ),
-        );
-      },
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50.0),
+        child: BasicAppBar(
+          appBarTitle: appBarTitle,
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SearchBar(),
+      ),
+      floatingActionButton: BasicFloatingButton(
+        icon: Icons.add,
+        onPressed: () => showDialog(
+          context: context,
+          builder: (context) {
+            //도큐멘트 생성 팝업
+            return CommonCreatePop(
+              nameHintText: '(#제외 검색용 단어 입력)',
+              nameLabelText: '태그',
+              descHintText: '메모를 입력하세요',
+              descLabelText: '아이디어 메모 작성',
+              //index: (state as IdeasLoadSuccess).ideaMemo.length,
+            );
+          },
+        ),
+      ),
     );
   }
 }

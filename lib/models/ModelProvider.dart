@@ -24,7 +24,7 @@ export 'SearchTags.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "0182d584319079f759befee0fbd08231";
+  String version = "06a3ddc988f6483dfd7616129b4aac7e";
   @override
   List<ModelSchema> modelSchemas = [IdeaMemo.schema, SearchTags.schema];
   static final ModelProvider _instance = ModelProvider();

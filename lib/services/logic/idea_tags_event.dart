@@ -9,16 +9,18 @@ abstract class TagsEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class TagsLoadInProgress extends TagsEvent {}
+
 class TagsLoaded extends TagsEvent {
-  final List<IdeaMemo> ideas;
+  final List<SearchTags> tags;
 
-  const TagsLoaded(this.ideas);
-
-  @override
-  List<Object> get props => [ideas];
+  const TagsLoaded(this.tags);
 
   @override
-  String toString() => 'ideas { ideas: $ideas }';
+  List<Object> get props => [tags];
+
+  @override
+  String toString() => 'tags { tags: $tags }';
 }
 
 class TagAdded extends TagsEvent {
@@ -57,10 +59,10 @@ class TagDeleted extends TagsEvent {
   String toString() => 'tag Deleted { tag: $tag }';
 }
 
-class TagsIdeasLoaded extends TagsEvent {
+class UpdateIdeaInTagsModel extends TagsEvent {
   final List<IdeaMemo> ideas;
 
-  const TagsIdeasLoaded(this.ideas);
+  const UpdateIdeaInTagsModel(this.ideas);
 
   @override
   List<Object> get props => [ideas];

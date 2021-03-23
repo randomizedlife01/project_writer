@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project_writer_v04/models/IdeaMemo.dart';
-import 'package:project_writer_v04/models/SearchTags.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
-import 'package:project_writer_v04/services/logic/idea_note_bloc.dart';
-import 'package:project_writer_v04/services/logic/idea_tags_bloc.dart';
 
 class CommonCreatePop extends StatelessWidget {
   final String descLabelText;
@@ -57,20 +52,17 @@ class CommonCreatePop extends StatelessWidget {
                             onPressed: () {
                               if (_formKey.currentState.validate()) {
                                 _formKey.currentState.save();
-                                BlocProvider.of<IdeaBloc>(context).add(
-                                  IdeaAdded(
-                                    IdeaMemo(
-                                      id: 'idea_Id' + index.toString(),
-                                      memo: _memoController.text ?? '',
-                                    ),
-                                  ),
-                                );
+                                // BlocProvider.of<IdeaBloc>(context).add(
+                                //   IdeaAdded(
+                                //     IdeaMemo(memo: _memoController.text ?? '', tags: _tagsController.text ?? ''),
+                                //   ),
+                                // );
 
-                                List<String> tagsList = _tagsController.text.split(" ");
-
-                                tagsList.forEach((tag) {
-                                  BlocProvider.of<TagsBloc>(context).add(TagAdded(SearchTags(tag: tag)));
-                                });
+                                // List<String> tagsList = _tagsController.text.split(" ");
+                                //
+                                // tagsList.forEach((tag) {
+                                //   BlocProvider.of<TagsBloc>(context).add(TagAdded(SearchTags(tag: tag)));
+                                // });
 
                                 Navigator.pop(context);
                               }
