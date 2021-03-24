@@ -10,8 +10,6 @@ class FreeWriteRepository {
       tags: tags,
     );
 
-    print(ideaObject);
-
     try {
       await Amplify.DataStore.save(ideaObject);
 
@@ -61,25 +59,28 @@ class FreeWriteRepository {
     return updateIdea;
   }
 
-  Future<IdeaMemo> delete({String id}) async {
+  Future<IdeaMemo> deleteIdea({String id}) async {
     try {
       final ideaObject = await readByIdIdea(id: id);
       await Amplify.DataStore.delete(ideaObject);
 
-      // List<StorySummary> listData = await Amplify.DataStore.query(
-      //   StorySummary.classType,
-      //   where: StorySummary.DOCUMENTID.eq(
-      //     documentId,
-      //   ),
-      // );
-      //
-      // listData.forEach(
-      //   (element) {
-      //     Amplify.DataStore.delete(element);
-      //   },
-      // );
-
       return ideaObject;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  //TODO: 태그 검색시 태그 id로 검색하고 일치하면 리스트 띄우기
+  Future<List<SearchTags>> getTags({String documentId}) async {
+    try {
+      final data = await Amplify.DataStore.query(
+        SearchTags.classType,
+        where: SearchTags.IDEAMEMOID.contains(
+          documentId,
+        ),
+      );
+
+      return data;
     } catch (e) {
       throw e;
     }

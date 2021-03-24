@@ -26,27 +26,9 @@ class IdeasAndTagsBloc implements BlocBase {
   Stream<List<IdeaMemo>> get ideaStream => _ideaController.stream;
   Stream<List<SearchTags>> get searchTagsStream => _tagsController.stream;
 
-  // Stream<List<IdeaAndTagsModel>> moviesUserFavouritesStream() {
-  //   return Rx.combineLatest2(ideasStream(), tagsStream(), (List<IdeaMemo> ideas, List<SearchTags> tags) {
-  //     if (ideas.isNotEmpty && tags.isNotEmpty) {
-  //       return ideas.map((idea) {
-  //         final userFavourite = tags?.firstWhere((userFavourite) => userFavourite.tag.contains(idea.tags), orElse: () => null);
-  //         return IdeaAndTagsModel(
-  //           idea,
-  //           userFavourite?.tag ?? false,
-  //         );
-  //       }).toList();
-  //     } else {
-  //       return null;
-  //     }
-  //   });
-  // }
-
-  //TODO: 오옷쓰 쓰기 읽기 되었음. 이젠 태그랑 분리해서 저장하고 검색기능 하기...
   Stream<IdeaAndTagModel> moviesUserFavouritesStream() {
     readIdeaAndTags();
     return Rx.combineLatest2(ideaStream, searchTagsStream, (List<IdeaMemo> ideas, List<SearchTags> tags) {
-      //print('idea : $ideas, tag : $tags');
       return IdeaAndTagModel(ideas, tags);
     });
   }
@@ -63,7 +45,7 @@ class IdeasAndTagsBloc implements BlocBase {
   Future<List<SearchTags>> readTags({String id}) async {
     try {
       _searchTags = await Amplify.DataStore.query(SearchTags.classType);
-      print(searchTags);
+      return _searchTags;
     } catch (e) {
       throw e;
     }
@@ -74,10 +56,10 @@ class IdeasAndTagsBloc implements BlocBase {
       _ideaMemo = await readIdeas();
       _searchTags = await readTags();
 
+      print('idea : $_ideaMemo, tags : $_searchTags');
+
       _ideaController.add(_ideaMemo);
       _tagsController.add(_searchTags);
-
-      print('idea : $_ideaMemo, tags : $_searchTags');
     } catch (e) {
       throw e;
     }
@@ -97,6 +79,17 @@ class IdeasAndTagsBloc implements BlocBase {
       _ideaController.add(_ideaMemo);
     } catch (e) {
       return e;
+    }
+  }
+
+  void deleteIdeaAndTags({String id}) async {
+    try {
+      ideaAndTagRepository.deleteIdea(id: id);
+      _ideaMemo.removeWhere((element) => element.id == id);
+
+      _ideaController.add(_ideaMemo);
+    } catch (e) {
+      throw e;
     }
   }
 

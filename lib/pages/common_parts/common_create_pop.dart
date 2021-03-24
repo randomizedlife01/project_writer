@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:material_tag_editor/tag_editor.dart';
 import 'package:project_writer_v04/models/IdeaMemo.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/services/logic/bloc_base.dart';
@@ -14,9 +15,10 @@ class CommonCreatePop extends StatelessWidget {
   CommonCreatePop({Key key, this.descLabelText, this.nameLabelText, this.descHintText, this.nameHintText, this.index}) : super(key: key);
 
   final _formKey = GlobalKey<FormState>();
-
   final _memoController = TextEditingController();
   final _tagsController = TextEditingController();
+
+  var _latIdNum = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -57,27 +59,23 @@ class CommonCreatePop extends StatelessWidget {
                                 child: ElevatedButton(
                                   child: Text("저 장"),
                                   onPressed: () {
-                                    if (_formKey.currentState.validate()) {
-                                      _formKey.currentState.save();
-                                      _countBloc.addIdea(
-                                          memo: _memoController.text ?? '',
-                                          tags: _tagsController.text ?? '',
-                                          //TODO: 저장 아이디 체크하기. 잘못되서 들어옴.
-                                          //TODO: 현재 탭한 ListTile의 아이디를 읽어오기.
-                                          id: 'idea_Id' + snapshot.data.idea.length.toString());
-                                      // BlocProvider.of<IdeaBloc>(context).add(
-                                      //   IdeaAdded(
-                                      //     IdeaMemo(memo: _memoController.text ?? '', tags: _tagsController.text ?? ''),
-                                      //   ),
-                                      // );
+                                    if (_memoController.text.isNotEmpty && _tagsController.text.isNotEmpty) {
+                                      if (_formKey.currentState.validate()) {
+                                        _formKey.currentState.save();
 
-                                      // List<String> tagsList = _tagsController.text.split(" ");
-                                      //
-                                      // tagsList.forEach((tag) {
-                                      //   BlocProvider.of<TagsBloc>(context).add(TagAdded(SearchTags(tag: tag)));
-                                      // });
+                                        if (snapshot.data.idea.isNotEmpty) {
+                                          final lastId = snapshot.data.idea.last.id;
+                                          final number = lastId.split("_").last;
+                                          _latIdNum = int.parse(number);
+                                        }
 
-                                      Navigator.pop(context);
+                                        _countBloc.addIdea(
+                                            memo: _memoController.text ?? '',
+                                            tags: _tagsController.text ?? '',
+                                            id: 'idea_' + (_latIdNum + 1).toString());
+
+                                        Navigator.pop(context);
+                                      }
                                     }
                                   },
                                 ),
@@ -93,5 +91,35 @@ class CommonCreatePop extends StatelessWidget {
             ),
           );
         });
+  }
+}
+
+class _Chip extends StatelessWidget {
+  const _Chip({
+    @required this.label,
+    @required this.onDeleted,
+    @required this.index,
+  });
+
+  final String label;
+  final ValueChanged<int> onDeleted;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      labelPadding: const EdgeInsets.only(left: 8.0),
+      label: Text(
+        label,
+        style: TextStyle(fontSize: 13.0),
+      ),
+      deleteIcon: const Icon(
+        Icons.close,
+        size: 12,
+      ),
+      onDeleted: () {
+        onDeleted(index);
+      },
+    );
   }
 }

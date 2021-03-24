@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:project_writer_v04/models/ModelProvider.dart';
 import 'package:project_writer_v04/services/logic/bloc_base.dart';
 import 'package:project_writer_v04/services/logic/ideaAndTags_bloc.dart';
 
@@ -335,68 +335,89 @@ class SearchResultsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _countBloc = BlocProvider.of<IdeasAndTagsBloc>(context);
-    // if (BlocProvider.of<IdeaBloc>(context).state.props == null) {
-    //   return Center(
-    //     child: Column(
-    //       mainAxisSize: MainAxisSize.min,
-    //       children: [
-    //         Icon(
-    //           Icons.search,
-    //           size: 64,
-    //         ),
-    //         Text(
-    //           'Start Searching',
-    //           style: Theme.of(context).textTheme.bodyText1,
-    //         ),
-    //       ],
-    //     ),
-    //   );
-    // }
-
+    final _countBloc = BlocProvider.of<IdeasAndTagsBloc>(context);
     final fsb = FloatingSearchBar.of(context);
-
     //RxDart로 리스트 데이터 받아오는 부분
     return StreamBuilder<IdeaAndTagModel>(
         stream: _countBloc.moviesUserFavouritesStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
-            return ListView.separated(
-              padding: EdgeInsets.only(top: fsb.value.height + fsb.value.margins.vertical),
-              shrinkWrap: true,
-              physics: ScrollPhysics(),
-              //아이템 카운트
-              itemCount: snapshot.data.idea.length,
-              separatorBuilder: (context, index) {
-                return Divider();
-              },
-              itemBuilder: (context, index) {
-                return Slidable(
-                  actionPane: SlidableStrechActionPane(),
-                  enabled: true,
-                  secondaryActions: [
-                    IconSlideAction(
-                      caption: '미정',
-                      color: Colors.transparent,
-                      icon: Icons.archive,
-                      onTap: () {},
+            //print('idea : ${snapshot.data.idea}, tags: ${snapshot.data.tags}');
+            return Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: ListView.separated(
+                padding: EdgeInsets.only(top: fsb.value.height + fsb.value.margins.vertical),
+                shrinkWrap: true,
+                physics: ScrollPhysics(),
+                itemCount: snapshot.data.idea.length,
+                separatorBuilder: (context, index) {
+                  return Divider(
+                    height: 50.0,
+                    color: Colors.white,
+                    indent: 150.0,
+                    endIndent: 150.0,
+                  );
+                },
+                itemBuilder: (context, toIndex) {
+                  final tags = snapshot.data.idea[toIndex].tags.split(" ");
+                  return Slidable(
+                    actionPane: SlidableStrechActionPane(),
+                    enabled: true,
+                    secondaryActions: [
+                      IconSlideAction(
+                        caption: '미정',
+                        color: Colors.transparent,
+                        icon: Icons.archive,
+                        onTap: () {},
+                      ),
+                      IconSlideAction(
+                        caption: '삭제',
+                        color: Color(0xFFe23e57),
+                        icon: Icons.delete,
+                        onTap: () {
+                          BlocProvider.of<IdeasAndTagsBloc>(context)..deleteIdeaAndTags(id: snapshot.data.idea[toIndex].id);
+                          //BlocProvider.of<IdeaBloc>(context)..add(IdeaDeleted(IdeaMemo(id: state.ideaMemo[index].id)));
+                        },
+                      ),
+                    ],
+                    //RxDart 데이터 리스트타일
+                    child: ListTile(
+                      title: Text(
+                        snapshot.hasData ? snapshot.data.idea[toIndex].memo : '',
+                        style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w400),
+                      ),
+                      subtitle: Container(
+                        height: 38.0,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: tags.length,
+                          itemBuilder: (_, index) {
+                            if (tags.isNotEmpty) {
+                              //TODO: 텍스트 박스 만들기.
+                              return Container(
+                                margin: const EdgeInsets.only(top: 15.0, right: 10.0),
+                                padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 15.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Color(0xFF6c5c7a)),
+                                  color: Color(0xFF6c5c7a),
+                                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                                ),
+                                child: Text(
+                                  '#' + tags[index],
+                                  style: Theme.of(context).textTheme.bodyText2.copyWith(color: Color(0xFFfae3da), fontSize: 14.0),
+                                ),
+                              );
+                            } else {
+                              return Text('No Tags Data!!');
+                            }
+                          },
+                        ),
+                      ),
                     ),
-                    IconSlideAction(
-                      caption: '삭제',
-                      color: Color(0xFFe23e57),
-                      icon: Icons.delete,
-                      onTap: () {
-                        //BlocProvider.of<IdeaBloc>(context)..add(IdeaDeleted(IdeaMemo(id: state.ideaMemo[index].id)));
-                      },
-                    ),
-                  ],
-                  //RxDart 데이터 리스트타일
-                  child: ListTile(
-                    title: Text(snapshot.hasData ? snapshot.data.idea[index].memo : ''),
-                    //subtitle: Text(snapshot.hasData ? snapshot.data.tags[index].tag : ''),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             );
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
