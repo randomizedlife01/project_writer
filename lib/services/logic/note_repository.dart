@@ -10,7 +10,6 @@ class FreeWriteRepository {
       tags: tags,
     );
 
-    //TODO: 태그 저장용 만들고 분할 태그 만들고... 그리고 CRUD 및 검색하기 추가
     print(ideaObject);
 
     try {

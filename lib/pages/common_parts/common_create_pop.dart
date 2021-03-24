@@ -20,9 +20,9 @@ class CommonCreatePop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final IdeasAndTagsBloc bloc = BlocProvider.of<IdeasAndTagsBloc>(context);
-    return StreamBuilder<List<IdeaMemo>>(
-        stream: bloc.ideaStream,
+    var _countBloc = BlocProvider.of<IdeasAndTagsBloc>(context);
+    return StreamBuilder<IdeaAndTagModel>(
+        stream: _countBloc.moviesUserFavouritesStream(),
         builder: (context, snapshot) {
           return AlertDialog(
             content: SingleChildScrollView(
@@ -59,10 +59,12 @@ class CommonCreatePop extends StatelessWidget {
                                   onPressed: () {
                                     if (_formKey.currentState.validate()) {
                                       _formKey.currentState.save();
-                                      bloc.addIdea(
+                                      _countBloc.addIdea(
                                           memo: _memoController.text ?? '',
                                           tags: _tagsController.text ?? '',
-                                          id: 'idea_Id' + snapshot.data.length.toString());
+                                          //TODO: 저장 아이디 체크하기. 잘못되서 들어옴.
+                                          //TODO: 현재 탭한 ListTile의 아이디를 읽어오기.
+                                          id: 'idea_Id' + snapshot.data.idea.length.toString());
                                       // BlocProvider.of<IdeaBloc>(context).add(
                                       //   IdeaAdded(
                                       //     IdeaMemo(memo: _memoController.text ?? '', tags: _tagsController.text ?? ''),

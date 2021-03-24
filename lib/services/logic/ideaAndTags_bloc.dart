@@ -2,6 +2,7 @@ import 'package:amplify_flutter/amplify.dart';
 import 'package:project_writer_v04/models/IdeaMemo.dart';
 import 'package:project_writer_v04/models/SearchTags.dart';
 import 'package:project_writer_v04/services/logic/bloc_base.dart';
+import 'package:project_writer_v04/services/logic/note_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
 class IdeaAndTagModel {
@@ -12,8 +13,9 @@ class IdeaAndTagModel {
 }
 
 class IdeasAndTagsBloc implements BlocBase {
-  List<IdeaMemo> _ideaMemo = [];
-  List<SearchTags> _searchTags = [];
+  final ideaAndTagRepository = FreeWriteRepository();
+  List<IdeaMemo> _ideaMemo;
+  List<SearchTags> _searchTags;
 
   List<IdeaMemo> get ideaMemo => _ideaMemo;
   List<SearchTags> get searchTags => _searchTags;
@@ -40,44 +42,44 @@ class IdeasAndTagsBloc implements BlocBase {
   //   });
   // }
 
+  //TODO: 오옷쓰 쓰기 읽기 되었음. 이젠 태그랑 분리해서 저장하고 검색기능 하기...
   Stream<IdeaAndTagModel> moviesUserFavouritesStream() {
     readIdeaAndTags();
     return Rx.combineLatest2(ideaStream, searchTagsStream, (List<IdeaMemo> ideas, List<SearchTags> tags) {
+      //print('idea : $ideas, tag : $tags');
       return IdeaAndTagModel(ideas, tags);
     });
   }
 
-  Stream<IdeaAndTagModel> get counterObservable =>
-      Rx.combineLatest2(ideaStream, searchTagsStream, (ideas, tags) => IdeaAndTagModel(ideas, tags));
-
-  void readIdeas() async {
+  Future<List<IdeaMemo>> readIdeas() async {
     try {
-      _ideaMemo = await Amplify.DataStore.query(IdeaMemo.classType);
+      _ideaMemo = await ideaAndTagRepository.ideas();
+      return _ideaMemo;
     } catch (e) {
       throw e;
     }
   }
 
-  void readTags() async {
-    //TODO: 오류 지점.
+  Future<List<SearchTags>> readTags({String id}) async {
     try {
       _searchTags = await Amplify.DataStore.query(SearchTags.classType);
+      print(searchTags);
     } catch (e) {
       throw e;
     }
   }
 
-  void readIdeaAndTags() {
+  void readIdeaAndTags() async {
     try {
-      readIdeas();
-      readTags();
+      _ideaMemo = await readIdeas();
+      _searchTags = await readTags();
 
       _ideaController.add(_ideaMemo);
       _tagsController.add(_searchTags);
 
       print('idea : $_ideaMemo, tags : $_searchTags');
     } catch (e) {
-      return e;
+      throw e;
     }
   }
 
@@ -100,7 +102,6 @@ class IdeasAndTagsBloc implements BlocBase {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _tagsController.close();
     _ideaController.close();
   }

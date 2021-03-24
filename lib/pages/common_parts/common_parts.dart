@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:project_writer_v04/models/ModelProvider.dart';
 import 'package:project_writer_v04/services/logic/bloc_base.dart';
 import 'package:project_writer_v04/services/logic/ideaAndTags_bloc.dart';
 
@@ -334,7 +335,7 @@ class SearchResultsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _countBloc = BlocProvider.of<IdeasAndTagsBloc>(context)..readIdeaAndTags();
+    var _countBloc = BlocProvider.of<IdeasAndTagsBloc>(context);
     // if (BlocProvider.of<IdeaBloc>(context).state.props == null) {
     //   return Center(
     //     child: Column(
@@ -357,9 +358,8 @@ class SearchResultsListView extends StatelessWidget {
 
     //RxDart로 리스트 데이터 받아오는 부분
     return StreamBuilder<IdeaAndTagModel>(
-        stream: _countBloc.counterObservable,
+        stream: _countBloc.moviesUserFavouritesStream(),
         builder: (context, snapshot) {
-          //TODO: 자꾸 데이터가 널이 들어옴... 이니셜 데이터 확인.
           if (snapshot.connectionState == ConnectionState.active) {
             return ListView.separated(
               padding: EdgeInsets.only(top: fsb.value.height + fsb.value.margins.vertical),
@@ -393,7 +393,7 @@ class SearchResultsListView extends StatelessWidget {
                   //RxDart 데이터 리스트타일
                   child: ListTile(
                     title: Text(snapshot.hasData ? snapshot.data.idea[index].memo : ''),
-                    subtitle: Text(snapshot.hasData ? snapshot.data.tags[index].tag : ''),
+                    //subtitle: Text(snapshot.hasData ? snapshot.data.tags[index].tag : ''),
                   ),
                 );
               },
