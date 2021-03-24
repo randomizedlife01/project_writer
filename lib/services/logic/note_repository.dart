@@ -2,7 +2,7 @@ import 'package:amplify_flutter/amplify.dart';
 import 'package:project_writer_v04/models/IdeaMemo.dart';
 import 'package:project_writer_v04/models/ModelProvider.dart';
 
-class IdeaRepository {
+class FreeWriteRepository {
   Future<IdeaMemo> createIdea({String memo, String tags, String id}) async {
     final ideaObject = IdeaMemo(
       id: id,

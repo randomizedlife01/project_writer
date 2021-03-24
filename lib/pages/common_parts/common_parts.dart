@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:project_writer_v04/services/logic/free_write_bloc.dart';
+import 'package:project_writer_v04/services/logic/bloc_base.dart';
+import 'package:project_writer_v04/services/logic/ideaAndTags_bloc.dart';
 
 //기본 메뉴 버튼
 class BasicMenuButton extends StatelessWidget {
@@ -328,12 +329,12 @@ class _SearchBarState extends State<SearchBar> {
 //검색 결과 리스트 뷰
 class SearchResultsListView extends StatelessWidget {
   final String searchTerm;
-  final dataBloc = FreeWriteBloc();
 
   SearchResultsListView({Key key, this.searchTerm}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var _countBloc = BlocProvider.of<IdeasAndTagsBloc>(context)..readIdeaAndTags();
     // if (BlocProvider.of<IdeaBloc>(context).state.props == null) {
     //   return Center(
     //     child: Column(
@@ -354,17 +355,18 @@ class SearchResultsListView extends StatelessWidget {
 
     final fsb = FloatingSearchBar.of(context);
 
-    //TODO: RxDart로 리스트 데이터 받아오는 부분
-    return StreamBuilder<List<MovieUserFavourite>>(
-        stream: dataBloc.moviesUserFavouritesStream(),
+    //RxDart로 리스트 데이터 받아오는 부분
+    return StreamBuilder<IdeaAndTagModel>(
+        stream: _countBloc.counterObservable,
         builder: (context, snapshot) {
+          //TODO: 자꾸 데이터가 널이 들어옴... 이니셜 데이터 확인.
           if (snapshot.connectionState == ConnectionState.active) {
             return ListView.separated(
               padding: EdgeInsets.only(top: fsb.value.height + fsb.value.margins.vertical),
               shrinkWrap: true,
               physics: ScrollPhysics(),
-              //TODO: 아이템 카운트
-              itemCount: 10,
+              //아이템 카운트
+              itemCount: snapshot.data.idea.length,
               separatorBuilder: (context, index) {
                 return Divider();
               },
@@ -388,10 +390,10 @@ class SearchResultsListView extends StatelessWidget {
                       },
                     ),
                   ],
-                  //TODO: RxDart 데이터 리스트타일
+                  //RxDart 데이터 리스트타일
                   child: ListTile(
-                    title: Text(snapshot.hasData ? snapshot.data[index].idea.memo : ''),
-                    subtitle: Text(snapshot.hasData ? snapshot.data[index].tags.tag : ''),
+                    title: Text(snapshot.hasData ? snapshot.data.idea[index].memo : ''),
+                    subtitle: Text(snapshot.hasData ? snapshot.data.tags[index].tag : ''),
                   ),
                 );
               },
@@ -402,7 +404,7 @@ class SearchResultsListView extends StatelessWidget {
             );
           } else {
             return Center(
-              child: Text('ERROR!'),
+              child: Text('No Data!'),
             );
           }
         });
@@ -476,18 +478,5 @@ class DocInputForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return inputForm(hintText: hintText, labelText: labelText, controller: controller);
-  }
-}
-
-class BasicTag extends StatefulWidget {
-  @override
-  _BasicTagState createState() => _BasicTagState();
-}
-
-class _BasicTagState extends State<BasicTag> {
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
   }
 }
