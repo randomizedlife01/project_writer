@@ -69,20 +69,4 @@ class FreeWriteRepository {
       throw e;
     }
   }
-
-  //TODO: 태그 검색시 태그 id로 검색하고 일치하면 리스트 띄우기
-  Future<List<SearchTags>> getTags({String documentId}) async {
-    try {
-      final data = await Amplify.DataStore.query(
-        SearchTags.classType,
-        where: SearchTags.IDEAMEMOID.contains(
-          documentId,
-        ),
-      );
-
-      return data;
-    } catch (e) {
-      throw e;
-    }
-  }
 }

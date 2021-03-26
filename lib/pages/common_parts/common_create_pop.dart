@@ -70,9 +70,10 @@ class CommonCreatePop extends StatelessWidget {
                                         }
 
                                         _countBloc.addIdea(
-                                            memo: _memoController.text ?? '',
-                                            tags: _tagsController.text ?? '',
-                                            id: 'idea_' + (_latIdNum + 1).toString());
+                                          memo: _memoController.text ?? '',
+                                          tags: _tagsController.text ?? '',
+                                          id: 'idea_' + (_latIdNum + 1).toString(),
+                                        );
 
                                         Navigator.pop(context);
                                       }

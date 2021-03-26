@@ -160,11 +160,14 @@ class _SearchBarState extends State<SearchBar> {
 
   FloatingSearchBarController controller;
 
+  IdeasAndTagsBloc _countBloc;
+
   @override
   void initState() {
     super.initState();
     controller = FloatingSearchBarController();
     filteredSearchHistory = filteredSearchTerms(filter: null);
+    _countBloc = IdeasAndTagsBloc();
   }
 
   List<String> filteredSearchTerms({@required String filter}) {
@@ -211,6 +214,7 @@ class _SearchBarState extends State<SearchBar> {
       iconColor: Color(0xFFBF6C84),
       controller: controller,
       backgroundColor: Color(0xFF3b4445),
+      //TODO: 데이터 읽고 리스트 뷰로 내보내는 위젯
       body: SearchResultsListView(
         searchTerm: selectTerm,
       ),
@@ -228,16 +232,18 @@ class _SearchBarState extends State<SearchBar> {
         FloatingSearchBarAction.searchToClear(),
       ],
       onQueryChanged: (query) {
+        print('called');
         setState(() {
           filteredSearchHistory = filteredSearchTerms(filter: query);
         });
       },
       onSubmitted: (query) {
-        setState(() {
-          addSearchTerms(query);
-          selectTerm = query;
-          controller.close();
-        });
+        //TODO: 검색창 엔터 펑션
+        print('called 2');
+        addSearchTerms(query);
+        selectTerm = query;
+        _countBloc.readFilterdIdea(searchTags: query);
+        controller.close();
       },
       builder: (context, transition) {
         return ClipRRect(
@@ -360,6 +366,7 @@ class SearchResultsListView extends StatelessWidget {
                 },
                 itemBuilder: (context, toIndex) {
                   final tags = snapshot.data.idea[toIndex].tags.split(" ");
+                  print('aa : ${snapshot.data.idea[toIndex].isVisible}');
                   return Slidable(
                     actionPane: SlidableStrechActionPane(),
                     enabled: true,
@@ -383,9 +390,10 @@ class SearchResultsListView extends StatelessWidget {
                     //RxDart 데이터 리스트타일
                     child: ListTile(
                       title: Text(
-                        snapshot.hasData ? snapshot.data.idea[toIndex].memo : '',
+                        snapshot.hasData && snapshot.data.idea[toIndex].isVisible ? snapshot.data.idea[toIndex].memo : '',
                         style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w400),
                       ),
+                      //아이디어 메모당 태그 리스트(가로)
                       subtitle: Container(
                         height: 38.0,
                         child: ListView.builder(

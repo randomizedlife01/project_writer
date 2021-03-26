@@ -15,9 +15,7 @@
 
 // ignore_for_file: public_member_api_docs
 
-import 'ModelProvider.dart';
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 /** This is an auto generated class representing the IdeaMemo type in your schema. */
@@ -26,8 +24,8 @@ class IdeaMemo extends Model {
   static const classType = const IdeaMemoType();
   final String id;
   final String memo;
-  final List<SearchTags> searchTags;
   final String tags;
+  final bool isVisible;
 
   @override
   getInstanceType() => classType;
@@ -38,16 +36,15 @@ class IdeaMemo extends Model {
   }
 
   const IdeaMemo._internal(
-      {@required this.id, this.memo, this.searchTags, this.tags});
+      {@required this.id, this.memo, this.tags, @required this.isVisible});
 
   factory IdeaMemo(
-      {String id, String memo, List<SearchTags> searchTags, String tags}) {
+      {String id, String memo, String tags, @required bool isVisible}) {
     return IdeaMemo._internal(
         id: id == null ? UUID.getUUID() : id,
         memo: memo,
-        searchTags:
-            searchTags != null ? List.unmodifiable(searchTags) : searchTags,
-        tags: tags);
+        tags: tags,
+        isVisible: isVisible);
   }
 
   bool equals(Object other) {
@@ -60,8 +57,8 @@ class IdeaMemo extends Model {
     return other is IdeaMemo &&
         id == other.id &&
         memo == other.memo &&
-        DeepCollectionEquality().equals(searchTags, other.searchTags) &&
-        tags == other.tags;
+        tags == other.tags &&
+        isVisible == other.isVisible;
   }
 
   @override
@@ -74,46 +71,35 @@ class IdeaMemo extends Model {
     buffer.write("IdeaMemo {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("memo=" + "$memo" + ", ");
-    buffer.write("tags=" + "$tags");
+    buffer.write("tags=" + "$tags" + ", ");
+    buffer.write(
+        "isVisible=" + (isVisible != null ? isVisible.toString() : "null"));
     buffer.write("}");
 
     return buffer.toString();
   }
 
-  IdeaMemo copyWith(
-      {String id, String memo, List<SearchTags> searchTags, String tags}) {
+  IdeaMemo copyWith({String id, String memo, String tags, bool isVisible}) {
     return IdeaMemo(
         id: id ?? this.id,
         memo: memo ?? this.memo,
-        searchTags: searchTags ?? this.searchTags,
-        tags: tags ?? this.tags);
+        tags: tags ?? this.tags,
+        isVisible: isVisible ?? this.isVisible);
   }
 
   IdeaMemo.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         memo = json['memo'],
-        searchTags = json['searchTags'] is List
-            ? (json['searchTags'] as List)
-                .map((e) =>
-                    SearchTags.fromJson(new Map<String, dynamic>.from(e)))
-                .toList()
-            : null,
-        tags = json['tags'];
+        tags = json['tags'],
+        isVisible = json['isVisible'];
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'memo': memo,
-        'searchTags': searchTags?.map((e) => e?.toJson())?.toList(),
-        'tags': tags
-      };
+  Map<String, dynamic> toJson() =>
+      {'id': id, 'memo': memo, 'tags': tags, 'isVisible': isVisible};
 
   static final QueryField ID = QueryField(fieldName: "ideaMemo.id");
   static final QueryField MEMO = QueryField(fieldName: "memo");
-  static final QueryField SEARCHTAGS = QueryField(
-      fieldName: "searchTags",
-      fieldType: ModelFieldType(ModelFieldTypeEnum.model,
-          ofModelName: (SearchTags).toString()));
   static final QueryField TAGS = QueryField(fieldName: "tags");
+  static final QueryField ISVISIBLE = QueryField(fieldName: "isVisible");
   static var schema =
       Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "IdeaMemo";
@@ -135,16 +121,15 @@ class IdeaMemo extends Model {
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
 
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-        key: IdeaMemo.SEARCHTAGS,
-        isRequired: false,
-        ofModelName: (SearchTags).toString(),
-        associatedKey: SearchTags.IDEAMEMOID));
-
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: IdeaMemo.TAGS,
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: IdeaMemo.ISVISIBLE,
+        isRequired: true,
+        ofType: ModelFieldType(ModelFieldTypeEnum.bool)));
   });
 }
 

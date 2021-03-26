@@ -24,7 +24,6 @@ class SearchTags extends Model {
   static const classType = const SearchTagsType();
   final String id;
   final String tag;
-  final String ideamemoID;
 
   @override
   getInstanceType() => classType;
@@ -34,11 +33,10 @@ class SearchTags extends Model {
     return id;
   }
 
-  const SearchTags._internal({@required this.id, this.tag, this.ideamemoID});
+  const SearchTags._internal({@required this.id, this.tag});
 
-  factory SearchTags({String id, String tag, String ideamemoID}) {
-    return SearchTags._internal(
-        id: id == null ? UUID.getUUID() : id, tag: tag, ideamemoID: ideamemoID);
+  factory SearchTags({String id, String tag}) {
+    return SearchTags._internal(id: id == null ? UUID.getUUID() : id, tag: tag);
   }
 
   bool equals(Object other) {
@@ -48,10 +46,7 @@ class SearchTags extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is SearchTags &&
-        id == other.id &&
-        tag == other.tag &&
-        ideamemoID == other.ideamemoID;
+    return other is SearchTags && id == other.id && tag == other.tag;
   }
 
   @override
@@ -63,31 +58,24 @@ class SearchTags extends Model {
 
     buffer.write("SearchTags {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("tag=" + "$tag" + ", ");
-    buffer.write("ideamemoID=" + "$ideamemoID");
+    buffer.write("tag=" + "$tag");
     buffer.write("}");
 
     return buffer.toString();
   }
 
-  SearchTags copyWith({String id, String tag, String ideamemoID}) {
-    return SearchTags(
-        id: id ?? this.id,
-        tag: tag ?? this.tag,
-        ideamemoID: ideamemoID ?? this.ideamemoID);
+  SearchTags copyWith({String id, String tag}) {
+    return SearchTags(id: id ?? this.id, tag: tag ?? this.tag);
   }
 
   SearchTags.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        tag = json['tag'],
-        ideamemoID = json['ideamemoID'];
+        tag = json['tag'];
 
-  Map<String, dynamic> toJson() =>
-      {'id': id, 'tag': tag, 'ideamemoID': ideamemoID};
+  Map<String, dynamic> toJson() => {'id': id, 'tag': tag};
 
   static final QueryField ID = QueryField(fieldName: "searchTags.id");
   static final QueryField TAG = QueryField(fieldName: "tag");
-  static final QueryField IDEAMEMOID = QueryField(fieldName: "ideamemoID");
   static var schema =
       Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "SearchTags";
@@ -106,11 +94,6 @@ class SearchTags extends Model {
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: SearchTags.TAG,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: SearchTags.IDEAMEMOID,
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
   });

@@ -26,8 +26,12 @@ class IdeasAndTagsBloc implements BlocBase {
   Stream<List<IdeaMemo>> get ideaStream => _ideaController.stream;
   Stream<List<SearchTags>> get searchTagsStream => _tagsController.stream;
 
-  Stream<IdeaAndTagModel> moviesUserFavouritesStream() {
+  IdeasAndTagsBloc() {
     readIdeaAndTags();
+  }
+
+  Stream<IdeaAndTagModel> moviesUserFavouritesStream() {
+    //readIdeaAndTags();
     return Rx.combineLatest2(ideaStream, searchTagsStream, (List<IdeaMemo> ideas, List<SearchTags> tags) {
       return IdeaAndTagModel(ideas, tags);
     });
@@ -35,10 +39,10 @@ class IdeasAndTagsBloc implements BlocBase {
 
   Future<List<IdeaMemo>> readIdeas() async {
     try {
-      _ideaMemo = await ideaAndTagRepository.ideas();
+      _ideaMemo = await Amplify.DataStore.query(IdeaMemo.classType);
       return _ideaMemo;
     } catch (e) {
-      throw e;
+      return e;
     }
   }
 
@@ -70,15 +74,40 @@ class IdeasAndTagsBloc implements BlocBase {
       id: id,
       memo: memo,
       tags: tags,
+      isVisible: true,
     );
+
+    final tag = tags.split(" ");
 
     try {
       await Amplify.DataStore.save(ideaObject);
+      tag.forEach((element) async {
+        final tagObject = SearchTags(id: element, tag: element);
+        await Amplify.DataStore.save(tagObject);
+        _searchTags.add(tagObject);
+      });
       _ideaMemo.add(ideaObject);
 
       _ideaController.add(_ideaMemo);
+      _tagsController.add(_searchTags);
     } catch (e) {
       return e;
+    }
+  }
+
+  //TODO: 탐색기능부터 시작함.
+  void readFilterdIdea({String searchTags}) async {
+    try {
+      final searchTagsList = await Amplify.DataStore.query(
+        IdeaMemo.classType,
+        where: IdeaMemo.TAGS.contains(
+          searchTags,
+        ),
+      );
+      print(searchTagsList);
+      //_ideaController.add(searchTagsList);
+    } catch (e) {
+      throw e;
     }
   }
 
