@@ -60,8 +60,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return KeyboardVisibilityProvider(
-      child: BlocProvider(
-        bloc: IdeasAndTagsBloc(),
+      child: BlocProvider<IdeasBloc>(
+        bloc: IdeasBloc(),
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Project Writer v04',

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:material_tag_editor/tag_editor.dart';
 import 'package:project_writer_v04/models/IdeaMemo.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/services/logic/bloc_base.dart';
@@ -22,9 +21,9 @@ class CommonCreatePop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _countBloc = BlocProvider.of<IdeasAndTagsBloc>(context);
-    return StreamBuilder<IdeaAndTagModel>(
-        stream: _countBloc.moviesUserFavouritesStream(),
+    var _countBloc = BlocProvider.of<IdeasBloc>(context);
+    return StreamBuilder<List<IdeaMemo>>(
+        stream: _countBloc.ideaStream,
         builder: (context, snapshot) {
           return AlertDialog(
             content: SingleChildScrollView(
@@ -63,8 +62,8 @@ class CommonCreatePop extends StatelessWidget {
                                       if (_formKey.currentState.validate()) {
                                         _formKey.currentState.save();
 
-                                        if (snapshot.data.idea.isNotEmpty) {
-                                          final lastId = snapshot.data.idea.last.id;
+                                        if (snapshot.data.isNotEmpty) {
+                                          final lastId = snapshot.data.last.id;
                                           final number = lastId.split("_").last;
                                           _latIdNum = int.parse(number);
                                         }

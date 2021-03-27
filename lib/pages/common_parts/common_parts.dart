@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:project_writer_v04/models/IdeaMemo.dart';
 import 'package:project_writer_v04/services/logic/bloc_base.dart';
 import 'package:project_writer_v04/services/logic/ideaAndTags_bloc.dart';
 
@@ -146,13 +147,7 @@ class SearchBar extends StatefulWidget {
 class _SearchBarState extends State<SearchBar> {
   static const historyLength = 5;
 
-  List<String> _searchHistory = [
-    'a',
-    'b',
-    'c',
-    'd',
-    'e',
-  ];
+  List<String> _searchHistory = [];
 
   List<String> filteredSearchHistory;
 
@@ -160,14 +155,11 @@ class _SearchBarState extends State<SearchBar> {
 
   FloatingSearchBarController controller;
 
-  IdeasAndTagsBloc _countBloc;
-
   @override
   void initState() {
     super.initState();
     controller = FloatingSearchBarController();
     filteredSearchHistory = filteredSearchTerms(filter: null);
-    _countBloc = IdeasAndTagsBloc();
   }
 
   List<String> filteredSearchTerms({@required String filter}) {
@@ -204,6 +196,8 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
+    final _ideaBloc = BlocProvider.of<IdeasBloc>(context);
+    //TODO: setState 부분 전부 stream으로 변경!
     return FloatingSearchBar(
       shadowColor: Colors.transparent,
       border: BorderSide(
@@ -214,14 +208,13 @@ class _SearchBarState extends State<SearchBar> {
       iconColor: Color(0xFFBF6C84),
       controller: controller,
       backgroundColor: Color(0xFF3b4445),
-      //TODO: 데이터 읽고 리스트 뷰로 내보내는 위젯
       body: SearchResultsListView(
         searchTerm: selectTerm,
       ),
       transition: SlideFadeFloatingSearchBarTransition(),
       physics: BouncingScrollPhysics(),
       title: Text(
-        selectTerm ?? '태그 검색',
+        selectTerm == null ? '태그 검색' : selectTerm,
         style: TextStyle(color: Color(0xFFBF6C84)),
       ),
       backdropColor: Colors.transparent,
@@ -238,11 +231,19 @@ class _SearchBarState extends State<SearchBar> {
         });
       },
       onSubmitted: (query) {
-        //TODO: 검색창 엔터 펑션
-        print('called 2');
-        addSearchTerms(query);
-        selectTerm = query;
-        _countBloc.readFilterdIdea(searchTags: query);
+        //검색창 엔터 펑션
+        setState(() {
+          addSearchTerms(query);
+          selectTerm = query;
+        });
+        _ideaBloc.readFilteredIdea(searchTags: query);
+        if (query.isEmpty) {
+          _ideaBloc.readIdeas();
+          setState(() {
+            selectTerm = null;
+            print(selectTerm);
+          });
+        }
         controller.close();
       },
       builder: (context, transition) {
@@ -341,21 +342,20 @@ class SearchResultsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _countBloc = BlocProvider.of<IdeasAndTagsBloc>(context);
+    final _countBloc = BlocProvider.of<IdeasBloc>(context);
     final fsb = FloatingSearchBar.of(context);
-    //RxDart로 리스트 데이터 받아오는 부분
-    return StreamBuilder<IdeaAndTagModel>(
-        stream: _countBloc.moviesUserFavouritesStream(),
+    //RxDart로 리스트 데이터 받아오는 부분. 검색시 리스트뷰 빌드 다시 하기.
+    return StreamBuilder<List<IdeaMemo>>(
+        stream: _countBloc.ideaStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
-            //print('idea : ${snapshot.data.idea}, tags: ${snapshot.data.tags}');
             return Padding(
               padding: const EdgeInsets.only(top: 15.0),
               child: ListView.separated(
                 padding: EdgeInsets.only(top: fsb.value.height + fsb.value.margins.vertical),
                 shrinkWrap: true,
                 physics: ScrollPhysics(),
-                itemCount: snapshot.data.idea.length,
+                itemCount: snapshot.data.length,
                 separatorBuilder: (context, index) {
                   return Divider(
                     height: 50.0,
@@ -365,8 +365,7 @@ class SearchResultsListView extends StatelessWidget {
                   );
                 },
                 itemBuilder: (context, toIndex) {
-                  final tags = snapshot.data.idea[toIndex].tags.split(" ");
-                  print('aa : ${snapshot.data.idea[toIndex].isVisible}');
+                  final tags = snapshot.data[toIndex].tags.split(" ");
                   return Slidable(
                     actionPane: SlidableStrechActionPane(),
                     enabled: true,
@@ -382,15 +381,14 @@ class SearchResultsListView extends StatelessWidget {
                         color: Color(0xFFe23e57),
                         icon: Icons.delete,
                         onTap: () {
-                          BlocProvider.of<IdeasAndTagsBloc>(context)..deleteIdeaAndTags(id: snapshot.data.idea[toIndex].id);
-                          //BlocProvider.of<IdeaBloc>(context)..add(IdeaDeleted(IdeaMemo(id: state.ideaMemo[index].id)));
+                          BlocProvider.of<IdeasBloc>(context)..deleteIdeaAndTags(id: snapshot.data[toIndex].id);
                         },
                       ),
                     ],
                     //RxDart 데이터 리스트타일
                     child: ListTile(
                       title: Text(
-                        snapshot.hasData && snapshot.data.idea[toIndex].isVisible ? snapshot.data.idea[toIndex].memo : '',
+                        snapshot.hasData ? snapshot.data[toIndex].memo : '',
                         style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w400),
                       ),
                       //아이디어 메모당 태그 리스트(가로)
@@ -402,7 +400,6 @@ class SearchResultsListView extends StatelessWidget {
                           itemCount: tags.length,
                           itemBuilder: (_, index) {
                             if (tags.isNotEmpty) {
-                              //TODO: 텍스트 박스 만들기.
                               return Container(
                                 margin: const EdgeInsets.only(top: 15.0, right: 10.0),
                                 padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 15.0),
