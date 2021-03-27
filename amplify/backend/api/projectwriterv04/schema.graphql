@@ -1,12 +1,11 @@
-type SearchTags @model @auth(rules: [{allow: public}]) {
+type SearchHistory @model @auth(rules: [{allow: public}]) {
   id: ID!
-  tag: String
+  searchHistory: String
 }
 
 type IdeaMemo @model @auth(rules: [{allow: public}]) {
   id: ID!
   memo: String
   tags: String
-  isVisible: Boolean!
 }
  

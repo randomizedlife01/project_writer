@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project_writer_v04/models/IdeaMemo.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/services/logic/bloc_base.dart';
-import 'package:project_writer_v04/services/logic/ideaAndTags_bloc.dart';
+import 'package:project_writer_v04/services/logic/idea_bloc.dart';
 
 class CommonCreatePop extends StatelessWidget {
   final String descLabelText;

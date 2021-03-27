@@ -18,12 +18,12 @@
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
 import 'package:flutter/foundation.dart';
 
-/** This is an auto generated class representing the SearchTags type in your schema. */
+/** This is an auto generated class representing the SearchHistory type in your schema. */
 @immutable
-class SearchTags extends Model {
-  static const classType = const SearchTagsType();
+class SearchHistory extends Model {
+  static const classType = const SearchHistoryType();
   final String id;
-  final String tag;
+  final String searchHistory;
 
   @override
   getInstanceType() => classType;
@@ -33,10 +33,11 @@ class SearchTags extends Model {
     return id;
   }
 
-  const SearchTags._internal({@required this.id, this.tag});
+  const SearchHistory._internal({@required this.id, this.searchHistory});
 
-  factory SearchTags({String id, String tag}) {
-    return SearchTags._internal(id: id == null ? UUID.getUUID() : id, tag: tag);
+  factory SearchHistory({String id, String searchHistory}) {
+    return SearchHistory._internal(
+        id: id == null ? UUID.getUUID() : id, searchHistory: searchHistory);
   }
 
   bool equals(Object other) {
@@ -46,7 +47,9 @@ class SearchTags extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is SearchTags && id == other.id && tag == other.tag;
+    return other is SearchHistory &&
+        id == other.id &&
+        searchHistory == other.searchHistory;
   }
 
   @override
@@ -56,30 +59,32 @@ class SearchTags extends Model {
   String toString() {
     var buffer = new StringBuffer();
 
-    buffer.write("SearchTags {");
+    buffer.write("SearchHistory {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("tag=" + "$tag");
+    buffer.write("searchHistory=" + "$searchHistory");
     buffer.write("}");
 
     return buffer.toString();
   }
 
-  SearchTags copyWith({String id, String tag}) {
-    return SearchTags(id: id ?? this.id, tag: tag ?? this.tag);
+  SearchHistory copyWith({String id, String searchHistory}) {
+    return SearchHistory(
+        id: id ?? this.id, searchHistory: searchHistory ?? this.searchHistory);
   }
 
-  SearchTags.fromJson(Map<String, dynamic> json)
+  SearchHistory.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        tag = json['tag'];
+        searchHistory = json['searchHistory'];
 
-  Map<String, dynamic> toJson() => {'id': id, 'tag': tag};
+  Map<String, dynamic> toJson() => {'id': id, 'searchHistory': searchHistory};
 
-  static final QueryField ID = QueryField(fieldName: "searchTags.id");
-  static final QueryField TAG = QueryField(fieldName: "tag");
+  static final QueryField ID = QueryField(fieldName: "searchHistory.id");
+  static final QueryField SEARCHHISTORY =
+      QueryField(fieldName: "searchHistory");
   static var schema =
       Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "SearchTags";
-    modelSchemaDefinition.pluralName = "SearchTags";
+    modelSchemaDefinition.name = "SearchHistory";
+    modelSchemaDefinition.pluralName = "SearchHistories";
 
     modelSchemaDefinition.authRules = [
       AuthRule(authStrategy: AuthStrategy.PUBLIC, operations: [
@@ -93,17 +98,17 @@ class SearchTags extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: SearchTags.TAG,
+        key: SearchHistory.SEARCHHISTORY,
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
   });
 }
 
-class SearchTagsType extends ModelType<SearchTags> {
-  const SearchTagsType();
+class SearchHistoryType extends ModelType<SearchHistory> {
+  const SearchHistoryType();
 
   @override
-  SearchTags fromJson(Map<String, dynamic> jsonData) {
-    return SearchTags.fromJson(jsonData);
+  SearchHistory fromJson(Map<String, dynamic> jsonData) {
+    return SearchHistory.fromJson(jsonData);
   }
 }

@@ -5,8 +5,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:project_writer_v04/models/IdeaMemo.dart';
+import 'package:project_writer_v04/models/SearchHistory.dart';
 import 'package:project_writer_v04/services/logic/bloc_base.dart';
-import 'package:project_writer_v04/services/logic/ideaAndTags_bloc.dart';
+import 'package:project_writer_v04/services/logic/idea_bloc.dart';
+import 'package:project_writer_v04/services/logic/search_history_bloc.dart';
 
 //기본 메뉴 버튼
 class BasicMenuButton extends StatelessWidget {
@@ -149,16 +151,22 @@ class _SearchBarState extends State<SearchBar> {
 
   List<String> _searchHistory = [];
 
+  //TODO: 필터 히스토리는 amplify에 5개 저장하고 초기화시 불러오기. 창 닫을시에 최신 리스트로 갱신 저장.
   List<String> filteredSearchHistory;
 
   String selectTerm;
 
   FloatingSearchBarController controller;
 
+  SearchHistoryBloc _searchHistoryListBloc;
+
   @override
   void initState() {
     super.initState();
     controller = FloatingSearchBarController();
+    _searchHistoryListBloc = BlocProvider.of<SearchHistoryBloc>(context);
+    _searchHistoryListBloc.readSearchHistory();
+
     filteredSearchHistory = filteredSearchTerms(filter: null);
   }
 
@@ -198,133 +206,137 @@ class _SearchBarState extends State<SearchBar> {
   Widget build(BuildContext context) {
     final _ideaBloc = BlocProvider.of<IdeasBloc>(context);
     //TODO: setState 부분 전부 stream으로 변경!
-    return FloatingSearchBar(
-      shadowColor: Colors.transparent,
-      border: BorderSide(
-        color: Color(0xFFBF6C84),
-      ),
-      borderRadius: BorderRadius.circular(10.0),
-      automaticallyImplyBackButton: false,
-      iconColor: Color(0xFFBF6C84),
-      controller: controller,
-      backgroundColor: Color(0xFF3b4445),
-      body: SearchResultsListView(
-        searchTerm: selectTerm,
-      ),
-      transition: SlideFadeFloatingSearchBarTransition(),
-      physics: BouncingScrollPhysics(),
-      title: Text(
-        selectTerm == null ? '태그 검색' : selectTerm,
-        style: TextStyle(color: Color(0xFFBF6C84)),
-      ),
-      backdropColor: Colors.transparent,
-      queryStyle: TextStyle(color: Color(0xFFBF6C84), fontSize: 15.0, fontWeight: FontWeight.w400),
-      hint: '검색하실 태그를 입력해주세요',
-      hintStyle: TextStyle(color: Color(0xFFBF6C84), fontSize: 12.0),
-      actions: [
-        FloatingSearchBarAction.searchToClear(),
-      ],
-      onQueryChanged: (query) {
-        print('called');
-        setState(() {
-          filteredSearchHistory = filteredSearchTerms(filter: query);
-        });
-      },
-      onSubmitted: (query) {
-        //검색창 엔터 펑션
-        setState(() {
-          addSearchTerms(query);
-          selectTerm = query;
-        });
-        _ideaBloc.readFilteredIdea(searchTags: query);
-        if (query.isEmpty) {
-          _ideaBloc.readIdeas();
-          setState(() {
-            selectTerm = null;
-            print(selectTerm);
-          });
-        }
-        controller.close();
-      },
-      builder: (context, transition) {
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
-          child: Material(
-            color: Color(0xFFe4f9f5),
-            elevation: 0.0,
-            child: Builder(
-              builder: (context) {
-                if (filteredSearchHistory.isEmpty && controller.query.isEmpty) {
-                  return Container(
-                    height: 56.0,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    child: Text(
-                      'start searching',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyText2,
-                    ),
-                  );
-                } else if (filteredSearchHistory.isEmpty) {
-                  return ListTile(
-                    title: Text(
-                      controller.query,
-                      style: Theme.of(context).textTheme.bodyText2,
-                    ),
-                    leading: const Icon(Icons.search),
-                    onTap: () {
-                      setState(() {
-                        addSearchTerms(controller.query);
-                        selectTerm = controller.query;
-                      });
-                    },
-                  );
-                } else {
-                  return Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: filteredSearchHistory
-                        .map(
-                          (term) => ListTile(
-                            title: Text(
-                              term,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.bodyText2.copyWith(color: Color(0xFF3b4445)),
-                            ),
-                            leading: const Icon(
-                              Icons.search,
-                              color: Color(0xFF3b4445),
-                            ),
-                            trailing: IconButton(
-                              icon: Icon(
-                                Icons.clear,
-                                color: Color(0xFF3b4445),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  deleteSearchTerms(term);
-                                });
-                              },
-                            ),
-                            onTap: () {
-                              setState(() {
-                                putSearchTerms(term);
-                                selectTerm = term;
-                              });
-                              controller.close();
-                            },
-                          ),
-                        )
-                        .toList(),
-                  );
-                }
-              },
+    return StreamBuilder<List<SearchHistory>>(
+        stream: _searchHistoryListBloc.searchHistoryStream,
+        builder: (context, snapshot) {
+          return FloatingSearchBar(
+            shadowColor: Colors.transparent,
+            border: BorderSide(
+              color: Color(0xFFBF6C84),
             ),
-          ),
-        );
-      },
-    );
+            borderRadius: BorderRadius.circular(10.0),
+            automaticallyImplyBackButton: false,
+            iconColor: Color(0xFFBF6C84),
+            controller: controller,
+            backgroundColor: Color(0xFF3b4445),
+            body: SearchResultsListView(
+              searchTerm: selectTerm,
+            ),
+            transition: SlideFadeFloatingSearchBarTransition(),
+            physics: BouncingScrollPhysics(),
+            title: Text(
+              selectTerm == null ? '태그 검색' : selectTerm,
+              style: TextStyle(color: Color(0xFFBF6C84)),
+            ),
+            backdropColor: Colors.transparent,
+            queryStyle: TextStyle(color: Color(0xFFBF6C84), fontSize: 15.0, fontWeight: FontWeight.w400),
+            hint: '검색하실 태그를 입력해주세요',
+            hintStyle: TextStyle(color: Color(0xFFBF6C84), fontSize: 12.0),
+            actions: [
+              FloatingSearchBarAction.searchToClear(),
+            ],
+            onQueryChanged: (query) {
+              print('called');
+              setState(() {
+                filteredSearchHistory = filteredSearchTerms(filter: query);
+              });
+            },
+            onSubmitted: (query) {
+              //검색창 엔터 펑션
+              setState(() {
+                addSearchTerms(query);
+                selectTerm = query;
+              });
+              _ideaBloc.readFilteredIdea(searchTags: query);
+              if (query.isEmpty) {
+                _ideaBloc.readIdeas();
+                setState(() {
+                  selectTerm = null;
+                  print(selectTerm);
+                });
+              }
+              controller.close();
+            },
+            builder: (context, transition) {
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: Material(
+                  color: Color(0xFFe4f9f5),
+                  elevation: 0.0,
+                  child: Builder(
+                    builder: (context) {
+                      if (filteredSearchHistory.isEmpty && controller.query.isEmpty) {
+                        return Container(
+                          height: 56.0,
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          child: Text(
+                            'start searching',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodyText2,
+                          ),
+                        );
+                      } else if (filteredSearchHistory.isEmpty) {
+                        return ListTile(
+                          title: Text(
+                            controller.query,
+                            style: Theme.of(context).textTheme.bodyText2,
+                          ),
+                          leading: const Icon(Icons.search),
+                          onTap: () {
+                            setState(() {
+                              addSearchTerms(controller.query);
+                              selectTerm = controller.query;
+                            });
+                          },
+                        );
+                      } else {
+                        return Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: filteredSearchHistory
+                              .map(
+                                (term) => ListTile(
+                                  title: Text(
+                                    term,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(context).textTheme.bodyText2.copyWith(color: Color(0xFF3b4445)),
+                                  ),
+                                  leading: const Icon(
+                                    Icons.search,
+                                    color: Color(0xFF3b4445),
+                                  ),
+                                  trailing: IconButton(
+                                    icon: Icon(
+                                      Icons.clear,
+                                      color: Color(0xFF3b4445),
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        deleteSearchTerms(term);
+                                      });
+                                    },
+                                  ),
+                                  onTap: () {
+                                    setState(() {
+                                      putSearchTerms(term);
+                                      selectTerm = term;
+                                    });
+                                    controller.close();
+                                  },
+                                ),
+                              )
+                              .toList(),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              );
+            },
+          );
+        });
   }
 
   @override

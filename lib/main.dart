@@ -9,7 +9,7 @@ import 'package:project_writer_v04/models/ModelProvider.dart';
 import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
 import 'package:project_writer_v04/services/auth/auth_bloc.dart';
 import 'package:project_writer_v04/services/logic/bloc_base.dart';
-import 'package:project_writer_v04/services/logic/ideaAndTags_bloc.dart';
+import 'package:project_writer_v04/services/logic/idea_bloc.dart';
 import 'amplifyconfiguration.dart';
 import 'pages/auth_pages/login_page.dart';
 import 'pages/auth_pages/signup_page.dart';

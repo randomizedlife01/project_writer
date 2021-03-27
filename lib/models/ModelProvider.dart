@@ -17,16 +17,16 @@
 
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
 import 'IdeaMemo.dart';
-import 'SearchTags.dart';
+import 'SearchHistory.dart';
 
 export 'IdeaMemo.dart';
-export 'SearchTags.dart';
+export 'SearchHistory.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "42acc8bf34a6f80420beb8bc6e79dbde";
+  String version = "8c47a84f2451aa50b72600ff9b9239fe";
   @override
-  List<ModelSchema> modelSchemas = [IdeaMemo.schema, SearchTags.schema];
+  List<ModelSchema> modelSchemas = [IdeaMemo.schema, SearchHistory.schema];
   static final ModelProvider _instance = ModelProvider();
 
   static ModelProvider get instance => _instance;
@@ -38,9 +38,9 @@ class ModelProvider implements ModelProviderInterface {
           return IdeaMemo.classType;
         }
         break;
-      case "SearchTags":
+      case "SearchHistory":
         {
-          return SearchTags.classType;
+          return SearchHistory.classType;
         }
         break;
       default:

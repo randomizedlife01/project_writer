@@ -8,7 +8,6 @@ class FreeWriteRepository {
       id: id,
       memo: memo,
       tags: tags,
-      isVisible: true,
     );
 
     try {
