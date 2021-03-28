@@ -44,6 +44,7 @@ class SearchHistoryBloc implements BlocBase {
   void readSearchHistory() async {
     try {
       _searchHistoryList = await ideaAndTagRepository.histories();
+      print('1 : $_searchHistoryList');
       _searchHistoryController.add(_searchHistoryList);
     } catch (e) {
       return e;
@@ -79,6 +80,7 @@ class SearchHistoryBloc implements BlocBase {
     }
 
     _searchHistoryList = await Amplify.DataStore.query(SearchHistory.classType);
+    print('2 : $_searchHistoryList');
 
     if (_searchHistoryList.isNotEmpty) {
       if (_searchHistoryList.length > historyLength) {

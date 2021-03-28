@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/free_write_page.dart';
+import 'package:project_writer_v04/pages/document/timer_write_page/timer_write_page.dart';
 
 class IntroPage extends StatelessWidget {
   final VoidCallback shouldLogOut;
@@ -38,7 +39,14 @@ class IntroPage extends StatelessWidget {
               BasicMenuButton(
                 icon: FontAwesomeIcons.calendar,
                 buttonText: '내 삶의\n연표',
-                onPressed: () {},
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TimerWritePage(
+                      appBarTitle: '타이머 글쓰기',
+                    ),
+                  ),
+                ),
               ),
               BasicVerticalLine(),
               BasicMenuButton(

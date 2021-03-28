@@ -147,8 +147,8 @@ class SearchBar extends StatefulWidget {
 
 class _SearchBarState extends State<SearchBar> {
   String selectTerm;
-  int lastIdIndex;
-  int firstIdIndex;
+  int lastIdIndex = 0;
+  int firstIdIndex = 0;
 
   FloatingSearchBarController controller;
   SearchHistoryBloc _searchHistoryListBloc;
@@ -156,7 +156,6 @@ class _SearchBarState extends State<SearchBar> {
 
   //TODO: ++++++++++++++++++++++ 태그 기능이 아직 불완전함.++++++++++++++++++++++++++++//
   //1. 우선 태그 검색창에 타자를 칠 때 search history list에서 검색이 안 되고 있음.
-  //2. 태그 검색(search 키보드 버튼 / 혹은 돋보기 버튼 눌렀을 때 검색어 그대로 남아있게 하기.
 
   @override
   void initState() {
@@ -168,7 +167,6 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: setState 부분 전부 stream으로 변경!
     return StreamBuilder<SearchModel>(
         stream: _searchHistoryListBloc.searchCombineStream(),
         builder: (context, snapshot) {
@@ -189,7 +187,7 @@ class _SearchBarState extends State<SearchBar> {
               transition: SlideFadeFloatingSearchBarTransition(),
               physics: BouncingScrollPhysics(),
               title: Text(
-                selectTerm == null ? '태그 검색' : selectTerm,
+                selectTerm == null || selectTerm == '' ? '태그 검색' : selectTerm,
                 style: TextStyle(color: Color(0xFFBF6C84)),
               ),
               backdropColor: Colors.transparent,
@@ -203,6 +201,10 @@ class _SearchBarState extends State<SearchBar> {
                 _searchHistoryListBloc.filteredSearchTerms(filter: query);
               },
               onSubmitted: (query) {
+                firstIdIndex = int.parse((_searchHistoryListBloc.searchHistoryList.first.id).split('_').last);
+                print('3 : $firstIdIndex');
+                lastIdIndex = int.parse((_searchHistoryListBloc.searchHistoryList.last.id).split('_').last);
+                print('4 : $lastIdIndex');
                 _searchHistoryListBloc.addSearchTerms(
                     term: query,
                     firstId: 'history_' + (firstIdIndex).toString() ?? 'history_0',
@@ -212,7 +214,7 @@ class _SearchBarState extends State<SearchBar> {
                 if (query.isEmpty) {
                   _ideasBloc.readIdeas();
                 }
-                selectTerm = null;
+                //selectTerm = null;
                 controller.close();
               },
               builder: (context, transition) {
@@ -258,6 +260,7 @@ class _SearchBarState extends State<SearchBar> {
                                   (term) => ListTile(
                                     title: Text(
                                       term.searchHistory,
+                                      //term.searchHistory,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: Theme.of(context).textTheme.bodyText2.copyWith(color: Color(0xFF3b4445)),
