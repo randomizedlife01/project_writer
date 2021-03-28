@@ -5,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:project_writer_v04/models/IdeaMemo.dart';
+import 'package:project_writer_v04/models/SearchHistory.dart';
 import 'package:project_writer_v04/services/logic/bloc_base.dart';
 import 'package:project_writer_v04/services/logic/idea_bloc.dart';
 import 'package:project_writer_v04/services/logic/search_history_bloc.dart';
@@ -140,17 +141,12 @@ class BasicVerticalLine extends StatelessWidget {
 }
 
 //기본 서치 바
-class SearchBar extends StatefulWidget {
-  @override
-  _SearchBarState createState() => _SearchBarState();
-}
-
-class _SearchBarState extends State<SearchBar> {
-  String selectTerm;
+class SearchBar extends StatelessWidget {
+  String selectTerm = '';
   int lastIdIndex = 0;
   int firstIdIndex = 0;
 
-  FloatingSearchBarController controller;
+  FloatingSearchBarController controller = FloatingSearchBarController();
   SearchHistoryBloc _searchHistoryListBloc;
   IdeasBloc _ideasBloc;
 
@@ -158,17 +154,11 @@ class _SearchBarState extends State<SearchBar> {
   //1. 우선 태그 검색창에 타자를 칠 때 search history list에서 검색이 안 되고 있음.
 
   @override
-  void initState() {
-    super.initState();
-    controller = FloatingSearchBarController();
+  Widget build(BuildContext context) {
     _searchHistoryListBloc = BlocProvider.of<SearchHistoryBloc>(context);
     _ideasBloc = BlocProvider.of<IdeasBloc>(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<SearchModel>(
-        stream: _searchHistoryListBloc.searchCombineStream(),
+    return StreamBuilder<List<SearchHistory>>(
+        stream: _searchHistoryListBloc.searchHistoryStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             return FloatingSearchBar(
@@ -201,20 +191,9 @@ class _SearchBarState extends State<SearchBar> {
                 _searchHistoryListBloc.filteredSearchTerms(filter: query);
               },
               onSubmitted: (query) {
-                firstIdIndex = int.parse((_searchHistoryListBloc.searchHistoryList.first.id).split('_').last);
-                print('3 : $firstIdIndex');
-                lastIdIndex = int.parse((_searchHistoryListBloc.searchHistoryList.last.id).split('_').last);
-                print('4 : $lastIdIndex');
-                _searchHistoryListBloc.addSearchTerms(
-                    term: query,
-                    firstId: 'history_' + (firstIdIndex).toString() ?? 'history_0',
-                    lastId: lastIdIndex != null ? 'history_' + (lastIdIndex + 1).toString() : 'history_1');
+                _searchHistoryListBloc.addSearchTerms(term: query);
                 selectTerm = query;
-                _ideasBloc.readFilteredIdea(searchTags: query);
-                if (query.isEmpty) {
-                  _ideasBloc.readIdeas();
-                }
-                //selectTerm = null;
+                query.isEmpty ? _ideasBloc.readIdeas() : _ideasBloc.readFilteredIdea(searchTags: query);
                 controller.close();
               },
               builder: (context, transition) {
@@ -225,7 +204,7 @@ class _SearchBarState extends State<SearchBar> {
                     elevation: 0.0,
                     child: Builder(
                       builder: (context) {
-                        if (snapshot.data.filteredSearchHistoryList.isEmpty && controller.query.isEmpty) {
+                        if (snapshot.data.isEmpty && controller.query.isEmpty) {
                           return Container(
                             height: 56.0,
                             width: double.infinity,
@@ -237,7 +216,7 @@ class _SearchBarState extends State<SearchBar> {
                               style: Theme.of(context).textTheme.bodyText2,
                             ),
                           );
-                        } else if (snapshot.data.filteredSearchHistoryList.isEmpty) {
+                        } else if (snapshot.data.isEmpty) {
                           return ListTile(
                             title: Text(
                               controller.query,
@@ -245,17 +224,14 @@ class _SearchBarState extends State<SearchBar> {
                             ),
                             leading: const Icon(Icons.search),
                             onTap: () {
-                              _searchHistoryListBloc.addSearchTerms(
-                                  term: controller.query,
-                                  firstId: 'history_' + (firstIdIndex).toString(),
-                                  lastId: 'history_' + (lastIdIndex + 1).toString());
+                              _searchHistoryListBloc.addSearchTerms(term: controller.query);
                               selectTerm = controller.query;
                             },
                           );
                         } else {
                           return Column(
                             mainAxisSize: MainAxisSize.max,
-                            children: snapshot.data.filteredSearchHistoryList
+                            children: snapshot.data
                                 .map(
                                   (term) => ListTile(
                                     title: Text(
@@ -279,10 +255,8 @@ class _SearchBarState extends State<SearchBar> {
                                       },
                                     ),
                                     onTap: () {
-                                      setState(() {
-                                        _searchHistoryListBloc.putSearchTerms(term.searchHistory);
-                                        selectTerm = term.searchHistory;
-                                      });
+                                      _searchHistoryListBloc.putSearchTerms(term.searchHistory);
+                                      selectTerm = term.searchHistory;
                                       controller.close();
                                     },
                                   ),
@@ -302,12 +276,6 @@ class _SearchBarState extends State<SearchBar> {
             return Center(child: Text('데이터 로드 중\n오류가 발생하였습니다.'));
           }
         });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    controller.dispose();
   }
 }
 
