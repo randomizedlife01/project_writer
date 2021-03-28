@@ -147,195 +147,168 @@ class SearchBar extends StatefulWidget {
 }
 
 class _SearchBarState extends State<SearchBar> {
-  static const historyLength = 5;
-
-  List<String> _searchHistory = [];
-
-  //TODO: 필터 히스토리는 amplify에 5개 저장하고 초기화시 불러오기. 창 닫을시에 최신 리스트로 갱신 저장.
-  List<String> filteredSearchHistory;
-
   String selectTerm;
+  int lastIdIndex;
+  int firstIdIndex;
 
   FloatingSearchBarController controller;
-
   SearchHistoryBloc _searchHistoryListBloc;
+  IdeasBloc _ideasBloc;
 
   @override
   void initState() {
     super.initState();
     controller = FloatingSearchBarController();
     _searchHistoryListBloc = BlocProvider.of<SearchHistoryBloc>(context);
-    _searchHistoryListBloc.readSearchHistory();
-
-    filteredSearchHistory = filteredSearchTerms(filter: null);
-  }
-
-  List<String> filteredSearchTerms({@required String filter}) {
-    if (filter != null && filter.isNotEmpty) {
-      return _searchHistory.reversed.where((term) => term.startsWith(filter)).toList();
-    } else {
-      return _searchHistory.reversed.toList();
-    }
-  }
-
-  void addSearchTerms(String term) {
-    if (_searchHistory.contains(term)) {
-      putSearchTerms(term);
-      return;
-    }
-    _searchHistory.add(term);
-
-    if (_searchHistory.length > historyLength) {
-      _searchHistory.removeRange(0, _searchHistory.length - historyLength);
-    }
-
-    filteredSearchHistory = filteredSearchTerms(filter: null);
-  }
-
-  void deleteSearchTerms(String term) {
-    _searchHistory.removeWhere((element) => element == term);
-    filteredSearchHistory = filteredSearchTerms(filter: null);
-  }
-
-  void putSearchTerms(String term) {
-    deleteSearchTerms(term);
-    addSearchTerms(term);
+    _ideasBloc = BlocProvider.of<IdeasBloc>(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    final _ideaBloc = BlocProvider.of<IdeasBloc>(context);
     //TODO: setState 부분 전부 stream으로 변경!
-    return StreamBuilder<List<SearchHistory>>(
-        stream: _searchHistoryListBloc.searchHistoryStream,
+    return StreamBuilder<SearchModel>(
+        stream: _searchHistoryListBloc.searchCombineStream(),
         builder: (context, snapshot) {
-          return FloatingSearchBar(
-            shadowColor: Colors.transparent,
-            border: BorderSide(
-              color: Color(0xFFBF6C84),
-            ),
-            borderRadius: BorderRadius.circular(10.0),
-            automaticallyImplyBackButton: false,
-            iconColor: Color(0xFFBF6C84),
-            controller: controller,
-            backgroundColor: Color(0xFF3b4445),
-            body: SearchResultsListView(
-              searchTerm: selectTerm,
-            ),
-            transition: SlideFadeFloatingSearchBarTransition(),
-            physics: BouncingScrollPhysics(),
-            title: Text(
-              selectTerm == null ? '태그 검색' : selectTerm,
-              style: TextStyle(color: Color(0xFFBF6C84)),
-            ),
-            backdropColor: Colors.transparent,
-            queryStyle: TextStyle(color: Color(0xFFBF6C84), fontSize: 15.0, fontWeight: FontWeight.w400),
-            hint: '검색하실 태그를 입력해주세요',
-            hintStyle: TextStyle(color: Color(0xFFBF6C84), fontSize: 12.0),
-            actions: [
-              FloatingSearchBarAction.searchToClear(),
-            ],
-            onQueryChanged: (query) {
-              print('called');
-              setState(() {
-                filteredSearchHistory = filteredSearchTerms(filter: query);
-              });
-            },
-            onSubmitted: (query) {
-              //검색창 엔터 펑션
-              setState(() {
-                addSearchTerms(query);
+          if (snapshot.connectionState == ConnectionState.active) {
+            return FloatingSearchBar(
+              shadowColor: Colors.transparent,
+              border: BorderSide(
+                color: Color(0xFFBF6C84),
+              ),
+              borderRadius: BorderRadius.circular(10.0),
+              automaticallyImplyBackButton: false,
+              iconColor: Color(0xFFBF6C84),
+              controller: controller,
+              backgroundColor: Color(0xFF3b4445),
+              body: SearchResultsListView(
+                searchTerm: selectTerm,
+              ),
+              transition: SlideFadeFloatingSearchBarTransition(),
+              physics: BouncingScrollPhysics(),
+              title: Text(
+                selectTerm == null ? '태그 검색' : selectTerm,
+                style: TextStyle(color: Color(0xFFBF6C84)),
+              ),
+              backdropColor: Colors.transparent,
+              queryStyle: TextStyle(color: Color(0xFFBF6C84), fontSize: 15.0, fontWeight: FontWeight.w400),
+              hint: '검색하실 태그를 입력해주세요',
+              hintStyle: TextStyle(color: Color(0xFFBF6C84), fontSize: 12.0),
+              actions: [
+                FloatingSearchBarAction.searchToClear(),
+              ],
+              onQueryChanged: (query) {
+                print('called');
+                snapshot.data.filteredSearchHistoryList = _searchHistoryListBloc.filteredSearchTerms(filter: query);
+              },
+              onSubmitted: (query) {
+                //검색창 엔터 펑션
+                if (snapshot.data.searchHistoryList.isNotEmpty) {
+                  final lastIndexString = snapshot.data.searchHistoryList.last.id.split("_").last;
+                  lastIdIndex = int.parse(lastIndexString);
+                  final firstIndexString = snapshot.data.searchHistoryList.last.id.split("_").first;
+                  firstIdIndex = int.parse(firstIndexString);
+                }
+                _searchHistoryListBloc.addSearchTerms(
+                    term: query,
+                    firstId: 'history_' + (firstIdIndex).toString() ?? 'history_0',
+                    lastId: 'history_' + (lastIdIndex + 1).toString());
                 selectTerm = query;
-              });
-              _ideaBloc.readFilteredIdea(searchTags: query);
-              if (query.isEmpty) {
-                _ideaBloc.readIdeas();
-                setState(() {
-                  selectTerm = null;
-                  print(selectTerm);
-                });
-              }
-              controller.close();
-            },
-            builder: (context, transition) {
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: Material(
-                  color: Color(0xFFe4f9f5),
-                  elevation: 0.0,
-                  child: Builder(
-                    builder: (context) {
-                      if (filteredSearchHistory.isEmpty && controller.query.isEmpty) {
-                        return Container(
-                          height: 56.0,
-                          width: double.infinity,
-                          alignment: Alignment.center,
-                          child: Text(
-                            'start searching',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.bodyText2,
-                          ),
-                        );
-                      } else if (filteredSearchHistory.isEmpty) {
-                        return ListTile(
-                          title: Text(
-                            controller.query,
-                            style: Theme.of(context).textTheme.bodyText2,
-                          ),
-                          leading: const Icon(Icons.search),
-                          onTap: () {
-                            setState(() {
-                              addSearchTerms(controller.query);
+                _ideasBloc.readFilteredIdea(searchTags: query);
+                if (query.isEmpty) {
+                  _ideasBloc.readIdeas();
+                }
+                selectTerm = null;
+                print(selectTerm);
+                controller.close();
+              },
+              builder: (context, transition) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: Material(
+                    color: Color(0xFFe4f9f5),
+                    elevation: 0.0,
+                    child: Builder(
+                      builder: (context) {
+                        print(snapshot.connectionState);
+                        if (snapshot.data.filteredSearchHistoryList.isEmpty && controller.query.isEmpty) {
+                          return Container(
+                            height: 56.0,
+                            width: double.infinity,
+                            alignment: Alignment.center,
+                            child: Text(
+                              'start searching',
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodyText2,
+                            ),
+                          );
+                        } else if (snapshot.data.filteredSearchHistoryList.isEmpty) {
+                          return ListTile(
+                            title: Text(
+                              controller.query,
+                              style: Theme.of(context).textTheme.bodyText2,
+                            ),
+                            leading: const Icon(Icons.search),
+                            onTap: () {
+                              final lastIndexString = snapshot.data.searchHistoryList.last.id.split("_").last;
+                              final lastIdIndex = int.parse(lastIndexString);
+                              final firstIndexString = snapshot.data.searchHistoryList.last.id.split("_").first;
+                              final firstIdIndex = int.parse(firstIndexString);
+                              _searchHistoryListBloc.addSearchTerms(
+                                  term: controller.query,
+                                  firstId: 'history_' + (firstIdIndex).toString(),
+                                  lastId: 'history_' + (lastIdIndex + 1).toString());
                               selectTerm = controller.query;
-                            });
-                          },
-                        );
-                      } else {
-                        return Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: filteredSearchHistory
-                              .map(
-                                (term) => ListTile(
-                                  title: Text(
-                                    term,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: Theme.of(context).textTheme.bodyText2.copyWith(color: Color(0xFF3b4445)),
-                                  ),
-                                  leading: const Icon(
-                                    Icons.search,
-                                    color: Color(0xFF3b4445),
-                                  ),
-                                  trailing: IconButton(
-                                    icon: Icon(
-                                      Icons.clear,
+                            },
+                          );
+                        } else {
+                          return Column(
+                            mainAxisSize: MainAxisSize.max,
+                            children: snapshot.data.filteredSearchHistoryList
+                                .map(
+                                  (term) => ListTile(
+                                    title: Text(
+                                      term.searchHistory,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(context).textTheme.bodyText2.copyWith(color: Color(0xFF3b4445)),
+                                    ),
+                                    leading: const Icon(
+                                      Icons.search,
                                       color: Color(0xFF3b4445),
                                     ),
-                                    onPressed: () {
+                                    trailing: IconButton(
+                                      icon: Icon(
+                                        Icons.clear,
+                                        color: Color(0xFF3b4445),
+                                      ),
+                                      onPressed: () {
+                                        _searchHistoryListBloc.deleteSearchTerms(term.searchHistory);
+                                      },
+                                    ),
+                                    onTap: () {
                                       setState(() {
-                                        deleteSearchTerms(term);
+                                        _searchHistoryListBloc.putSearchTerms(term.searchHistory);
+                                        selectTerm = term.searchHistory;
                                       });
+                                      controller.close();
                                     },
                                   ),
-                                  onTap: () {
-                                    setState(() {
-                                      putSearchTerms(term);
-                                      selectTerm = term;
-                                    });
-                                    controller.close();
-                                  },
-                                ),
-                              )
-                              .toList(),
-                        );
-                      }
-                    },
+                                )
+                                .toList(),
+                          );
+                        }
+                      },
+                    ),
                   ),
-                ),
-              );
-            },
-          );
+                );
+              },
+            );
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else {
+            return Center(child: Text('데이터 로드 중\n오류가 발생하였습니다.'));
+          }
         });
   }
 
