@@ -17,7 +17,7 @@ class CommonCreatePop extends StatelessWidget {
   final _memoController = TextEditingController();
   final _tagsController = TextEditingController();
 
-  var _latIdNum = 0;
+  int _latIdNum = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -91,35 +91,5 @@ class CommonCreatePop extends StatelessWidget {
             ),
           );
         });
-  }
-}
-
-class _Chip extends StatelessWidget {
-  const _Chip({
-    @required this.label,
-    @required this.onDeleted,
-    @required this.index,
-  });
-
-  final String label;
-  final ValueChanged<int> onDeleted;
-  final int index;
-
-  @override
-  Widget build(BuildContext context) {
-    return Chip(
-      labelPadding: const EdgeInsets.only(left: 8.0),
-      label: Text(
-        label,
-        style: TextStyle(fontSize: 13.0),
-      ),
-      deleteIcon: const Icon(
-        Icons.close,
-        size: 12,
-      ),
-      onDeleted: () {
-        onDeleted(index);
-      },
-    );
   }
 }

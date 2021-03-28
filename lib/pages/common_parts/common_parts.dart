@@ -5,7 +5,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:project_writer_v04/models/IdeaMemo.dart';
-import 'package:project_writer_v04/models/SearchHistory.dart';
 import 'package:project_writer_v04/services/logic/bloc_base.dart';
 import 'package:project_writer_v04/services/logic/idea_bloc.dart';
 import 'package:project_writer_v04/services/logic/search_history_bloc.dart';
@@ -155,6 +154,10 @@ class _SearchBarState extends State<SearchBar> {
   SearchHistoryBloc _searchHistoryListBloc;
   IdeasBloc _ideasBloc;
 
+  //TODO: ++++++++++++++++++++++ 태그 기능이 아직 불완전함.++++++++++++++++++++++++++++//
+  //1. 우선 태그 검색창에 타자를 칠 때 search history list에서 검색이 안 되고 있음.
+  //2. 태그 검색(search 키보드 버튼 / 혹은 돋보기 버튼 눌렀을 때 검색어 그대로 남아있게 하기.
+
   @override
   void initState() {
     super.initState();
@@ -197,28 +200,19 @@ class _SearchBarState extends State<SearchBar> {
                 FloatingSearchBarAction.searchToClear(),
               ],
               onQueryChanged: (query) {
-                print('called');
-                snapshot.data.filteredSearchHistoryList = _searchHistoryListBloc.filteredSearchTerms(filter: query);
+                _searchHistoryListBloc.filteredSearchTerms(filter: query);
               },
               onSubmitted: (query) {
-                //검색창 엔터 펑션
-                if (snapshot.data.searchHistoryList.isNotEmpty) {
-                  final lastIndexString = snapshot.data.searchHistoryList.last.id.split("_").last;
-                  lastIdIndex = int.parse(lastIndexString);
-                  final firstIndexString = snapshot.data.searchHistoryList.last.id.split("_").first;
-                  firstIdIndex = int.parse(firstIndexString);
-                }
                 _searchHistoryListBloc.addSearchTerms(
                     term: query,
                     firstId: 'history_' + (firstIdIndex).toString() ?? 'history_0',
-                    lastId: 'history_' + (lastIdIndex + 1).toString());
+                    lastId: lastIdIndex != null ? 'history_' + (lastIdIndex + 1).toString() : 'history_1');
                 selectTerm = query;
                 _ideasBloc.readFilteredIdea(searchTags: query);
                 if (query.isEmpty) {
                   _ideasBloc.readIdeas();
                 }
                 selectTerm = null;
-                print(selectTerm);
                 controller.close();
               },
               builder: (context, transition) {
@@ -229,7 +223,6 @@ class _SearchBarState extends State<SearchBar> {
                     elevation: 0.0,
                     child: Builder(
                       builder: (context) {
-                        print(snapshot.connectionState);
                         if (snapshot.data.filteredSearchHistoryList.isEmpty && controller.query.isEmpty) {
                           return Container(
                             height: 56.0,
@@ -250,10 +243,6 @@ class _SearchBarState extends State<SearchBar> {
                             ),
                             leading: const Icon(Icons.search),
                             onTap: () {
-                              final lastIndexString = snapshot.data.searchHistoryList.last.id.split("_").last;
-                              final lastIdIndex = int.parse(lastIndexString);
-                              final firstIndexString = snapshot.data.searchHistoryList.last.id.split("_").first;
-                              final firstIdIndex = int.parse(firstIndexString);
                               _searchHistoryListBloc.addSearchTerms(
                                   term: controller.query,
                                   firstId: 'history_' + (firstIdIndex).toString(),

@@ -31,11 +31,10 @@ class SearchHistoryBloc implements BlocBase {
 
   SearchHistoryBloc() {
     readSearchHistory();
-    _filteredSearchHistory = filteredSearchTerms(filter: null);
+    filteredSearchTerms(filter: null);
   }
 
   Stream<SearchModel> searchCombineStream() {
-    //readIdeaAndTags();
     return Rx.combineLatest2(searchHistoryStream, filteredSearchHistoryStream,
         (List<SearchHistory> searchHistoryList, List<SearchHistory> filteredSearchHistoryList) {
       return SearchModel(searchHistoryList, filteredSearchHistoryList);
@@ -51,17 +50,21 @@ class SearchHistoryBloc implements BlocBase {
     }
   }
 
-  List<SearchHistory> filteredSearchTerms({@required String filter}) {
+  void filteredSearchTerms({@required String filter}) {
     if (filter != null && filter.isNotEmpty) {
-      return _filteredSearchHistory.reversed.where((term) => term.id.startsWith(filter)).toList();
+      _searchHistoryList.reversed.where((term) {
+        return term.id.startsWith(filter);
+      }).toList();
     } else {
-      return _filteredSearchHistory.reversed.toList();
+      _searchHistoryList.reversed.toList();
     }
+    _searchHistoryController.add(_searchHistoryList);
   }
 
   void deleteSearchTerms(String term) {
     _searchHistoryList.removeWhere((element) => element.id == term);
-    _filteredSearchHistory = filteredSearchTerms(filter: null);
+    _filteredSearchHistory.removeWhere((element) => element.id == term);
+    //_filteredSearchHistory = filteredSearchTerms(filter: null);
   }
 
   void putSearchTerms(String term) {
@@ -77,16 +80,22 @@ class SearchHistoryBloc implements BlocBase {
 
     _searchHistoryList = await Amplify.DataStore.query(SearchHistory.classType);
 
-    if (_searchHistoryList.length > historyLength) {
-      final firstHistory = await ideaAndTagRepository.readByIdHistory(id: firstId);
-      await Amplify.DataStore.delete(firstHistory);
-      _searchHistoryList.removeRange(0, _searchHistoryList.length - historyLength);
+    if (_searchHistoryList.isNotEmpty) {
+      if (_searchHistoryList.length > historyLength) {
+        final firstHistory = await ideaAndTagRepository.readByIdHistory(id: firstId);
+        await Amplify.DataStore.delete(firstHistory);
+        _searchHistoryList.removeRange(0, _searchHistoryList.length - historyLength);
+      }
+      final newHistory = await ideaAndTagRepository.createSearch(id: lastId, searchText: term);
+      _searchHistoryList.add(newHistory);
+    } else {
+      final newHistory = await ideaAndTagRepository.createSearch(id: 'history_0', searchText: term);
+      _searchHistoryList.add(newHistory);
     }
 
-    final newHistory = await ideaAndTagRepository.createSearch(id: lastId, searchText: term);
-    _searchHistoryList.add(newHistory);
+    //filteredSearchTerms(filter: null);
 
-    _filteredSearchHistory = filteredSearchTerms(filter: null);
+    _filteredSearchHistoryController.add(_filteredSearchHistory);
 
     _searchHistoryController.add(_searchHistoryList);
   }
