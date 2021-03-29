@@ -148,6 +148,7 @@ class SearchBar extends StatelessWidget {
   NewCombineBloc _searchHistoryListBloc;
   //IdeasBloc _ideasBloc;
 
+  //TODO: Bloc 작성은 끝났음. 태그 검색창 및 태그 리스트 진행.
   @override
   Widget build(BuildContext context) {
     _searchHistoryListBloc = BlocProvider.of<NewCombineBloc>(context);
@@ -282,7 +283,7 @@ class SearchResultsListView extends StatelessWidget {
 
   SearchResultsListView({Key key, this.searchTerm, this.newCombineBloc}) : super(key: key);
 
-  //TODO: 계속 루프걸림. 해결할 것. 그리고 RxDart로 다시 수정했음.
+  //TODO: Bloc 작성은 끝났음. 여기는 리스트 불러오고 필터 적용하는 곳.
   @override
   Widget build(BuildContext context) {
     final fsb = FloatingSearchBar.of(context);
@@ -297,7 +298,7 @@ class SearchResultsListView extends StatelessWidget {
                 padding: EdgeInsets.only(top: fsb.value.height + fsb.value.margins.vertical),
                 shrinkWrap: true,
                 physics: ScrollPhysics(),
-                itemCount: snapshot.data.ideamemo.length,
+                itemCount: snapshot.data.ideaMemo.length,
                 separatorBuilder: (context, index) {
                   return Divider(
                     height: 50.0,
@@ -307,7 +308,7 @@ class SearchResultsListView extends StatelessWidget {
                   );
                 },
                 itemBuilder: (context, toIndex) {
-                  final tags = snapshot.data.ideamemo[toIndex].tags.split(" ");
+                  final tags = snapshot.data.ideaMemo[toIndex].tags.split(" ");
                   return Slidable(
                     actionPane: SlidableStrechActionPane(),
                     enabled: true,
@@ -323,14 +324,14 @@ class SearchResultsListView extends StatelessWidget {
                         color: Color(0xFFe23e57),
                         icon: Icons.delete,
                         onTap: () {
-                          BlocProvider.of<IdeasBloc>(context)..deleteIdeaAndTags(id: snapshot.data.ideamemo[toIndex].id);
+                          BlocProvider.of<IdeasBloc>(context)..deleteIdeaAndTags(id: snapshot.data.ideaMemo[toIndex].id);
                         },
                       ),
                     ],
                     //RxDart 데이터 리스트타일
                     child: ListTile(
                       title: Text(
-                        snapshot.hasData ? snapshot.data.ideamemo[toIndex].memo : '',
+                        snapshot.hasData ? snapshot.data.ideaMemo[toIndex].memo : '',
                         style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w400),
                       ),
                       //아이디어 메모당 태그 리스트(가로)

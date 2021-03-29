@@ -1,11 +1,35 @@
 import 'package:amplify_flutter/amplify.dart';
+import 'package:flutter/material.dart';
 import 'package:project_writer_v04/models/IdeaMemo.dart';
 import 'package:project_writer_v04/models/ModelProvider.dart';
 
-class FreeWriteRepository {
-  Future<IdeaMemo> createIdea({String memo, String tags, String id}) async {
+class NewCombineRepository {
+  final ideaIdFirst = 'idea_';
+  final tagIdFirst = 'history_';
+  final historyLength = 4;
+
+  Future<List<IdeaMemo>> readIdeas({List<IdeaMemo> ideaMemo}) async {
+    try {
+      ideaMemo = await Amplify.DataStore.query(IdeaMemo.classType);
+      return ideaMemo;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<List<SearchHistory>> readTags({String id, List<SearchHistory> searchHistory}) async {
+    try {
+      searchHistory = await Amplify.DataStore.query(SearchHistory.classType);
+      print(searchHistory);
+      return searchHistory;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<IdeaMemo> createIdea({String memo, String tags, int index}) async {
     final ideaObject = IdeaMemo(
-      id: id,
+      id: ideaIdFirst + index.toString(),
       memo: memo,
       tags: tags,
     );
@@ -27,12 +51,12 @@ class FreeWriteRepository {
     }
   }
 
-  Future<IdeaMemo> readByIdIdea({String id}) async {
+  Future<IdeaMemo> readByIdIdea({int index}) async {
     try {
       final ideaObjects = await Amplify.DataStore.query(
         IdeaMemo.classType,
         where: IdeaMemo.ID.eq(
-          id,
+          ideaIdFirst + index.toString(),
         ),
       );
 
@@ -50,18 +74,18 @@ class FreeWriteRepository {
     }
   }
 
-  Future<IdeaMemo> update({String id}) async {
-    final ideaObject = await readByIdIdea(id: id);
-    final updateIdea = ideaObject.copyWith(memo: 'new DocName');
+  Future<IdeaMemo> update({int index, String memo}) async {
+    final ideaObject = await readByIdIdea(index: index);
+    final updateIdea = ideaObject.copyWith(memo: memo);
 
     await Amplify.DataStore.save(updateIdea);
 
     return updateIdea;
   }
 
-  Future<IdeaMemo> deleteIdea({String id}) async {
+  Future<IdeaMemo> deleteIdea({int index}) async {
     try {
-      final ideaObject = await readByIdIdea(id: id);
+      final ideaObject = await readByIdIdea(index: index);
       await Amplify.DataStore.delete(ideaObject);
 
       return ideaObject;
@@ -70,9 +94,9 @@ class FreeWriteRepository {
     }
   }
 
-  Future<SearchHistory> createTag({String tags, String id}) async {
+  Future<SearchHistory> createTag({String tags, int index}) async {
     final tagObject = SearchHistory(
-      id: id,
+      id: tagIdFirst + index.toString(),
       searchHistory: tags,
     );
 
@@ -93,12 +117,12 @@ class FreeWriteRepository {
     }
   }
 
-  Future<SearchHistory> readByIdSearchTag({String id}) async {
+  Future<SearchHistory> readByIdSearchTag({int index}) async {
     try {
       final tagsObjects = await Amplify.DataStore.query(
         SearchHistory.classType,
         where: SearchHistory.ID.eq(
-          id,
+          tagIdFirst + index.toString(),
         ),
       );
 
@@ -116,8 +140,8 @@ class FreeWriteRepository {
     }
   }
 
-  Future<SearchHistory> updateTag({String id, String tag}) async {
-    final tagObject = await readByIdSearchTag(id: id);
+  Future<SearchHistory> updateTag({int index, String tag}) async {
+    final tagObject = await readByIdSearchTag(index: index);
     final updateTag = tagObject.copyWith(searchHistory: tag);
 
     await Amplify.DataStore.save(updateTag);
@@ -125,9 +149,9 @@ class FreeWriteRepository {
     return updateTag;
   }
 
-  Future<SearchHistory> deleteTag({String id}) async {
+  Future<SearchHistory> deleteTag({int index}) async {
     try {
-      final tagObject = await readByIdSearchTag(id: id);
+      final tagObject = await readByIdSearchTag(index: index);
       await Amplify.DataStore.delete(tagObject);
 
       return tagObject;

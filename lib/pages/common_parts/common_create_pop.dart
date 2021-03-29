@@ -3,6 +3,7 @@ import 'package:project_writer_v04/models/IdeaMemo.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/services/logic/bloc_base.dart';
 import 'package:project_writer_v04/services/logic/idea_bloc.dart';
+import 'package:project_writer_v04/services/logic/new_combine_bloc.dart';
 
 class CommonCreatePop extends StatelessWidget {
   final String descLabelText;
@@ -21,9 +22,9 @@ class CommonCreatePop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _countBloc = BlocProvider.of<IdeasBloc>(context);
-    return StreamBuilder<List<IdeaMemo>>(
-        stream: _countBloc.ideaStream,
+    var _countBloc = BlocProvider.of<NewCombineBloc>(context);
+    return StreamBuilder<NewCombineModel>(
+        stream: _countBloc.combineStream(),
         builder: (context, snapshot) {
           return AlertDialog(
             content: SingleChildScrollView(
@@ -62,17 +63,17 @@ class CommonCreatePop extends StatelessWidget {
                                       if (_formKey.currentState.validate()) {
                                         _formKey.currentState.save();
 
-                                        if (snapshot.data.isNotEmpty) {
-                                          final lastId = snapshot.data.last.id;
+                                        if (snapshot.data.ideaMemo.isNotEmpty) {
+                                          final lastId = snapshot.data.ideaMemo.last.id;
                                           final number = lastId.split("_").last;
                                           _latIdNum = int.parse(number);
                                         }
 
-                                        _countBloc.addIdea(
-                                          memo: _memoController.text ?? '',
-                                          tags: _tagsController.text ?? '',
-                                          id: 'idea_' + (_latIdNum + 1).toString(),
-                                        );
+                                        // _countBloc.addIdea(
+                                        //   memo: _memoController.text ?? '',
+                                        //   tags: _tagsController.text ?? '',
+                                        //   id: 'idea_' + (_latIdNum + 1).toString(),
+                                        // );
 
                                         Navigator.pop(context);
                                       }
