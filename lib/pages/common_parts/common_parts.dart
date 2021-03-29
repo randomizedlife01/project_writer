@@ -4,11 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:project_writer_v04/models/IdeaMemo.dart';
-import 'package:project_writer_v04/models/SearchHistory.dart';
 import 'package:project_writer_v04/services/logic/bloc_base.dart';
 import 'package:project_writer_v04/services/logic/idea_bloc.dart';
-import 'package:project_writer_v04/services/logic/search_history_bloc.dart';
+import 'package:project_writer_v04/services/logic/new_combine_bloc.dart';
 
 //기본 메뉴 버튼
 class BasicMenuButton extends StatelessWidget {
@@ -147,18 +145,15 @@ class SearchBar extends StatelessWidget {
   int firstIdIndex = 0;
 
   FloatingSearchBarController controller = FloatingSearchBarController();
-  SearchHistoryBloc _searchHistoryListBloc;
-  IdeasBloc _ideasBloc;
-
-  //TODO: ++++++++++++++++++++++ 태그 기능이 아직 불완전함.++++++++++++++++++++++++++++//
-  //1. 우선 태그 검색창에 타자를 칠 때 search history list에서 검색이 안 되고 있음.
+  NewCombineBloc _searchHistoryListBloc;
+  //IdeasBloc _ideasBloc;
 
   @override
   Widget build(BuildContext context) {
-    _searchHistoryListBloc = BlocProvider.of<SearchHistoryBloc>(context);
-    _ideasBloc = BlocProvider.of<IdeasBloc>(context);
-    return StreamBuilder<List<SearchHistory>>(
-        stream: _searchHistoryListBloc.searchHistoryStream,
+    _searchHistoryListBloc = BlocProvider.of<NewCombineBloc>(context);
+    //_ideasBloc = BlocProvider.of<IdeasBloc>(context);
+    return StreamBuilder<NewCombineModel>(
+        stream: _searchHistoryListBloc.combineStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             return FloatingSearchBar(
@@ -173,6 +168,7 @@ class SearchBar extends StatelessWidget {
               backgroundColor: Color(0xFF3b4445),
               body: SearchResultsListView(
                 searchTerm: selectTerm,
+                newCombineBloc: BlocProvider.of<NewCombineBloc>(context),
               ),
               transition: SlideFadeFloatingSearchBarTransition(),
               physics: BouncingScrollPhysics(),
@@ -188,13 +184,13 @@ class SearchBar extends StatelessWidget {
                 FloatingSearchBarAction.searchToClear(),
               ],
               onQueryChanged: (query) {
-                _searchHistoryListBloc.filteredSearchTerms(filter: query);
+                //_searchHistoryListBloc.filteredSearchTerms(filter: query);
               },
               onSubmitted: (query) {
-                _searchHistoryListBloc.addSearchTerms(term: query);
-                selectTerm = query;
-                query.isEmpty ? _ideasBloc.readIdeas() : _ideasBloc.readFilteredIdea(searchTags: query);
-                controller.close();
+                // _searchHistoryListBloc.addSearchTerms(term: query);
+                // selectTerm = query;
+                // query.isEmpty ? _ideasBloc.readIdeas() : _ideasBloc.readFilteredIdea(searchTags: query);
+                // controller.close();
               },
               builder: (context, transition) {
                 return ClipRRect(
@@ -204,7 +200,7 @@ class SearchBar extends StatelessWidget {
                     elevation: 0.0,
                     child: Builder(
                       builder: (context) {
-                        if (snapshot.data.isEmpty && controller.query.isEmpty) {
+                        if (snapshot.data.searchHistory.isEmpty && controller.query.isEmpty) {
                           return Container(
                             height: 56.0,
                             width: double.infinity,
@@ -216,7 +212,7 @@ class SearchBar extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodyText2,
                             ),
                           );
-                        } else if (snapshot.data.isEmpty) {
+                        } else if (snapshot.data.searchHistory.isEmpty) {
                           return ListTile(
                             title: Text(
                               controller.query,
@@ -224,14 +220,14 @@ class SearchBar extends StatelessWidget {
                             ),
                             leading: const Icon(Icons.search),
                             onTap: () {
-                              _searchHistoryListBloc.addSearchTerms(term: controller.query);
+                              //_searchHistoryListBloc.addSearchTerms(term: controller.query);
                               selectTerm = controller.query;
                             },
                           );
                         } else {
                           return Column(
                             mainAxisSize: MainAxisSize.max,
-                            children: snapshot.data
+                            children: snapshot.data.searchHistory
                                 .map(
                                   (term) => ListTile(
                                     title: Text(
@@ -251,11 +247,11 @@ class SearchBar extends StatelessWidget {
                                         color: Color(0xFF3b4445),
                                       ),
                                       onPressed: () {
-                                        _searchHistoryListBloc.deleteSearchTerms(term.searchHistory);
+                                        //_searchHistoryListBloc.deleteSearchTerms(term.searchHistory);
                                       },
                                     ),
                                     onTap: () {
-                                      _searchHistoryListBloc.putSearchTerms(term.searchHistory);
+                                      //_searchHistoryListBloc.putSearchTerms(term.searchHistory);
                                       selectTerm = term.searchHistory;
                                       controller.close();
                                     },
@@ -282,16 +278,17 @@ class SearchBar extends StatelessWidget {
 //검색 결과 리스트 뷰
 class SearchResultsListView extends StatelessWidget {
   final String searchTerm;
+  final NewCombineBloc newCombineBloc;
 
-  SearchResultsListView({Key key, this.searchTerm}) : super(key: key);
+  SearchResultsListView({Key key, this.searchTerm, this.newCombineBloc}) : super(key: key);
 
+  //TODO: 계속 루프걸림. 해결할 것. 그리고 RxDart로 다시 수정했음.
   @override
   Widget build(BuildContext context) {
-    final _countBloc = BlocProvider.of<IdeasBloc>(context);
     final fsb = FloatingSearchBar.of(context);
     //RxDart로 리스트 데이터 받아오는 부분. 검색시 리스트뷰 빌드 다시 하기.
-    return StreamBuilder<List<IdeaMemo>>(
-        stream: _countBloc.ideaStream,
+    return StreamBuilder<NewCombineModel>(
+        stream: newCombineBloc.combineStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
             return Padding(
@@ -300,7 +297,7 @@ class SearchResultsListView extends StatelessWidget {
                 padding: EdgeInsets.only(top: fsb.value.height + fsb.value.margins.vertical),
                 shrinkWrap: true,
                 physics: ScrollPhysics(),
-                itemCount: snapshot.data.length,
+                itemCount: snapshot.data.ideamemo.length,
                 separatorBuilder: (context, index) {
                   return Divider(
                     height: 50.0,
@@ -310,7 +307,7 @@ class SearchResultsListView extends StatelessWidget {
                   );
                 },
                 itemBuilder: (context, toIndex) {
-                  final tags = snapshot.data[toIndex].tags.split(" ");
+                  final tags = snapshot.data.ideamemo[toIndex].tags.split(" ");
                   return Slidable(
                     actionPane: SlidableStrechActionPane(),
                     enabled: true,
@@ -326,14 +323,14 @@ class SearchResultsListView extends StatelessWidget {
                         color: Color(0xFFe23e57),
                         icon: Icons.delete,
                         onTap: () {
-                          BlocProvider.of<IdeasBloc>(context)..deleteIdeaAndTags(id: snapshot.data[toIndex].id);
+                          BlocProvider.of<IdeasBloc>(context)..deleteIdeaAndTags(id: snapshot.data.ideamemo[toIndex].id);
                         },
                       ),
                     ],
                     //RxDart 데이터 리스트타일
                     child: ListTile(
                       title: Text(
-                        snapshot.hasData ? snapshot.data[toIndex].memo : '',
+                        snapshot.hasData ? snapshot.data.ideamemo[toIndex].memo : '',
                         style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w400),
                       ),
                       //아이디어 메모당 태그 리스트(가로)

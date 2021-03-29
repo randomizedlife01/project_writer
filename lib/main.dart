@@ -9,8 +9,7 @@ import 'package:project_writer_v04/models/ModelProvider.dart';
 import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
 import 'package:project_writer_v04/services/auth/auth_bloc.dart';
 import 'package:project_writer_v04/services/logic/bloc_base.dart';
-import 'package:project_writer_v04/services/logic/idea_bloc.dart';
-import 'package:project_writer_v04/services/logic/search_history_bloc.dart';
+import 'package:project_writer_v04/services/logic/new_combine_bloc.dart';
 import 'amplifyconfiguration.dart';
 import 'pages/auth_pages/login_page.dart';
 import 'pages/auth_pages/signup_page.dart';
@@ -61,51 +60,48 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return KeyboardVisibilityProvider(
-      child: BlocProvider<IdeasBloc>(
-        bloc: IdeasBloc(),
-        child: BlocProvider<SearchHistoryBloc>(
-          bloc: SearchHistoryBloc(),
-          child: MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Project Writer v04',
-            theme: StoryThemeData.data,
-            home: StreamBuilder<AuthState>(
-                stream: _authService.authStateController.stream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Navigator(
-                      pages: [
-                        if (snapshot.data.authFlowStatus == AuthFlowStatus.login)
-                          MaterialPage(
-                              child: LoginPage(
-                            shouldShowSignUp: _authService.showSignUp,
-                            didProvideCredentials: _authService.loginWithCredentials,
-                          )),
-                        if (snapshot.data.authFlowStatus == AuthFlowStatus.signUp)
-                          MaterialPage(
-                              child: SignUpPage(
-                            shouldShowLogin: _authService.showLogin,
-                            didProvideCredentials: _authService.signUpWithCredentials,
-                          )),
-                        if (snapshot.data.authFlowStatus == AuthFlowStatus.verification)
-                          MaterialPage(child: VerificationPage(didProvideVerificationCode: _authService.verifyCode)),
-                        if (snapshot.data.authFlowStatus == AuthFlowStatus.session)
-                          MaterialPage(
-                            child: IntroPage(
-                              shouldLogOut: _authService.logOut,
-                            ),
+      child: BlocProvider<NewCombineBloc>(
+        bloc: NewCombineBloc(),
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Project Writer v04',
+          theme: StoryThemeData.data,
+          home: StreamBuilder<AuthState>(
+              stream: _authService.authStateController.stream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Navigator(
+                    pages: [
+                      if (snapshot.data.authFlowStatus == AuthFlowStatus.login)
+                        MaterialPage(
+                            child: LoginPage(
+                          shouldShowSignUp: _authService.showSignUp,
+                          didProvideCredentials: _authService.loginWithCredentials,
+                        )),
+                      if (snapshot.data.authFlowStatus == AuthFlowStatus.signUp)
+                        MaterialPage(
+                            child: SignUpPage(
+                          shouldShowLogin: _authService.showLogin,
+                          didProvideCredentials: _authService.signUpWithCredentials,
+                        )),
+                      if (snapshot.data.authFlowStatus == AuthFlowStatus.verification)
+                        MaterialPage(child: VerificationPage(didProvideVerificationCode: _authService.verifyCode)),
+                      if (snapshot.data.authFlowStatus == AuthFlowStatus.session)
+                        MaterialPage(
+                          child: IntroPage(
+                            shouldLogOut: _authService.logOut,
                           ),
-                      ],
-                      onPopPage: (route, result) => route.didPop(result),
-                    );
-                  } else {
-                    return Container(
-                      alignment: Alignment.center,
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                }),
-          ),
+                        ),
+                    ],
+                    onPopPage: (route, result) => route.didPop(result),
+                  );
+                } else {
+                  return Container(
+                    alignment: Alignment.center,
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }),
         ),
       ),
     );
