@@ -1,29 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:project_writer_v04/models/IdeaMemo.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/services/logic/bloc_base.dart';
-import 'package:project_writer_v04/services/logic/idea_bloc.dart';
-import 'package:project_writer_v04/services/logic/new_combine_bloc.dart';
+import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_bloc.dart';
 
-class CommonCreatePop extends StatelessWidget {
+class FreeWriteCreatePop extends StatelessWidget {
   final String descLabelText;
   final String nameLabelText;
   final String descHintText;
   final String nameHintText;
   final int index;
 
-  CommonCreatePop({Key key, this.descLabelText, this.nameLabelText, this.descHintText, this.nameHintText, this.index}) : super(key: key);
+  FreeWriteCreatePop({Key key, this.descLabelText, this.nameLabelText, this.descHintText, this.nameHintText, this.index}) : super(key: key);
 
   final _formKey = GlobalKey<FormState>();
   final _memoController = TextEditingController();
   final _tagsController = TextEditingController();
 
-  int _latIdNum = 0;
+  int _lastIdeaIdNum = 0;
+  int _lastSearchNum = 0;
 
   @override
   Widget build(BuildContext context) {
-    var _countBloc = BlocProvider.of<NewCombineBloc>(context);
-    return StreamBuilder<NewCombineModel>(
+    var _countBloc = BlocProvider.of<FreeWriteBloc>(context);
+    return StreamBuilder<FreeWriteModel>(
         stream: _countBloc.combineStream(),
         builder: (context, snapshot) {
           return AlertDialog(
@@ -66,14 +65,16 @@ class CommonCreatePop extends StatelessWidget {
                                         if (snapshot.data.ideaMemo.isNotEmpty) {
                                           final lastId = snapshot.data.ideaMemo.last.id;
                                           final number = lastId.split("_").last;
-                                          _latIdNum = int.parse(number);
+                                          _lastIdeaIdNum = int.parse(number);
                                         }
 
-                                        // _countBloc.addIdea(
-                                        //   memo: _memoController.text ?? '',
-                                        //   tags: _tagsController.text ?? '',
-                                        //   id: 'idea_' + (_latIdNum + 1).toString(),
-                                        // );
+                                        _countBloc.createIdea(
+                                          memo: _memoController.text ?? '',
+                                          tag: _tagsController.text ?? '',
+                                          id: 'idea_' + (_lastIdeaIdNum + 1).toString(),
+                                        );
+
+                                        _countBloc.createTag(tag: _tagsController.text);
 
                                         Navigator.pop(context);
                                       }

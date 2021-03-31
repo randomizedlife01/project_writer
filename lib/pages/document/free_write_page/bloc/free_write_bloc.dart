@@ -1,19 +1,18 @@
 import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/material.dart';
 import 'package:project_writer_v04/models/ModelProvider.dart';
-import 'package:project_writer_v04/services/logic/new_combine_repository.dart';
-import 'package:project_writer_v04/services/logic/search_history_repository.dart';
+import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_repository.dart';
 import 'package:rxdart/rxdart.dart';
-import 'bloc_base.dart';
+import '../../../../services/logic/bloc_base.dart';
 
-class NewCombineModel {
+class FreeWriteModel {
   List<IdeaMemo> ideaMemo;
   List<SearchHistory> searchHistory;
 
-  NewCombineModel(this.ideaMemo, this.searchHistory);
+  FreeWriteModel(this.ideaMemo, this.searchHistory);
 }
 
-class NewCombineBloc implements BlocBase {
+class FreeWriteBloc implements BlocBase {
   final newCombineRepository = NewCombineRepository();
   List<IdeaMemo> _ideaMemo;
 
@@ -23,7 +22,6 @@ class NewCombineBloc implements BlocBase {
 
   Stream<List<IdeaMemo>> get ideaStream => _ideaController.stream;
 
-  final tagRepository = SearchHistoryRepository();
   final historyLength = 4;
 
   List<SearchHistory> _searchHistoryList = [];
@@ -34,14 +32,14 @@ class NewCombineBloc implements BlocBase {
 
   Stream<List<SearchHistory>> get searchHistoryStream => _searchHistoryController.stream;
 
-  NewCombineBloc() {
+  FreeWriteBloc() {
     readIdeaAndTags();
   }
 
-  Stream<NewCombineModel> combineStream() {
+  Stream<FreeWriteModel> combineStream() {
     return Rx.combineLatest2(ideaStream, searchHistoryStream, (List<IdeaMemo> ideas, List<SearchHistory> tags) {
       //print('idea : $ideas, tag : $tags');
-      return NewCombineModel(ideas, tags);
+      return FreeWriteModel(ideas, tags);
     });
   }
 
@@ -50,6 +48,8 @@ class NewCombineBloc implements BlocBase {
       _ideaMemo = await newCombineRepository.readIdeas();
       _searchHistoryList = await newCombineRepository.readTags();
 
+      print('search history : $_searchHistoryList');
+
       _ideaController.add(_ideaMemo);
       _searchHistoryController.add(_searchHistoryList);
     } catch (e) {
@@ -57,9 +57,18 @@ class NewCombineBloc implements BlocBase {
     }
   }
 
-  void createIdea({int index, String memo, String tag}) async {
+  void filteredIdeaAndTags({@required String filter}) async {
     try {
-      final data = await newCombineRepository.createIdea(index: index, memo: memo, tags: tag);
+      _ideaMemo = _ideaMemo.where((element) => element.tags.contains(filter)).toList();
+      _ideaController.add(_ideaMemo);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  void createIdea({String id, String memo, String tag}) async {
+    try {
+      final data = await newCombineRepository.createIdea(id: id, memo: memo, tags: tag);
       _ideaMemo.add(data);
 
       _ideaController.add(_ideaMemo);
@@ -68,9 +77,15 @@ class NewCombineBloc implements BlocBase {
     }
   }
 
-  void updateIdea({int index, String memo}) async {
+  void updateIdea({String id, String memo, int index}) async {
     try {
-      final data = await newCombineRepository.update(index: index, memo: memo);
+      if (id.isNotEmpty) {
+        final lastId = _ideaMemo.last.id;
+        final number = lastId.split("_").last;
+        final _latIdNum = int.parse(number);
+      }
+
+      final data = await newCombineRepository.update(id: id, memo: memo);
       _ideaMemo[index] = data;
 
       _ideaController.add(_ideaMemo);
@@ -79,9 +94,9 @@ class NewCombineBloc implements BlocBase {
     }
   }
 
-  void deleteIdea({int index}) async {
+  void deleteIdea({String id}) async {
     try {
-      final data = await newCombineRepository.deleteIdea(index: index);
+      final data = await newCombineRepository.deleteIdea(id: id);
       _ideaMemo.remove(data);
 
       _ideaController.add(_ideaMemo);
@@ -90,20 +105,45 @@ class NewCombineBloc implements BlocBase {
     }
   }
 
-  void createTag({int index, String tag}) async {
+  void createTag({String tag}) async {
     try {
-      final data = await newCombineRepository.createTag(index: index, tags: tag);
-      _searchHistoryList.add(data);
+      _searchHistoryList = await Amplify.DataStore.query(SearchHistory.classType);
 
-      _searchHistoryController.add(_searchHistoryList);
+      final tagData = tag.split(' ');
+
+      print('tag data : $tagData');
+
+      int firstData = 0;
+
+      tagData.forEach((history) async {
+        if (tagData.isNotEmpty && _searchHistoryList.isNotEmpty) {
+          final lastData = _searchHistoryList.last.id;
+          print('last data : $lastData');
+          final lastIndex = lastData.split('_').last;
+          print('last index : $lastIndex');
+          final lastId = int.parse(lastIndex) + 1;
+          print('last id : $lastId');
+
+          final newHistory = await newCombineRepository.createTag(id: 'history_' + lastId.toString());
+          _searchHistoryList.add(newHistory);
+
+          _searchHistoryController.add(_searchHistoryList);
+        } else {
+          final newHistory = await newCombineRepository.createTag(id: 'history_' + firstData.toString());
+          _searchHistoryList.add(newHistory);
+          firstData++;
+
+          _searchHistoryController.add(_searchHistoryList);
+        }
+      });
     } catch (e) {
       throw e;
     }
   }
 
-  void updateTag({int index, String tag}) async {
+  void updateTag({String id, int index, String tag}) async {
     try {
-      final data = await newCombineRepository.updateTag(index: index, tag: tag);
+      final data = await newCombineRepository.updateTag(id: id, tag: tag);
       _searchHistoryList[index] = data;
 
       _searchHistoryController.add(_searchHistoryList);
@@ -112,9 +152,9 @@ class NewCombineBloc implements BlocBase {
     }
   }
 
-  void deleteTag({int index}) async {
+  void deleteTag({String id}) async {
     try {
-      final data = await newCombineRepository.deleteTag(index: index);
+      final data = await newCombineRepository.deleteTag(id: id);
       _searchHistoryList.remove(data);
 
       _searchHistoryController.add(_searchHistoryList);
@@ -143,7 +183,7 @@ class NewCombineBloc implements BlocBase {
     addSearchTerms(term: term);
   }
 
-  void addSearchTerms({String term, int firstIndex, int lastIndex}) async {
+  void addSearchTerms({String term, String firstId, String lastId}) async {
     if (searchHistoryList.contains(term)) {
       putSearchTerms(term: term);
       return;
@@ -153,13 +193,13 @@ class NewCombineBloc implements BlocBase {
 
     if (_searchHistoryList.isNotEmpty) {
       if (_searchHistoryList.length > historyLength) {
-        final firstHistory = await newCombineRepository.deleteTag(index: firstIndex);
+        final firstHistory = await newCombineRepository.deleteTag(id: firstId);
         searchHistoryList.remove(firstHistory);
       }
-      final newHistory = await newCombineRepository.createTag(index: lastIndex, tags: term);
+      final newHistory = await newCombineRepository.createTag(id: lastId, tags: term);
       searchHistoryList.add(newHistory);
     } else {
-      final newHistory = await newCombineRepository.createTag(index: lastIndex, tags: term);
+      final newHistory = await newCombineRepository.createTag(id: lastId, tags: term);
       searchHistoryList.add(newHistory);
     }
 

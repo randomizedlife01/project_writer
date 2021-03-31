@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
-import 'package:project_writer_v04/pages/common_parts/common_create_pop.dart';
+import 'package:project_writer_v04/pages/document/free_write_page/parts/free_write_create_pop.dart';
+import 'package:project_writer_v04/pages/document/free_write_page/parts/free_write_parts.dart';
 
 class FreeWritePage extends StatelessWidget {
   final String appBarTitle;
@@ -47,7 +48,7 @@ class FreeWritePage extends StatelessWidget {
           context: context,
           builder: (context) {
             //도큐멘트 생성 팝업
-            return CommonCreatePop(
+            return FreeWriteCreatePop(
               nameHintText: '(#제외 검색용 단어 입력)',
               nameLabelText: '태그',
               descHintText: '메모를 입력하세요',

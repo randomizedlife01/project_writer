@@ -9,7 +9,7 @@ import 'package:project_writer_v04/models/ModelProvider.dart';
 import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
 import 'package:project_writer_v04/services/auth/auth_bloc.dart';
 import 'package:project_writer_v04/services/logic/bloc_base.dart';
-import 'package:project_writer_v04/services/logic/new_combine_bloc.dart';
+import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_bloc.dart';
 import 'amplifyconfiguration.dart';
 import 'pages/auth_pages/login_page.dart';
 import 'pages/auth_pages/signup_page.dart';
@@ -60,8 +60,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return KeyboardVisibilityProvider(
-      child: BlocProvider<NewCombineBloc>(
-        bloc: NewCombineBloc(),
+      child: BlocProvider<FreeWriteBloc>(
+        bloc: FreeWriteBloc(),
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Project Writer v04',

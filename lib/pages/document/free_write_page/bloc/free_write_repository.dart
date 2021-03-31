@@ -1,5 +1,4 @@
 import 'package:amplify_flutter/amplify.dart';
-import 'package:flutter/material.dart';
 import 'package:project_writer_v04/models/IdeaMemo.dart';
 import 'package:project_writer_v04/models/ModelProvider.dart';
 
@@ -17,19 +16,18 @@ class NewCombineRepository {
     }
   }
 
-  Future<List<SearchHistory>> readTags({String id, List<SearchHistory> searchHistory}) async {
+  Future<List<SearchHistory>> readTags({List<SearchHistory> searchHistory}) async {
     try {
       searchHistory = await Amplify.DataStore.query(SearchHistory.classType);
-      print(searchHistory);
       return searchHistory;
     } catch (e) {
       throw e;
     }
   }
 
-  Future<IdeaMemo> createIdea({String memo, String tags, int index}) async {
+  Future<IdeaMemo> createIdea({String memo, String tags, String id}) async {
     final ideaObject = IdeaMemo(
-      id: ideaIdFirst + index.toString(),
+      id: id,
       memo: memo,
       tags: tags,
     );
@@ -51,12 +49,12 @@ class NewCombineRepository {
     }
   }
 
-  Future<IdeaMemo> readByIdIdea({int index}) async {
+  Future<IdeaMemo> readByIdIdea({String id}) async {
     try {
       final ideaObjects = await Amplify.DataStore.query(
         IdeaMemo.classType,
         where: IdeaMemo.ID.eq(
-          ideaIdFirst + index.toString(),
+          id,
         ),
       );
 
@@ -74,8 +72,8 @@ class NewCombineRepository {
     }
   }
 
-  Future<IdeaMemo> update({int index, String memo}) async {
-    final ideaObject = await readByIdIdea(index: index);
+  Future<IdeaMemo> update({String id, String memo}) async {
+    final ideaObject = await readByIdIdea(id: id);
     final updateIdea = ideaObject.copyWith(memo: memo);
 
     await Amplify.DataStore.save(updateIdea);
@@ -83,9 +81,9 @@ class NewCombineRepository {
     return updateIdea;
   }
 
-  Future<IdeaMemo> deleteIdea({int index}) async {
+  Future<IdeaMemo> deleteIdea({String id}) async {
     try {
-      final ideaObject = await readByIdIdea(index: index);
+      final ideaObject = await readByIdIdea(id: id);
       await Amplify.DataStore.delete(ideaObject);
 
       return ideaObject;
@@ -94,9 +92,9 @@ class NewCombineRepository {
     }
   }
 
-  Future<SearchHistory> createTag({String tags, int index}) async {
+  Future<SearchHistory> createTag({String tags, String id}) async {
     final tagObject = SearchHistory(
-      id: tagIdFirst + index.toString(),
+      id: id,
       searchHistory: tags,
     );
 
@@ -117,12 +115,12 @@ class NewCombineRepository {
     }
   }
 
-  Future<SearchHistory> readByIdSearchTag({int index}) async {
+  Future<SearchHistory> readByIdSearchTag({String id}) async {
     try {
       final tagsObjects = await Amplify.DataStore.query(
         SearchHistory.classType,
         where: SearchHistory.ID.eq(
-          tagIdFirst + index.toString(),
+          id,
         ),
       );
 
@@ -140,8 +138,8 @@ class NewCombineRepository {
     }
   }
 
-  Future<SearchHistory> updateTag({int index, String tag}) async {
-    final tagObject = await readByIdSearchTag(index: index);
+  Future<SearchHistory> updateTag({String id, String tag}) async {
+    final tagObject = await readByIdSearchTag(id: id);
     final updateTag = tagObject.copyWith(searchHistory: tag);
 
     await Amplify.DataStore.save(updateTag);
@@ -149,9 +147,9 @@ class NewCombineRepository {
     return updateTag;
   }
 
-  Future<SearchHistory> deleteTag({int index}) async {
+  Future<SearchHistory> deleteTag({String id}) async {
     try {
-      final tagObject = await readByIdSearchTag(index: index);
+      final tagObject = await readByIdSearchTag(id: id);
       await Amplify.DataStore.delete(tagObject);
 
       return tagObject;
