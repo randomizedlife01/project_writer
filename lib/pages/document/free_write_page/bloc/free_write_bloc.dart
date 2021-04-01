@@ -12,6 +12,8 @@ class FreeWriteModel {
   FreeWriteModel(this.ideaMemo, this.searchHistory);
 }
 
+//TODO: 태그 검색 사용시 텍스트 목록을 클릭하면 안 나옴... 이 오류 수정할것.
+
 class FreeWriteBloc implements BlocBase {
   final newCombineRepository = NewCombineRepository();
   List<IdeaMemo> _ideaMemo;
@@ -47,8 +49,6 @@ class FreeWriteBloc implements BlocBase {
     try {
       _ideaMemo = await newCombineRepository.readIdeas();
       _searchHistoryList = await newCombineRepository.readTags();
-
-      print('search history : $_searchHistoryList');
 
       _ideaController.add(_ideaMemo);
       _searchHistoryController.add(_searchHistoryList);
@@ -108,34 +108,28 @@ class FreeWriteBloc implements BlocBase {
   void createTag({String tag}) async {
     try {
       _searchHistoryList = await Amplify.DataStore.query(SearchHistory.classType);
+      if (searchHistoryList.contains(tag)) {
+        putSearchTerms(term: tag);
+        return;
+      }
 
       final tagData = tag.split(' ');
 
-      print('tag data : $tagData');
-
-      int firstData = 0;
-
-      tagData.forEach((history) async {
-        if (tagData.isNotEmpty && _searchHistoryList.isNotEmpty) {
-          final lastData = _searchHistoryList.last.id;
-          print('last data : $lastData');
-          final lastIndex = lastData.split('_').last;
-          print('last index : $lastIndex');
-          final lastId = int.parse(lastIndex) + 1;
-          print('last id : $lastId');
-
-          final newHistory = await newCombineRepository.createTag(id: 'history_' + lastId.toString());
-          _searchHistoryList.add(newHistory);
-
-          _searchHistoryController.add(_searchHistoryList);
-        } else {
-          final newHistory = await newCombineRepository.createTag(id: 'history_' + firstData.toString());
-          _searchHistoryList.add(newHistory);
-          firstData++;
-
-          _searchHistoryController.add(_searchHistoryList);
+      tagData.forEach((tag) async {
+        if (_searchHistoryList.length > historyLength) {
+          int firstIndex = _searchHistoryList.isNotEmpty ? int.parse(_searchHistoryList.first.id.split('_').last) : 0;
+          final firstHistory = await newCombineRepository.deleteTag(id: 'history_' + firstIndex.toString());
+          _searchHistoryList.remove(firstHistory);
         }
+        int lastIndex = _searchHistoryList.isNotEmpty ? int.parse(_searchHistoryList.last.id.split('_').last) : 0;
+        final lastHistory = await newCombineRepository.createTag(id: 'history_' + lastIndex.toString(), tags: tag);
+        _searchHistoryList.add(lastHistory);
       });
+
+      filteredSearchTerms(filter: null);
+
+      _searchHistoryController.add(_filteredSearchHistory);
+      _searchHistoryController.add(_searchHistoryList);
     } catch (e) {
       throw e;
     }
@@ -180,33 +174,7 @@ class FreeWriteBloc implements BlocBase {
 
   void putSearchTerms({String term}) {
     deleteSearchTerms(term: term);
-    addSearchTerms(term: term);
-  }
-
-  void addSearchTerms({String term, String firstId, String lastId}) async {
-    if (searchHistoryList.contains(term)) {
-      putSearchTerms(term: term);
-      return;
-    }
-
-    _searchHistoryList = await Amplify.DataStore.query(SearchHistory.classType);
-
-    if (_searchHistoryList.isNotEmpty) {
-      if (_searchHistoryList.length > historyLength) {
-        final firstHistory = await newCombineRepository.deleteTag(id: firstId);
-        searchHistoryList.remove(firstHistory);
-      }
-      final newHistory = await newCombineRepository.createTag(id: lastId, tags: term);
-      searchHistoryList.add(newHistory);
-    } else {
-      final newHistory = await newCombineRepository.createTag(id: lastId, tags: term);
-      searchHistoryList.add(newHistory);
-    }
-
-    filteredSearchTerms(filter: null);
-
-    _searchHistoryController.add(_filteredSearchHistory);
-    _searchHistoryController.add(_searchHistoryList);
+    createTag(tag: term);
   }
 
   @override

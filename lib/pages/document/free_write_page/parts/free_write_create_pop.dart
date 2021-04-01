@@ -67,7 +67,6 @@ class FreeWriteCreatePop extends StatelessWidget {
                                           final number = lastId.split("_").last;
                                           _lastIdeaIdNum = int.parse(number);
                                         }
-
                                         _countBloc.createIdea(
                                           memo: _memoController.text ?? '',
                                           tag: _tagsController.text ?? '',

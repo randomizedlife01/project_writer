@@ -55,8 +55,6 @@ class SearchBar extends StatelessWidget {
               },
               onSubmitted: (query) {
                 _searchHistoryListBloc.createTag(tag: query);
-
-                _searchHistoryListBloc.addSearchTerms(term: query);
                 selectTerm = query;
                 query.isEmpty ? _searchHistoryListBloc.readIdeaAndTags() : _searchHistoryListBloc.filteredIdeaAndTags(filter: query);
                 controller.close();
@@ -89,7 +87,7 @@ class SearchBar extends StatelessWidget {
                             ),
                             leading: const Icon(Icons.search),
                             onTap: () {
-                              _searchHistoryListBloc.addSearchTerms(term: controller.query);
+                              _searchHistoryListBloc.createTag(tag: controller.query);
                               selectTerm = controller.query;
                             },
                           );
@@ -158,7 +156,7 @@ class SearchResultsListView extends StatelessWidget {
     return StreamBuilder<FreeWriteModel>(
         stream: newCombineBloc.combineStream(),
         builder: (context, snapshot) {
-          //BlocProvider.of<FreeWriteBloc>(context)..deleteTag(id: 'history_0');
+          //BlocProvider.of<FreeWriteBloc>(context)..deleteTag(id: '4c933737-5a73-446e-91ef-c111d899ad4a');
           if (snapshot.connectionState == ConnectionState.active) {
             return Padding(
               padding: const EdgeInsets.only(top: 15.0),
