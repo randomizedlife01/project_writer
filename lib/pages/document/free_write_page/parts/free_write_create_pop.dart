@@ -20,7 +20,7 @@ class FreeWriteCreatePop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _ideaBloc = BlocProvider.of<ReFreeCubit>(context);
+    final _ideaBloc = BlocProvider.of<ReFreeCubit>(context, listen: false);
     return BlocBuilder<ReFreeCubit, FreeWriteState>(
       builder: (context, state) {
         if (state is StateOfIdeasLoaded) {

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_bloc.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/bloc/re_free_cubit.dart';
 
 class SearchBar extends StatelessWidget {
@@ -17,7 +16,7 @@ class SearchBar extends StatelessWidget {
   //TODO: Bloc 작성은 끝났음. 태그 검색창 및 태그 리스트 진행.
   @override
   Widget build(BuildContext context) {
-    //_ideasBloc = BlocProvider.of<IdeasBloc>(context);
+    //final _allBloc = BlocProvider.of<ReFreeCubit>(context);
     return BlocBuilder<ReFreeCubit, FreeWriteState>(builder: (context, state) {
       if (state is StateOfIdeasLoaded) {
         return FloatingSearchBar(
@@ -48,13 +47,15 @@ class SearchBar extends StatelessWidget {
           ],
           onQueryChanged: (query) {
             //TODO: 검색창 입력 Bloc
-            //_searchHistoryListBloc.filteredSearchTerms(filter: query);
+            BlocProvider.of<ReFreeCubit>(context).filteredSearchTerms(filter: query);
           },
           onSubmitted: (query) {
             //TODO: 검색창 확인 버튼 Bloc
-            //_searchHistoryListBloc.createTag(tag: query);
+            BlocProvider.of<ReFreeCubit>(context).createTag(tag: query);
             selectTerm = query;
-            //query.isEmpty ? _searchHistoryListBloc.readIdeaAndTags() : _searchHistoryListBloc.filteredIdeaAndTags(filter: query);
+            // query.isEmpty
+            //     ? BlocProvider.of<ReFreeCubit>(context).readIdeaAndTags()
+            //     : BlocProvider.of<ReFreeCubit>(context).filteredIdeaAndTags(filter: query);
             controller.close();
           },
           builder: (context, transition) {
@@ -65,7 +66,7 @@ class SearchBar extends StatelessWidget {
                 elevation: 0.0,
                 child: Builder(
                   builder: (context) {
-                    if (state.searchHistory.isEmpty && controller.query.isEmpty) {
+                    if (state.ideaMemo.isEmpty && controller.query.isEmpty) {
                       return Container(
                         height: 56.0,
                         width: double.infinity,
@@ -77,7 +78,7 @@ class SearchBar extends StatelessWidget {
                           style: Theme.of(context).textTheme.bodyText2,
                         ),
                       );
-                    } else if (state.data.searchHistory.isEmpty) {
+                    } else if (state.searchHistory.isEmpty) {
                       return ListTile(
                         title: Text(
                           controller.query,
@@ -85,14 +86,14 @@ class SearchBar extends StatelessWidget {
                         ),
                         leading: const Icon(Icons.search),
                         onTap: () {
-                          _searchHistoryListBloc.createTag(tag: controller.query);
+                          BlocProvider.of<ReFreeCubit>(context).createTag(tag: controller.query);
                           selectTerm = controller.query;
                         },
                       );
                     } else {
                       return Column(
                         mainAxisSize: MainAxisSize.max,
-                        children: state.data.searchHistory
+                        children: state.searchHistory
                             .map(
                               (term) => ListTile(
                                 title: Text(
@@ -111,11 +112,11 @@ class SearchBar extends StatelessWidget {
                                     color: Color(0xFF3b4445),
                                   ),
                                   onPressed: () {
-                                    _searchHistoryListBloc.deleteSearchTerms(term: term.searchHistory);
+                                    BlocProvider.of<ReFreeCubit>(context).deleteSearchTerms(term: term.searchHistory);
                                   },
                                 ),
                                 onTap: () {
-                                  _searchHistoryListBloc.putSearchTerms(term: term.searchHistory);
+                                  BlocProvider.of<ReFreeCubit>(context).putSearchTerms(term: term.searchHistory);
                                   selectTerm = term.searchHistory;
                                   controller.close();
                                 },
@@ -150,7 +151,7 @@ class SearchResultsListView extends StatelessWidget {
   Widget build(BuildContext context) {
     final fsb = FloatingSearchBar.of(context);
     final _searchHistoryListBloc = BlocProvider.of<ReFreeCubit>(context);
-    _searchHistoryListBloc.readIdeaAndTags();
+    //_searchHistoryListBloc.readIdeaAndTags();
     return BlocBuilder<ReFreeCubit, FreeWriteState>(
       builder: (context, state) {
         if (state is StateOfIdeasLoaded) {

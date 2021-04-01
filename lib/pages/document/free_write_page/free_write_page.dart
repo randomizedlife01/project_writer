@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project_writer_v04/models/IdeaMemo.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_repository.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/parts/free_write_create_pop.dart';
@@ -35,6 +34,7 @@ class FreeWritePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of<ReFreeCubit>(context).readIdeaAndTags();
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(50.0),

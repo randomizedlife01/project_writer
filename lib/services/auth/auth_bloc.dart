@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:project_writer_v04/services/auth/auth_credentials.dart';
-import 'package:rxdart/rxdart.dart';
 
 enum AuthFlowStatus { login, signUp, verification, session }
 
@@ -14,7 +15,7 @@ class AuthState {
 }
 
 class AuthService {
-  final authStateController = BehaviorSubject<AuthState>();
+  final authStateController = StreamController<AuthState>();
   AuthCredentials _credentials;
 
   static AuthCheckStatus check;
