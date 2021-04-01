@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
-import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_bloc.dart';
+import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_repository.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/free_write_page.dart';
 import 'package:project_writer_v04/pages/document/timer_write_page/timer_write_page.dart';
-import 'package:project_writer_v04/services/logic/bloc_base.dart';
+import 'package:project_writer_v04/pages/document/free_write_page/bloc/re_free_cubit.dart';
 
 class IntroPage extends StatelessWidget {
   final VoidCallback shouldLogOut;
@@ -31,8 +32,12 @@ class IntroPage extends StatelessWidget {
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => BlocProvider<FreeWriteBloc>(
-                      bloc: FreeWriteBloc(),
+                    builder: (context) => MultiBlocProvider(
+                      providers: [
+                        BlocProvider<ReFreeCubit>(
+                          create: (_) => ReFreeCubit(NewCombineRepository()),
+                        )
+                      ],
                       child: FreeWritePage(
                         appBarTitle: '자유롭게 쓰기',
                       ),
