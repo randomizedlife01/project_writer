@@ -60,49 +60,46 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return KeyboardVisibilityProvider(
-      child: BlocProvider<FreeWriteBloc>(
-        bloc: FreeWriteBloc(),
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Project Writer v04',
-          theme: StoryThemeData.data,
-          home: StreamBuilder<AuthState>(
-              stream: _authService.authStateController.stream,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Navigator(
-                    pages: [
-                      if (snapshot.data.authFlowStatus == AuthFlowStatus.login)
-                        MaterialPage(
-                            child: LoginPage(
-                          shouldShowSignUp: _authService.showSignUp,
-                          didProvideCredentials: _authService.loginWithCredentials,
-                        )),
-                      if (snapshot.data.authFlowStatus == AuthFlowStatus.signUp)
-                        MaterialPage(
-                            child: SignUpPage(
-                          shouldShowLogin: _authService.showLogin,
-                          didProvideCredentials: _authService.signUpWithCredentials,
-                        )),
-                      if (snapshot.data.authFlowStatus == AuthFlowStatus.verification)
-                        MaterialPage(child: VerificationPage(didProvideVerificationCode: _authService.verifyCode)),
-                      if (snapshot.data.authFlowStatus == AuthFlowStatus.session)
-                        MaterialPage(
-                          child: IntroPage(
-                            shouldLogOut: _authService.logOut,
-                          ),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Project Writer v04',
+        theme: StoryThemeData.data,
+        home: StreamBuilder<AuthState>(
+            stream: _authService.authStateController.stream,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Navigator(
+                  pages: [
+                    if (snapshot.data.authFlowStatus == AuthFlowStatus.login)
+                      MaterialPage(
+                          child: LoginPage(
+                        shouldShowSignUp: _authService.showSignUp,
+                        didProvideCredentials: _authService.loginWithCredentials,
+                      )),
+                    if (snapshot.data.authFlowStatus == AuthFlowStatus.signUp)
+                      MaterialPage(
+                          child: SignUpPage(
+                        shouldShowLogin: _authService.showLogin,
+                        didProvideCredentials: _authService.signUpWithCredentials,
+                      )),
+                    if (snapshot.data.authFlowStatus == AuthFlowStatus.verification)
+                      MaterialPage(child: VerificationPage(didProvideVerificationCode: _authService.verifyCode)),
+                    if (snapshot.data.authFlowStatus == AuthFlowStatus.session)
+                      MaterialPage(
+                        child: IntroPage(
+                          shouldLogOut: _authService.logOut,
                         ),
-                    ],
-                    onPopPage: (route, result) => route.didPop(result),
-                  );
-                } else {
-                  return Container(
-                    alignment: Alignment.center,
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              }),
-        ),
+                      ),
+                  ],
+                  onPopPage: (route, result) => route.didPop(result),
+                );
+              } else {
+                return Container(
+                  alignment: Alignment.center,
+                  child: CircularProgressIndicator(),
+                );
+              }
+            }),
       ),
     );
   }

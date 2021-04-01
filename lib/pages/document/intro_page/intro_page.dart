@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
+import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_bloc.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/free_write_page.dart';
 import 'package:project_writer_v04/pages/document/timer_write_page/timer_write_page.dart';
+import 'package:project_writer_v04/services/logic/bloc_base.dart';
 
 class IntroPage extends StatelessWidget {
   final VoidCallback shouldLogOut;
@@ -29,8 +31,11 @@ class IntroPage extends StatelessWidget {
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => FreeWritePage(
-                      appBarTitle: '자유롭게 쓰기',
+                    builder: (context) => BlocProvider<FreeWriteBloc>(
+                      bloc: FreeWriteBloc(),
+                      child: FreeWritePage(
+                        appBarTitle: '자유롭게 쓰기',
+                      ),
                     ),
                   ),
                 ),

@@ -171,7 +171,7 @@ class DocInputForm extends StatelessWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFF252a34),
+            color: Color(0xFFe23e57),
           ),
         ),
         focusedBorder: OutlineInputBorder(
@@ -183,14 +183,14 @@ class DocInputForm extends StatelessWidget {
         hintStyle: TextStyle(
           fontSize: 12.0,
           fontFamily: 'GothicA1',
-          color: Color(0xFF8785a2),
+          color: Color(0xff8785a2),
           fontWeight: FontWeight.w600,
         ),
         labelText: labelText,
         labelStyle: TextStyle(
           fontSize: 12.0,
           fontFamily: 'GothicA1',
-          color: Color(0xFF252a34),
+          color: Color(0xFFc06c84),
           fontWeight: FontWeight.w600,
         ),
       ),
