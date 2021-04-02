@@ -20,6 +20,7 @@ class SearchBar extends StatelessWidget {
     return BlocBuilder<ReFreeCubit, FreeWriteState>(builder: (context, state) {
       if (state is StateOfIdeasLoaded) {
         return FloatingSearchBar(
+          autocorrect: false,
           shadowColor: Colors.transparent,
           border: BorderSide(
             color: Color(0xFFBF6C84),
@@ -46,16 +47,14 @@ class SearchBar extends StatelessWidget {
             FloatingSearchBarAction.searchToClear(),
           ],
           onQueryChanged: (query) {
-            //TODO: 검색창 입력 Bloc
             BlocProvider.of<ReFreeCubit>(context).filteredSearchTerms(filter: query);
           },
           onSubmitted: (query) {
-            //TODO: 검색창 확인 버튼 Bloc
             BlocProvider.of<ReFreeCubit>(context).createTag(tag: query);
             selectTerm = query;
-            // query.isEmpty
-            //     ? BlocProvider.of<ReFreeCubit>(context).readIdeaAndTags()
-            //     : BlocProvider.of<ReFreeCubit>(context).filteredIdeaAndTags(filter: query);
+            query.isEmpty
+                ? BlocProvider.of<ReFreeCubit>(context).readIdeaAndTags()
+                : BlocProvider.of<ReFreeCubit>(context).filteredIdeaAndTags(filter: query);
             controller.close();
           },
           builder: (context, transition) {
@@ -66,7 +65,7 @@ class SearchBar extends StatelessWidget {
                 elevation: 0.0,
                 child: Builder(
                   builder: (context) {
-                    if (state.ideaMemo.isEmpty && controller.query.isEmpty) {
+                    if (state.searchHistory.isEmpty && controller.query.isEmpty) {
                       return Container(
                         height: 56.0,
                         width: double.infinity,
@@ -86,7 +85,7 @@ class SearchBar extends StatelessWidget {
                         ),
                         leading: const Icon(Icons.search),
                         onTap: () {
-                          BlocProvider.of<ReFreeCubit>(context).createTag(tag: controller.query);
+                          //BlocProvider.of<ReFreeCubit>(context).createTag(tag: controller.query);
                           selectTerm = controller.query;
                         },
                       );
@@ -150,8 +149,6 @@ class SearchResultsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fsb = FloatingSearchBar.of(context);
-    final _searchHistoryListBloc = BlocProvider.of<ReFreeCubit>(context);
-    //_searchHistoryListBloc.readIdeaAndTags();
     return BlocBuilder<ReFreeCubit, FreeWriteState>(
       builder: (context, state) {
         if (state is StateOfIdeasLoaded) {
@@ -188,7 +185,7 @@ class SearchResultsListView extends StatelessWidget {
                       icon: Icons.delete,
                       onTap: () {
                         //TODO: 아이디어 메모 삭제
-                        //BlocProvider.of<FreeWriteBloc>(context)..deleteIdea(id: snapshot.data.ideaMemo[toIndex].id);
+                        BlocProvider.of<ReFreeCubit>(context)..deleteIdea(id: state.ideaMemo[toIndex].id);
                       },
                     ),
                   ],
@@ -237,7 +234,7 @@ class SearchResultsListView extends StatelessWidget {
           );
         } else {
           return Center(
-            child: Text('No Data!'),
+            child: Text('ERROR!'),
           );
         }
       },

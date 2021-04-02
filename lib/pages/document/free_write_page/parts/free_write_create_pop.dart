@@ -20,7 +20,6 @@ class FreeWriteCreatePop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _ideaBloc = BlocProvider.of<ReFreeCubit>(context, listen: false);
     return BlocBuilder<ReFreeCubit, FreeWriteState>(
       builder: (context, state) {
         if (state is StateOfIdeasLoaded) {
@@ -68,14 +67,14 @@ class FreeWriteCreatePop extends StatelessWidget {
                                         }
 
                                         //TODO: 아이디어 생성
-                                        _ideaBloc.createIdea(
+                                        BlocProvider.of<ReFreeCubit>(context).createIdea(
                                           memo: _memoController.text ?? '',
                                           tag: _tagsController.text ?? '',
                                           id: 'idea_' + (_lastIdeaIdNum + 1).toString(),
                                         );
 
                                         //TODO: 태그 생성
-                                        //_countBloc.createTag(tag: _tagsController.text);
+                                        BlocProvider.of<ReFreeCubit>(context).createTag(tag: _tagsController.text);
 
                                         Navigator.pop(context);
                                       }
@@ -99,7 +98,7 @@ class FreeWriteCreatePop extends StatelessWidget {
           );
         } else {
           return Center(
-            child: Text('Nod data!!!!!'),
+            child: Text('ERROR!'),
           );
         }
       },

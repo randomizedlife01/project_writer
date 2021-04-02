@@ -35,7 +35,7 @@ class IntroPage extends StatelessWidget {
                     builder: (context) => MultiBlocProvider(
                       providers: [
                         BlocProvider<ReFreeCubit>(
-                          create: (_) => ReFreeCubit(NewCombineRepository()),
+                          create: (_) => ReFreeCubit(newCombineRepository: NewCombineRepository(), ideaMemo: [], searchHistory: []),
                         )
                       ],
                       child: FreeWritePage(

@@ -6,13 +6,26 @@ import 'package:project_writer_v04/pages/document/free_write_page/parts/free_wri
 import 'package:project_writer_v04/pages/document/free_write_page/parts/free_write_parts.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/bloc/re_free_cubit.dart';
 
-class FreeWritePage extends StatelessWidget {
+class FreeWritePage extends StatefulWidget {
   final String appBarTitle;
 
   FreeWritePage({Key key, this.appBarTitle});
 
+  @override
+  _FreeWritePageState createState() => _FreeWritePageState();
+}
+
+class _FreeWritePageState extends State<FreeWritePage> {
   final memoController = TextEditingController();
   final tagsController = TextEditingController();
+
+  final ReFreeCubit reFreeCubit = ReFreeCubit();
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<ReFreeCubit>(context).readIdeaAndTags();
+  }
 
   Widget floatingButton() {
     return Container(
@@ -34,12 +47,11 @@ class FreeWritePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<ReFreeCubit>(context).readIdeaAndTags();
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(50.0),
         child: BasicAppBar(
-          appBarTitle: appBarTitle,
+          appBarTitle: widget.appBarTitle,
         ),
       ),
       body: Padding(
@@ -51,10 +63,15 @@ class FreeWritePage extends StatelessWidget {
         //onPressed: () => _openPopup(context),
         onPressed: () => showDialog(
           context: context,
-          builder: (context) {
+          builder: (_) {
             return BlocProvider.value(
-              value: ReFreeCubit(NewCombineRepository()),
-              child: FreeWriteCreatePop(),
+              value: BlocProvider.of<ReFreeCubit>(context),
+              child: FreeWriteCreatePop(
+                nameLabelText: '태그 입력',
+                nameHintText: '#제외, 띄어쓰기로 구분합니다.',
+                descLabelText: '아이디어 메모 작성',
+                descHintText: '떠오른 아이디어를 작성해 주세요',
+              ),
             );
           },
         ),
