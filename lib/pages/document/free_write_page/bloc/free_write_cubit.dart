@@ -6,7 +6,7 @@ import 'package:project_writer_v04/models/IdeaMemo.dart';
 import 'package:project_writer_v04/models/ModelProvider.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_repository.dart';
 
-part 're_free_state.dart';
+part 'free_write_state.dart';
 
 class ReFreeCubit extends Cubit<FreeWriteState> {
   List<IdeaMemo> ideaMemo;

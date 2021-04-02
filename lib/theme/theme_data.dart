@@ -28,13 +28,39 @@ class StoryThemeData {
         color: Color(0xFFBF6C84),
       ),
     ),
-    buttonColor: Color(0xFFe23e57),
-    buttonTheme: ButtonThemeData(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(40.0),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        primary: Color(0xFFe23e57),
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        textStyle: TextStyle(
+          fontSize: 14.0,
+          color: Color(0xFFf6f6f6),
+          fontFamily: 'GothicA1',
+          fontWeight: FontWeight.w500,
+        ),
       ),
-      buttonColor: Color(0xFFc06c84),
-      textTheme: ButtonTextTheme.primary,
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        backgroundColor: Color(0xFFf6f6f6),
+        side: BorderSide(
+          color: Color(0xFFe23e57),
+        ),
+        primary: Color(0xFFe23e57),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        elevation: 0,
+        textStyle: TextStyle(
+          fontSize: 14.0,
+          color: Color(0xFFe23e57),
+          fontFamily: 'GothicA1',
+          fontWeight: FontWeight.w500,
+        ),
+      ),
     ),
     scaffoldBackgroundColor: Color(0xFF3b4445),
     visualDensity: VisualDensity.adaptivePlatformDensity,

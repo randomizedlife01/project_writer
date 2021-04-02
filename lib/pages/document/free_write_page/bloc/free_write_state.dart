@@ -1,4 +1,4 @@
-part of 're_free_cubit.dart';
+part of 'free_write_cubit.dart';
 
 @immutable
 abstract class FreeWriteState extends Equatable {

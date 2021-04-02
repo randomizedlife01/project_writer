@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
-import 'package:project_writer_v04/pages/document/free_write_page/bloc/re_free_cubit.dart';
+import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_cubit.dart';
 
 class FreeWriteCreatePop extends StatelessWidget {
   final String descLabelText;
@@ -24,6 +24,7 @@ class FreeWriteCreatePop extends StatelessWidget {
       builder: (context, state) {
         if (state is StateOfIdeasLoaded) {
           return AlertDialog(
+            backgroundColor: Color(0xFFf6f6f6),
             content: SingleChildScrollView(
               child: Container(
                 height: MediaQuery.of(context).size.height * 0.35,
@@ -53,33 +54,48 @@ class FreeWriteCreatePop extends StatelessWidget {
                               width: double.infinity,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: ElevatedButton(
-                                  child: Text("저 장"),
-                                  onPressed: () {
-                                    if (_memoController.text.isNotEmpty && _tagsController.text.isNotEmpty) {
-                                      if (_formKey.currentState.validate()) {
-                                        _formKey.currentState.save();
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: OutlinedButton(
+                                        child: Text("취 소"),
+                                        onPressed: () {},
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        child: Text("저 장"),
+                                        onPressed: () {
+                                          if (_memoController.text.isNotEmpty && _tagsController.text.isNotEmpty) {
+                                            if (_formKey.currentState.validate()) {
+                                              _formKey.currentState.save();
 
-                                        if (state.ideaMemo.isNotEmpty) {
-                                          final lastId = state.ideaMemo.last.id;
-                                          final number = lastId.split("_").last;
-                                          _lastIdeaIdNum = int.parse(number);
-                                        }
+                                              if (state.ideaMemo.isNotEmpty) {
+                                                final lastId = state.ideaMemo.last.id;
+                                                final number = lastId.split("_").last;
+                                                _lastIdeaIdNum = int.parse(number);
+                                              }
 
-                                        //TODO: 아이디어 생성
-                                        BlocProvider.of<ReFreeCubit>(context).createIdea(
-                                          memo: _memoController.text ?? '',
-                                          tag: _tagsController.text ?? '',
-                                          id: 'idea_' + (_lastIdeaIdNum + 1).toString(),
-                                        );
+                                              //TODO: 아이디어 생성
+                                              BlocProvider.of<ReFreeCubit>(context).createIdea(
+                                                memo: _memoController.text ?? '',
+                                                tag: _tagsController.text ?? '',
+                                                id: 'idea_' + (_lastIdeaIdNum + 1).toString(),
+                                              );
 
-                                        //TODO: 태그 생성
-                                        BlocProvider.of<ReFreeCubit>(context).createTag(tag: _tagsController.text);
+                                              //TODO: 태그 생성
+                                              BlocProvider.of<ReFreeCubit>(context).createTag(tag: _tagsController.text);
 
-                                        Navigator.pop(context);
-                                      }
-                                    }
-                                  },
+                                              Navigator.pop(context);
+                                            }
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             )
