@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_repository.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/free_write_page.dart';
+import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_bloc.dart';
 import 'package:project_writer_v04/pages/document/intro_page/parts/intro_parts.dart';
 import 'package:project_writer_v04/pages/document/timer_write_page/timer_write_page.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_cubit.dart';
@@ -18,7 +19,7 @@ class IntroPage extends StatelessWidget {
     return Container();
   }
 
-  Widget documentView(BuildContext context, int index) {
+  Widget documentView({BuildContext context, IntroDocumentState state, int index}) {
     return Container(
       padding: EdgeInsets.all(10.0),
       child: Stack(
@@ -56,10 +57,10 @@ class IntroPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Text(
-                    //   snapshot.listValue[index].docName,
-                    //   style: Theme.of(context).textTheme.headline1,
-                    // ),
+                    Text(
+                      state.document[index].docName,
+                      style: Theme.of(context).textTheme.headline1,
+                    ),
                     SizedBox(
                       height: 10.0,
                     ),
@@ -74,7 +75,7 @@ class IntroPage extends StatelessWidget {
                     SizedBox(
                       height: 8.0,
                     ),
-                    // Text(snapshot.listValue[index].docDesc),
+                    Text(state.document[index].docDesc),
                     SizedBox(
                       height: 15.0,
                     ),
@@ -90,18 +91,58 @@ class IntroPage extends StatelessWidget {
   }
 
   Widget noteListView(BuildContext context) {
-    return Container(
-      child: CarouselSlider.builder(
-        options: CarouselOptions(
-          aspectRatio: 2.0,
-          enlargeCenterPage: true,
-          height: MediaQuery.of(context).size.height * 0.65,
-        ),
-        itemCount: 10,
-        itemBuilder: (context, firstIndex, lastIndex) {
-          return documentView(context, firstIndex);
-        },
-      ),
+    BlocProvider.of<IntroDocumentCubit>(context).readDocument();
+    return BlocBuilder<IntroDocumentCubit, IntroDocumentState>(
+      builder: (context, state) {
+        if (state is IntroDocumentLoaded) {
+          if (state.document.isNotEmpty) {
+            return Container(
+              child: CarouselSlider.builder(
+                options: CarouselOptions(
+                  aspectRatio: 2.0,
+                  enlargeCenterPage: true,
+                  height: MediaQuery.of(context).size.height * 0.65,
+                ),
+                itemCount: state.document.length,
+                itemBuilder: (context, itemIndex, realIdx) {
+                  return documentView(context: context, state: state, index: itemIndex);
+                },
+              ),
+            );
+          } else {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Text(
+                    '아직 저장된\n데이터가 없습니다.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w100),
+                  ),
+                ),
+                SizedBox(
+                  height: 30.0,
+                ),
+                OutlinedButton(
+                  style: Theme.of(context).outlinedButtonTheme.style.copyWith(
+                        backgroundColor: MaterialStateProperty.all(Color(0xFF3b4445)),
+                      ),
+                  onPressed: () {},
+                  child: Text('새로운 스토리 만들기'),
+                ),
+              ],
+            );
+          }
+        } else if (state is IntroDocumentLoading) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return Center(
+            child: Text('ERROR!!'),
+          );
+        }
+      },
     );
   }
 
@@ -121,7 +162,7 @@ class IntroPage extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => BlocProvider<FreeWriteCubit>(
-                    create: (_) => FreeWriteCubit(newCombineRepository: NewCombineRepository(), ideaMemo: [], searchHistory: []),
+                    create: (_) => FreeWriteCubit(newCombineRepository: FreeWriteRepository(), ideaMemo: [], searchHistory: []),
                     child: FreeWritePage(
                       appBarTitle: '자유롭게 쓰기',
                     ),

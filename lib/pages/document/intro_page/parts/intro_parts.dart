@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:project_writer_v04/pages/document/intro_page/parts/intro_doc_delete_pop.dart';
 import 'package:unicorndial/unicorndial.dart';
 
 //도큐멘트 위의 버
 class IntroDocumentButton extends StatelessWidget {
   //도튜멘트 팝업 메뉴버튼
-  List<UnicornButton> docMenuButtons() {
+  List<UnicornButton> docMenuButtons(BuildContext context) {
     var docMenuButton = List<UnicornButton>();
 
     docMenuButton.add(
@@ -22,7 +23,8 @@ class IntroDocumentButton extends StatelessWidget {
             size: 16.0,
           ),
           onPressed: () {
-            //TODO: 스토리 속으로
+            //TODO: 스토리 속으로... 현재 진행중.
+            Navigator.pushNamed(context, '/story_page');
             // Navigator.push(
             //   context,
             //   MaterialPageRoute(
@@ -54,7 +56,7 @@ class IntroDocumentButton extends StatelessWidget {
         hasLabel: true,
         labelText: "표지 편집",
         currentButton: FloatingActionButton(
-          //heroTag: "doc-edit",
+          heroTag: "doc-edit",
           backgroundColor: Color(0xFFF8FEE9),
           mini: true,
           child: Icon(
@@ -77,7 +79,7 @@ class IntroDocumentButton extends StatelessWidget {
         hasLabel: true,
         labelText: "문서 삭제",
         currentButton: FloatingActionButton(
-          //heroTag: "doc-delete",
+          heroTag: "doc-delete",
           backgroundColor: Color(0xFFF8FEE9),
           mini: true,
           child: Icon(
@@ -86,16 +88,16 @@ class IntroDocumentButton extends StatelessWidget {
             size: 16.0,
           ),
           onPressed: () {
-            //TODO: 문서 지우기
-            // showDialog(
-            //   context: context,
-            //   builder: (context) {
-            //     return DocDeletePopUp(
-            //       index: index,
-            //       documentId: snapshot.listValue[index].id,
-            //     );
-            //   },
-            // );
+            showDialog(
+              context: context,
+              builder: (context) {
+                //TODO: 스토리 속으로... 현재 진행중.
+                return DocDeletePopUp(
+                    //index: index,
+                    //documentId: snapshot.listValue[index].id,
+                    );
+              },
+            );
           },
         ),
         labelBackgroundColor: Colors.transparent,
@@ -122,7 +124,7 @@ class IntroDocumentButton extends StatelessWidget {
               parentButton: Icon(
                 Icons.list,
               ),
-              childButtons: docMenuButtons()),
+              childButtons: docMenuButtons(context)),
         ),
       ),
     );

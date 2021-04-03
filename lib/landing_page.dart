@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_writer_v04/pages/auth_pages/login_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/signup_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/verification_page.dart';
+import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_bloc.dart';
+import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_repository.dart';
 import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/bloc/auth_bloc.dart';
 
@@ -15,7 +18,6 @@ class LandingPage extends StatelessWidget {
     return StreamBuilder<AuthState>(
         stream: _authService.authStateController.stream,
         builder: (context, snapshot) {
-          print(snapshot.connectionState);
           if (snapshot.hasData) {
             return Navigator(
               pages: [
@@ -35,8 +37,11 @@ class LandingPage extends StatelessWidget {
                   MaterialPage(child: VerificationPage(didProvideVerificationCode: _authService.verifyCode)),
                 if (snapshot.data.authFlowStatus == AuthFlowStatus.session)
                   MaterialPage(
-                    child: IntroPage(
-                      shouldLogOut: _authService.logOut,
+                    child: BlocProvider<IntroDocumentCubit>(
+                      create: (_) => IntroDocumentCubit(introDocumentRepository: IntroDocumentRepository(), document: []),
+                      child: IntroPage(
+                        shouldLogOut: _authService.logOut,
+                      ),
                     ),
                   ),
               ],

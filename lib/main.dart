@@ -4,7 +4,6 @@ import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:project_writer_v04/models/ModelProvider.dart';
 import 'package:project_writer_v04/pages/auth_pages/bloc/auth_bloc.dart';

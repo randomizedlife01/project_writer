@@ -2,7 +2,7 @@ import 'package:amplify_flutter/amplify.dart';
 import 'package:project_writer_v04/models/IdeaMemo.dart';
 import 'package:project_writer_v04/models/ModelProvider.dart';
 
-class NewCombineRepository {
+class FreeWriteRepository {
   final ideaIdFirst = 'idea_';
   final tagIdFirst = 'history_';
   final historyLength = 4;

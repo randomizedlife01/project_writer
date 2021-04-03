@@ -13,7 +13,7 @@ class FreeWriteCubit extends Cubit<FreeWriteState> {
   List<SearchHistory> searchHistory;
   List<SearchHistory> _filteredSearchHistory;
 
-  final NewCombineRepository newCombineRepository;
+  final FreeWriteRepository newCombineRepository;
 
   FreeWriteCubit({this.newCombineRepository, this.ideaMemo, this.searchHistory}) : super(FreeWriteLoading());
 
