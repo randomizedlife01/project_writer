@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify.dart';
-import 'package:project_writer_v04/services/auth/auth_credentials.dart';
+import 'package:project_writer_v04/pages/auth_pages/bloc/auth_credentials.dart';
 
 enum AuthFlowStatus { login, signUp, verification, session }
 

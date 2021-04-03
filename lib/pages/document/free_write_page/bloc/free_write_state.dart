@@ -11,22 +11,22 @@ abstract class FreeWriteState extends Equatable {
   List<Object> get props => [ideaMemo, searchHistory];
 }
 
-class StateOfIdeasLoading extends FreeWriteState {
+class FreeWriteLoading extends FreeWriteState {
   @override
   String toString() => 'Ideas Loading';
 }
 
-class StateOfIdeasLoaded extends FreeWriteState {
+class FreeWriteLoaded extends FreeWriteState {
   final List<IdeaMemo> ideaMemo;
   final List<SearchHistory> searchHistory;
 
-  StateOfIdeasLoaded({this.ideaMemo = const [], this.searchHistory = const []}) : super(ideaMemo: ideaMemo, searchHistory: searchHistory);
+  FreeWriteLoaded({this.ideaMemo = const [], this.searchHistory = const []}) : super(ideaMemo: ideaMemo, searchHistory: searchHistory);
 
   @override
   String toString() => 'StateOfIdeasLoaded { StateOfIdeasLoaded: $ideaMemo , StateOfSearchHistoryLoaded : $searchHistory}';
 }
 
-class StateOfIdeasNotLoaded extends FreeWriteState {
+class FreeWriteNotLoaded extends FreeWriteState {
   @override
   String toString() => 'StateOfIdeasLoaded NotLoaded';
 }

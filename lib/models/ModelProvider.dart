@@ -16,26 +16,45 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
+import 'Document.dart';
 import 'IdeaMemo.dart';
+import 'MyLifeMemo.dart';
 import 'SearchHistory.dart';
 
+export 'Document.dart';
 export 'IdeaMemo.dart';
+export 'MyLifeMemo.dart';
 export 'SearchHistory.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "8c47a84f2451aa50b72600ff9b9239fe";
+  String version = "16420db9eff01a944567a25396df310e";
   @override
-  List<ModelSchema> modelSchemas = [IdeaMemo.schema, SearchHistory.schema];
+  List<ModelSchema> modelSchemas = [
+    Document.schema,
+    IdeaMemo.schema,
+    MyLifeMemo.schema,
+    SearchHistory.schema
+  ];
   static final ModelProvider _instance = ModelProvider();
 
   static ModelProvider get instance => _instance;
 
   ModelType getModelTypeByModelName(String modelName) {
     switch (modelName) {
+      case "Document":
+        {
+          return Document.classType;
+        }
+        break;
       case "IdeaMemo":
         {
           return IdeaMemo.classType;
+        }
+        break;
+      case "MyLifeMemo":
+        {
+          return MyLifeMemo.classType;
         }
         break;
       case "SearchHistory":

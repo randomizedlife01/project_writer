@@ -17,8 +17,8 @@ class SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //final _allBloc = BlocProvider.of<ReFreeCubit>(context);
-    return BlocBuilder<ReFreeCubit, FreeWriteState>(builder: (context, state) {
-      if (state is StateOfIdeasLoaded) {
+    return BlocBuilder<FreeWriteCubit, FreeWriteState>(builder: (context, state) {
+      if (state is FreeWriteLoaded) {
         return FloatingSearchBar(
           autocorrect: false,
           shadowColor: Colors.transparent,
@@ -47,14 +47,14 @@ class SearchBar extends StatelessWidget {
             FloatingSearchBarAction.searchToClear(),
           ],
           onQueryChanged: (query) {
-            BlocProvider.of<ReFreeCubit>(context).filteredSearchTerms(filter: query);
+            BlocProvider.of<FreeWriteCubit>(context).filteredSearchTerms(filter: query);
           },
           onSubmitted: (query) {
-            BlocProvider.of<ReFreeCubit>(context).createTag(tag: query);
+            BlocProvider.of<FreeWriteCubit>(context).createTag(tag: query);
             selectTerm = query;
             query.isEmpty
-                ? BlocProvider.of<ReFreeCubit>(context).readIdeaAndTags()
-                : BlocProvider.of<ReFreeCubit>(context).filteredIdeaAndTags(filter: query);
+                ? BlocProvider.of<FreeWriteCubit>(context).readIdeaAndTags()
+                : BlocProvider.of<FreeWriteCubit>(context).filteredIdeaAndTags(filter: query);
             controller.close();
           },
           builder: (context, transition) {
@@ -111,11 +111,11 @@ class SearchBar extends StatelessWidget {
                                     color: Color(0xFF3b4445),
                                   ),
                                   onPressed: () {
-                                    BlocProvider.of<ReFreeCubit>(context).deleteSearchTerms(term: term.searchHistory);
+                                    BlocProvider.of<FreeWriteCubit>(context).deleteSearchTerms(term: term.searchHistory);
                                   },
                                 ),
                                 onTap: () {
-                                  BlocProvider.of<ReFreeCubit>(context).putSearchTerms(term: term.searchHistory);
+                                  BlocProvider.of<FreeWriteCubit>(context).putSearchTerms(term: term.searchHistory);
                                   selectTerm = term.searchHistory;
                                   controller.close();
                                 },
@@ -130,7 +130,7 @@ class SearchBar extends StatelessWidget {
             );
           },
         );
-      } else if (state is StateOfIdeasLoading) {
+      } else if (state is FreeWriteLoading) {
         return CircularProgressIndicator();
       } else {
         return Center(child: Text('데이터 로드 중\n오류가 발생하였습니다.'));
@@ -149,9 +149,9 @@ class SearchResultsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fsb = FloatingSearchBar.of(context);
-    return BlocBuilder<ReFreeCubit, FreeWriteState>(
+    return BlocBuilder<FreeWriteCubit, FreeWriteState>(
       builder: (context, state) {
-        if (state is StateOfIdeasLoaded) {
+        if (state is FreeWriteLoaded) {
           return Padding(
             padding: const EdgeInsets.only(top: 15.0),
             child: ListView.separated(
@@ -185,7 +185,7 @@ class SearchResultsListView extends StatelessWidget {
                       icon: Icons.delete,
                       onTap: () {
                         //TODO: 아이디어 메모 삭제
-                        BlocProvider.of<ReFreeCubit>(context)..deleteIdea(id: state.ideaMemo[toIndex].id);
+                        BlocProvider.of<FreeWriteCubit>(context)..deleteIdea(id: state.ideaMemo[toIndex].id);
                       },
                     ),
                   ],
@@ -228,7 +228,7 @@ class SearchResultsListView extends StatelessWidget {
               },
             ),
           );
-        } else if (state is StateOfIdeasLoading) {
+        } else if (state is FreeWriteLoading) {
           return Center(
             child: CircularProgressIndicator(),
           );

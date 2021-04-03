@@ -18,13 +18,13 @@
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
 import 'package:flutter/foundation.dart';
 
-/** This is an auto generated class representing the IdeaMemo type in your schema. */
+/** This is an auto generated class representing the MyLifeMemo type in your schema. */
 @immutable
-class IdeaMemo extends Model {
-  static const classType = const IdeaMemoType();
+class MyLifeMemo extends Model {
+  static const classType = const MyLifeMemoType();
   final String id;
-  final String memo;
-  final String tags;
+  final String lifeMemo;
+  final TemporalDate myLifeDate;
   final String documentID;
 
   @override
@@ -35,14 +35,21 @@ class IdeaMemo extends Model {
     return id;
   }
 
-  const IdeaMemo._internal(
-      {@required this.id, this.memo, this.tags, this.documentID});
+  const MyLifeMemo._internal(
+      {@required this.id,
+      this.lifeMemo,
+      @required this.myLifeDate,
+      this.documentID});
 
-  factory IdeaMemo({String id, String memo, String tags, String documentID}) {
-    return IdeaMemo._internal(
+  factory MyLifeMemo(
+      {String id,
+      String lifeMemo,
+      @required TemporalDate myLifeDate,
+      String documentID}) {
+    return MyLifeMemo._internal(
         id: id == null ? UUID.getUUID() : id,
-        memo: memo,
-        tags: tags,
+        lifeMemo: lifeMemo,
+        myLifeDate: myLifeDate,
         documentID: documentID);
   }
 
@@ -53,10 +60,10 @@ class IdeaMemo extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is IdeaMemo &&
+    return other is MyLifeMemo &&
         id == other.id &&
-        memo == other.memo &&
-        tags == other.tags &&
+        lifeMemo == other.lifeMemo &&
+        myLifeDate == other.myLifeDate &&
         documentID == other.documentID;
   }
 
@@ -67,41 +74,53 @@ class IdeaMemo extends Model {
   String toString() {
     var buffer = new StringBuffer();
 
-    buffer.write("IdeaMemo {");
+    buffer.write("MyLifeMemo {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("memo=" + "$memo" + ", ");
-    buffer.write("tags=" + "$tags" + ", ");
+    buffer.write("lifeMemo=" + "$lifeMemo" + ", ");
+    buffer.write("myLifeDate=" +
+        (myLifeDate != null ? myLifeDate.format() : "null") +
+        ", ");
     buffer.write("documentID=" + "$documentID");
     buffer.write("}");
 
     return buffer.toString();
   }
 
-  IdeaMemo copyWith({String id, String memo, String tags, String documentID}) {
-    return IdeaMemo(
+  MyLifeMemo copyWith(
+      {String id,
+      String lifeMemo,
+      TemporalDate myLifeDate,
+      String documentID}) {
+    return MyLifeMemo(
         id: id ?? this.id,
-        memo: memo ?? this.memo,
-        tags: tags ?? this.tags,
+        lifeMemo: lifeMemo ?? this.lifeMemo,
+        myLifeDate: myLifeDate ?? this.myLifeDate,
         documentID: documentID ?? this.documentID);
   }
 
-  IdeaMemo.fromJson(Map<String, dynamic> json)
+  MyLifeMemo.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        memo = json['memo'],
-        tags = json['tags'],
+        lifeMemo = json['lifeMemo'],
+        myLifeDate = json['myLifeDate'] != null
+            ? TemporalDate.fromString(json['myLifeDate'])
+            : null,
         documentID = json['documentID'];
 
-  Map<String, dynamic> toJson() =>
-      {'id': id, 'memo': memo, 'tags': tags, 'documentID': documentID};
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'lifeMemo': lifeMemo,
+        'myLifeDate': myLifeDate?.format(),
+        'documentID': documentID
+      };
 
-  static final QueryField ID = QueryField(fieldName: "ideaMemo.id");
-  static final QueryField MEMO = QueryField(fieldName: "memo");
-  static final QueryField TAGS = QueryField(fieldName: "tags");
+  static final QueryField ID = QueryField(fieldName: "myLifeMemo.id");
+  static final QueryField LIFEMEMO = QueryField(fieldName: "lifeMemo");
+  static final QueryField MYLIFEDATE = QueryField(fieldName: "myLifeDate");
   static final QueryField DOCUMENTID = QueryField(fieldName: "documentID");
   static var schema =
       Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "IdeaMemo";
-    modelSchemaDefinition.pluralName = "IdeaMemos";
+    modelSchemaDefinition.name = "MyLifeMemo";
+    modelSchemaDefinition.pluralName = "MyLifeMemos";
 
     modelSchemaDefinition.authRules = [
       AuthRule(authStrategy: AuthStrategy.PUBLIC, operations: [
@@ -115,27 +134,27 @@ class IdeaMemo extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: IdeaMemo.MEMO,
+        key: MyLifeMemo.LIFEMEMO,
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: IdeaMemo.TAGS,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+        key: MyLifeMemo.MYLIFEDATE,
+        isRequired: true,
+        ofType: ModelFieldType(ModelFieldTypeEnum.date)));
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: IdeaMemo.DOCUMENTID,
+        key: MyLifeMemo.DOCUMENTID,
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
   });
 }
 
-class IdeaMemoType extends ModelType<IdeaMemo> {
-  const IdeaMemoType();
+class MyLifeMemoType extends ModelType<MyLifeMemo> {
+  const MyLifeMemoType();
 
   @override
-  IdeaMemo fromJson(Map<String, dynamic> jsonData) {
-    return IdeaMemo.fromJson(jsonData);
+  MyLifeMemo fromJson(Map<String, dynamic> jsonData) {
+    return MyLifeMemo.fromJson(jsonData);
   }
 }

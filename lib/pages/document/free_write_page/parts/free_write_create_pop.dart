@@ -20,9 +20,9 @@ class FreeWriteCreatePop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ReFreeCubit, FreeWriteState>(
+    return BlocBuilder<FreeWriteCubit, FreeWriteState>(
       builder: (context, state) {
-        if (state is StateOfIdeasLoaded) {
+        if (state is FreeWriteLoaded) {
           return AlertDialog(
             backgroundColor: Color(0xFFf6f6f6),
             content: SingleChildScrollView(
@@ -80,14 +80,14 @@ class FreeWriteCreatePop extends StatelessWidget {
                                               }
 
                                               //TODO: 아이디어 생성
-                                              BlocProvider.of<ReFreeCubit>(context).createIdea(
+                                              BlocProvider.of<FreeWriteCubit>(context).createIdea(
                                                 memo: _memoController.text ?? '',
                                                 tag: _tagsController.text ?? '',
                                                 id: 'idea_' + (_lastIdeaIdNum + 1).toString(),
                                               );
 
                                               //TODO: 태그 생성
-                                              BlocProvider.of<ReFreeCubit>(context).createTag(tag: _tagsController.text);
+                                              BlocProvider.of<FreeWriteCubit>(context).createTag(tag: _tagsController.text);
 
                                               Navigator.pop(context);
                                             }
@@ -108,7 +108,7 @@ class FreeWriteCreatePop extends StatelessWidget {
               ),
             ),
           );
-        } else if (state is StateOfIdeasLoading) {
+        } else if (state is FreeWriteLoading) {
           return Center(
             child: CircularProgressIndicator(),
           );

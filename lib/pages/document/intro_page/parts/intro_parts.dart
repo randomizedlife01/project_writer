@@ -6,14 +6,14 @@ import 'package:unicorndial/unicorndial.dart';
 class IntroDocumentButton extends StatelessWidget {
   //도튜멘트 팝업 메뉴버튼
   List<UnicornButton> docMenuButtons() {
-    var docMenuButton = [];
+    var docMenuButton = List<UnicornButton>();
 
     docMenuButton.add(
       UnicornButton(
         hasLabel: true,
         labelText: "스토리 속으로",
         currentButton: FloatingActionButton(
-          heroTag: "doc-add",
+          //heroTag: "doc-add",
           backgroundColor: Color(0xFFF8FEE9),
           mini: true,
           child: Icon(
@@ -54,7 +54,7 @@ class IntroDocumentButton extends StatelessWidget {
         hasLabel: true,
         labelText: "표지 편집",
         currentButton: FloatingActionButton(
-          heroTag: "doc-edit",
+          //heroTag: "doc-edit",
           backgroundColor: Color(0xFFF8FEE9),
           mini: true,
           child: Icon(
@@ -77,7 +77,7 @@ class IntroDocumentButton extends StatelessWidget {
         hasLabel: true,
         labelText: "문서 삭제",
         currentButton: FloatingActionButton(
-          heroTag: "doc-delete",
+          //heroTag: "doc-delete",
           backgroundColor: Color(0xFFF8FEE9),
           mini: true,
           child: Icon(

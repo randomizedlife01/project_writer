@@ -8,34 +8,34 @@ import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_writ
 
 part 'free_write_state.dart';
 
-class ReFreeCubit extends Cubit<FreeWriteState> {
+class FreeWriteCubit extends Cubit<FreeWriteState> {
   List<IdeaMemo> ideaMemo;
   List<SearchHistory> searchHistory;
   List<SearchHistory> _filteredSearchHistory;
 
   final NewCombineRepository newCombineRepository;
 
-  ReFreeCubit({this.newCombineRepository, this.ideaMemo, this.searchHistory}) : super(StateOfIdeasLoading());
+  FreeWriteCubit({this.newCombineRepository, this.ideaMemo, this.searchHistory}) : super(FreeWriteLoading());
 
   Future<void> readIdeaAndTags() async {
     try {
-      emit(StateOfIdeasLoading());
+      emit(FreeWriteLoading());
 
       ideaMemo = await newCombineRepository.readIdeas();
 
       searchHistory = await newCombineRepository.readTags();
-      emit(StateOfIdeasLoaded(ideaMemo: ideaMemo, searchHistory: searchHistory));
+      emit(FreeWriteLoaded(ideaMemo: ideaMemo, searchHistory: searchHistory));
     } catch (e) {
-      emit(StateOfIdeasNotLoaded());
+      emit(FreeWriteNotLoaded());
     }
   }
 
   Future<void> filteredIdeaAndTags({@required String filter}) async {
     try {
-      emit(StateOfIdeasLoading());
+      emit(FreeWriteLoading());
 
       ideaMemo = ideaMemo.where((element) => element.tags.contains(filter)).toList();
-      emit(StateOfIdeasLoaded(ideaMemo: ideaMemo, searchHistory: searchHistory));
+      emit(FreeWriteLoaded(ideaMemo: ideaMemo, searchHistory: searchHistory));
     } catch (e) {
       throw e;
     }
@@ -43,14 +43,14 @@ class ReFreeCubit extends Cubit<FreeWriteState> {
 
   Future<void> createIdea({String id, String memo, String tag}) async {
     try {
-      emit(StateOfIdeasLoading());
+      emit(FreeWriteLoading());
 
       final data = await newCombineRepository.createIdea(id: id, memo: memo, tags: tag);
       ideaMemo.add(data);
 
       print(ideaMemo);
 
-      emit(StateOfIdeasLoaded(ideaMemo: ideaMemo, searchHistory: searchHistory));
+      emit(FreeWriteLoaded(ideaMemo: ideaMemo, searchHistory: searchHistory));
     } catch (e) {
       throw e;
     }
@@ -64,12 +64,12 @@ class ReFreeCubit extends Cubit<FreeWriteState> {
 
   Future<void> deleteIdea({String id}) async {
     try {
-      emit(StateOfIdeasLoading());
+      emit(FreeWriteLoading());
 
       final data = await newCombineRepository.deleteIdea(id: id);
       ideaMemo.remove(data);
 
-      emit(StateOfIdeasLoaded(ideaMemo: ideaMemo, searchHistory: searchHistory));
+      emit(FreeWriteLoaded(ideaMemo: ideaMemo, searchHistory: searchHistory));
     } catch (e) {
       throw e;
     }
@@ -77,7 +77,7 @@ class ReFreeCubit extends Cubit<FreeWriteState> {
 
   Future<void> createTag({String tag}) async {
     try {
-      emit(StateOfIdeasLoading());
+      emit(FreeWriteLoading());
 
       searchHistory = await Amplify.DataStore.query(SearchHistory.classType);
       if (searchHistory.contains(tag)) {
@@ -100,7 +100,7 @@ class ReFreeCubit extends Cubit<FreeWriteState> {
 
       filteredSearchTerms(filter: null);
 
-      emit(StateOfIdeasLoaded(ideaMemo: ideaMemo, searchHistory: searchHistory));
+      emit(FreeWriteLoaded(ideaMemo: ideaMemo, searchHistory: searchHistory));
     } catch (e) {
       throw e;
     }

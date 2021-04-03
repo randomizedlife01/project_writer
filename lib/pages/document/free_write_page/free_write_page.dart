@@ -18,12 +18,12 @@ class _FreeWritePageState extends State<FreeWritePage> {
   final memoController = TextEditingController();
   final tagsController = TextEditingController();
 
-  final ReFreeCubit reFreeCubit = ReFreeCubit();
+  final FreeWriteCubit reFreeCubit = FreeWriteCubit();
 
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ReFreeCubit>(context).readIdeaAndTags();
+    BlocProvider.of<FreeWriteCubit>(context).readIdeaAndTags();
   }
 
   Widget floatingButton() {
@@ -64,7 +64,7 @@ class _FreeWritePageState extends State<FreeWritePage> {
           context: context,
           builder: (_) {
             return BlocProvider.value(
-              value: BlocProvider.of<ReFreeCubit>(context),
+              value: BlocProvider.of<FreeWriteCubit>(context),
               child: FreeWriteCreatePop(
                 nameLabelText: '태그 입력',
                 nameHintText: '#제외, 띄어쓰기로 구분합니다.',

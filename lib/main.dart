@@ -4,14 +4,12 @@ import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:project_writer_v04/models/ModelProvider.dart';
-import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
-import 'package:project_writer_v04/services/auth/auth_bloc.dart';
+import 'package:project_writer_v04/pages/auth_pages/bloc/auth_bloc.dart';
+import 'package:project_writer_v04/services/route/app_route.dart';
 import 'amplifyconfiguration.dart';
-import 'pages/auth_pages/login_page.dart';
-import 'pages/auth_pages/signup_page.dart';
-import 'pages/auth_pages/verification_page.dart';
 import 'theme/theme_data.dart';
 
 void main() {
@@ -24,14 +22,14 @@ void main() {
 // 1
 class MyApp extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _MyAppState();
+  _MyAppState createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
+  final AppRouter _appRouter = AppRouter();
+
   final _authService = AuthService();
   final _amplify = Amplify;
-
-  final navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
@@ -61,47 +59,16 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return KeyboardVisibilityProvider(
       child: MaterialApp(
-        navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         title: 'Project Writer v04',
         theme: StoryThemeData.data,
-        home: StreamBuilder<AuthState>(
-            stream: _authService.authStateController.stream,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Navigator(
-                  pages: [
-                    if (snapshot.data.authFlowStatus == AuthFlowStatus.login)
-                      MaterialPage(
-                          child: LoginPage(
-                        shouldShowSignUp: _authService.showSignUp,
-                        didProvideCredentials: _authService.loginWithCredentials,
-                      )),
-                    if (snapshot.data.authFlowStatus == AuthFlowStatus.signUp)
-                      MaterialPage(
-                          child: SignUpPage(
-                        shouldShowLogin: _authService.showLogin,
-                        didProvideCredentials: _authService.signUpWithCredentials,
-                      )),
-                    if (snapshot.data.authFlowStatus == AuthFlowStatus.verification)
-                      MaterialPage(child: VerificationPage(didProvideVerificationCode: _authService.verifyCode)),
-                    if (snapshot.data.authFlowStatus == AuthFlowStatus.session)
-                      MaterialPage(
-                        child: IntroPage(
-                          shouldLogOut: _authService.logOut,
-                        ),
-                      ),
-                  ],
-                  onPopPage: (route, result) => route.didPop(result),
-                );
-              } else {
-                return Container(
-                  alignment: Alignment.center,
-                  child: CircularProgressIndicator(),
-                );
-              }
-            }),
+        onGenerateRoute: _appRouter.onGeneratorRoute,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
