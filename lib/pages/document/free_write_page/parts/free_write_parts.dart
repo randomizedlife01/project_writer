@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_cubit.dart';
+import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_bloc.dart';
 
 class SearchBar extends StatelessWidget {
   String selectTerm = '';

@@ -2,15 +2,12 @@ type Document @model @auth(rules: [{allow: public}]) {
   id: ID!
   docName: String
   docDesc: String
-  IdeaMemos: [IdeaMemo] @connection(keyName: "byDocument", fields: ["id"])
-  MyLifeMemos: [MyLifeMemo] @connection(keyName: "byDocument", fields: ["id"])
 }
 
-type MyLifeMemo @model @auth(rules: [{allow: public}]) @key(name: "byDocument", fields: ["documentID"]) {
+type MyLifeStory @model @auth(rules: [{allow: public}]) {
   id: ID!
   lifeMemo: String
   myLifeDate: AWSDate!
-  documentID: ID
 }
 
 type SearchHistory @model @auth(rules: [{allow: public}]) {
@@ -18,10 +15,9 @@ type SearchHistory @model @auth(rules: [{allow: public}]) {
   searchHistory: String
 }
 
-type IdeaMemo @model @auth(rules: [{allow: public}]) @key(name: "byDocument", fields: ["documentID"]) {
+type IdeaMemo @model @auth(rules: [{allow: public}]) {
   id: ID!
   memo: String
   tags: String
-  documentID: ID
 }
  

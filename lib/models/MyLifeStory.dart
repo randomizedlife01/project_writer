@@ -18,14 +18,13 @@
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
 import 'package:flutter/foundation.dart';
 
-/** This is an auto generated class representing the MyLifeMemo type in your schema. */
+/** This is an auto generated class representing the MyLifeStory type in your schema. */
 @immutable
-class MyLifeMemo extends Model {
-  static const classType = const MyLifeMemoType();
+class MyLifeStory extends Model {
+  static const classType = const MyLifeStoryType();
   final String id;
   final String lifeMemo;
   final TemporalDate myLifeDate;
-  final String documentID;
 
   @override
   getInstanceType() => classType;
@@ -35,22 +34,15 @@ class MyLifeMemo extends Model {
     return id;
   }
 
-  const MyLifeMemo._internal(
-      {@required this.id,
-      this.lifeMemo,
-      @required this.myLifeDate,
-      this.documentID});
+  const MyLifeStory._internal(
+      {@required this.id, this.lifeMemo, @required this.myLifeDate});
 
-  factory MyLifeMemo(
-      {String id,
-      String lifeMemo,
-      @required TemporalDate myLifeDate,
-      String documentID}) {
-    return MyLifeMemo._internal(
+  factory MyLifeStory(
+      {String id, String lifeMemo, @required TemporalDate myLifeDate}) {
+    return MyLifeStory._internal(
         id: id == null ? UUID.getUUID() : id,
         lifeMemo: lifeMemo,
-        myLifeDate: myLifeDate,
-        documentID: documentID);
+        myLifeDate: myLifeDate);
   }
 
   bool equals(Object other) {
@@ -60,11 +52,10 @@ class MyLifeMemo extends Model {
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is MyLifeMemo &&
+    return other is MyLifeStory &&
         id == other.id &&
         lifeMemo == other.lifeMemo &&
-        myLifeDate == other.myLifeDate &&
-        documentID == other.documentID;
+        myLifeDate == other.myLifeDate;
   }
 
   @override
@@ -74,53 +65,40 @@ class MyLifeMemo extends Model {
   String toString() {
     var buffer = new StringBuffer();
 
-    buffer.write("MyLifeMemo {");
+    buffer.write("MyLifeStory {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("lifeMemo=" + "$lifeMemo" + ", ");
-    buffer.write("myLifeDate=" +
-        (myLifeDate != null ? myLifeDate.format() : "null") +
-        ", ");
-    buffer.write("documentID=" + "$documentID");
+    buffer.write(
+        "myLifeDate=" + (myLifeDate != null ? myLifeDate.format() : "null"));
     buffer.write("}");
 
     return buffer.toString();
   }
 
-  MyLifeMemo copyWith(
-      {String id,
-      String lifeMemo,
-      TemporalDate myLifeDate,
-      String documentID}) {
-    return MyLifeMemo(
+  MyLifeStory copyWith({String id, String lifeMemo, TemporalDate myLifeDate}) {
+    return MyLifeStory(
         id: id ?? this.id,
         lifeMemo: lifeMemo ?? this.lifeMemo,
-        myLifeDate: myLifeDate ?? this.myLifeDate,
-        documentID: documentID ?? this.documentID);
+        myLifeDate: myLifeDate ?? this.myLifeDate);
   }
 
-  MyLifeMemo.fromJson(Map<String, dynamic> json)
+  MyLifeStory.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         lifeMemo = json['lifeMemo'],
         myLifeDate = json['myLifeDate'] != null
             ? TemporalDate.fromString(json['myLifeDate'])
-            : null,
-        documentID = json['documentID'];
+            : null;
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'lifeMemo': lifeMemo,
-        'myLifeDate': myLifeDate?.format(),
-        'documentID': documentID
-      };
+  Map<String, dynamic> toJson() =>
+      {'id': id, 'lifeMemo': lifeMemo, 'myLifeDate': myLifeDate?.format()};
 
-  static final QueryField ID = QueryField(fieldName: "myLifeMemo.id");
+  static final QueryField ID = QueryField(fieldName: "myLifeStory.id");
   static final QueryField LIFEMEMO = QueryField(fieldName: "lifeMemo");
   static final QueryField MYLIFEDATE = QueryField(fieldName: "myLifeDate");
-  static final QueryField DOCUMENTID = QueryField(fieldName: "documentID");
   static var schema =
       Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
-    modelSchemaDefinition.name = "MyLifeMemo";
-    modelSchemaDefinition.pluralName = "MyLifeMemos";
+    modelSchemaDefinition.name = "MyLifeStory";
+    modelSchemaDefinition.pluralName = "MyLifeStories";
 
     modelSchemaDefinition.authRules = [
       AuthRule(authStrategy: AuthStrategy.PUBLIC, operations: [
@@ -134,27 +112,22 @@ class MyLifeMemo extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: MyLifeMemo.LIFEMEMO,
+        key: MyLifeStory.LIFEMEMO,
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: MyLifeMemo.MYLIFEDATE,
+        key: MyLifeStory.MYLIFEDATE,
         isRequired: true,
         ofType: ModelFieldType(ModelFieldTypeEnum.date)));
-
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: MyLifeMemo.DOCUMENTID,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
   });
 }
 
-class MyLifeMemoType extends ModelType<MyLifeMemo> {
-  const MyLifeMemoType();
+class MyLifeStoryType extends ModelType<MyLifeStory> {
+  const MyLifeStoryType();
 
   @override
-  MyLifeMemo fromJson(Map<String, dynamic> jsonData) {
-    return MyLifeMemo.fromJson(jsonData);
+  MyLifeStory fromJson(Map<String, dynamic> jsonData) {
+    return MyLifeStory.fromJson(jsonData);
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
-import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_cubit.dart';
+import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_bloc.dart';
 
 class FreeWriteCreatePop extends StatelessWidget {
   final String descLabelText;

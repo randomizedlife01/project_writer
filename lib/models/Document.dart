@@ -15,9 +15,7 @@
 
 // ignore_for_file: public_member_api_docs
 
-import 'ModelProvider.dart';
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 
 /** This is an auto generated class representing the Document type in your schema. */
@@ -27,8 +25,6 @@ class Document extends Model {
   final String id;
   final String docName;
   final String docDesc;
-  final List<IdeaMemo> IdeaMemos;
-  final List<MyLifeMemo> MyLifeMemos;
 
   @override
   getInstanceType() => classType;
@@ -38,26 +34,13 @@ class Document extends Model {
     return id;
   }
 
-  const Document._internal(
-      {@required this.id,
-      this.docName,
-      this.docDesc,
-      this.IdeaMemos,
-      this.MyLifeMemos});
+  const Document._internal({@required this.id, this.docName, this.docDesc});
 
-  factory Document(
-      {String id,
-      String docName,
-      String docDesc,
-      List<IdeaMemo> IdeaMemos,
-      List<MyLifeMemo> MyLifeMemos}) {
+  factory Document({String id, String docName, String docDesc}) {
     return Document._internal(
         id: id == null ? UUID.getUUID() : id,
         docName: docName,
-        docDesc: docDesc,
-        IdeaMemos: IdeaMemos != null ? List.unmodifiable(IdeaMemos) : IdeaMemos,
-        MyLifeMemos:
-            MyLifeMemos != null ? List.unmodifiable(MyLifeMemos) : MyLifeMemos);
+        docDesc: docDesc);
   }
 
   bool equals(Object other) {
@@ -70,9 +53,7 @@ class Document extends Model {
     return other is Document &&
         id == other.id &&
         docName == other.docName &&
-        docDesc == other.docDesc &&
-        DeepCollectionEquality().equals(IdeaMemos, other.IdeaMemos) &&
-        DeepCollectionEquality().equals(MyLifeMemos, other.MyLifeMemos);
+        docDesc == other.docDesc;
   }
 
   @override
@@ -91,55 +72,24 @@ class Document extends Model {
     return buffer.toString();
   }
 
-  Document copyWith(
-      {String id,
-      String docName,
-      String docDesc,
-      List<IdeaMemo> IdeaMemos,
-      List<MyLifeMemo> MyLifeMemos}) {
+  Document copyWith({String id, String docName, String docDesc}) {
     return Document(
         id: id ?? this.id,
         docName: docName ?? this.docName,
-        docDesc: docDesc ?? this.docDesc,
-        IdeaMemos: IdeaMemos ?? this.IdeaMemos,
-        MyLifeMemos: MyLifeMemos ?? this.MyLifeMemos);
+        docDesc: docDesc ?? this.docDesc);
   }
 
   Document.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         docName = json['docName'],
-        docDesc = json['docDesc'],
-        IdeaMemos = json['IdeaMemos'] is List
-            ? (json['IdeaMemos'] as List)
-                .map((e) => IdeaMemo.fromJson(new Map<String, dynamic>.from(e)))
-                .toList()
-            : null,
-        MyLifeMemos = json['MyLifeMemos'] is List
-            ? (json['MyLifeMemos'] as List)
-                .map((e) =>
-                    MyLifeMemo.fromJson(new Map<String, dynamic>.from(e)))
-                .toList()
-            : null;
+        docDesc = json['docDesc'];
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'docName': docName,
-        'docDesc': docDesc,
-        'IdeaMemos': IdeaMemos?.map((e) => e?.toJson())?.toList(),
-        'MyLifeMemos': MyLifeMemos?.map((e) => e?.toJson())?.toList()
-      };
+  Map<String, dynamic> toJson() =>
+      {'id': id, 'docName': docName, 'docDesc': docDesc};
 
   static final QueryField ID = QueryField(fieldName: "document.id");
   static final QueryField DOCNAME = QueryField(fieldName: "docName");
   static final QueryField DOCDESC = QueryField(fieldName: "docDesc");
-  static final QueryField IDEAMEMOS = QueryField(
-      fieldName: "IdeaMemos",
-      fieldType: ModelFieldType(ModelFieldTypeEnum.model,
-          ofModelName: (IdeaMemo).toString()));
-  static final QueryField MYLIFEMEMOS = QueryField(
-      fieldName: "MyLifeMemos",
-      fieldType: ModelFieldType(ModelFieldTypeEnum.model,
-          ofModelName: (MyLifeMemo).toString()));
   static var schema =
       Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Document";
@@ -165,18 +115,6 @@ class Document extends Model {
         key: Document.DOCDESC,
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-        key: Document.IDEAMEMOS,
-        isRequired: false,
-        ofModelName: (IdeaMemo).toString(),
-        associatedKey: IdeaMemo.DOCUMENTID));
-
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-        key: Document.MYLIFEMEMOS,
-        isRequired: false,
-        ofModelName: (MyLifeMemo).toString(),
-        associatedKey: MyLifeMemo.DOCUMENTID));
   });
 }
 

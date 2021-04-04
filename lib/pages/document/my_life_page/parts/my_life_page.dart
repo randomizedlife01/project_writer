@@ -5,6 +5,7 @@ class MyLifePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        padding: EdgeInsets.all(15.0),
         child: Text('hey!'),
       ),
     );

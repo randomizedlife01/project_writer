@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
-import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_repository.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/parts/free_write_create_pop.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/parts/free_write_parts.dart';
-import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_cubit.dart';
+import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_bloc.dart';
 
 class FreeWritePage extends StatefulWidget {
   final String appBarTitle;

@@ -6,7 +6,6 @@ import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_bloc.dart';
 import 'package:project_writer_v04/pages/document/intro_page/parts/intro_doc_create_pop.dart';
 import 'package:project_writer_v04/pages/document/intro_page/parts/intro_parts.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class IntroPage extends StatelessWidget {
   final VoidCallback shouldLogOut;

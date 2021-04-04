@@ -25,7 +25,6 @@ class IdeaMemo extends Model {
   final String id;
   final String memo;
   final String tags;
-  final String documentID;
 
   @override
   getInstanceType() => classType;
@@ -35,15 +34,11 @@ class IdeaMemo extends Model {
     return id;
   }
 
-  const IdeaMemo._internal(
-      {@required this.id, this.memo, this.tags, this.documentID});
+  const IdeaMemo._internal({@required this.id, this.memo, this.tags});
 
-  factory IdeaMemo({String id, String memo, String tags, String documentID}) {
+  factory IdeaMemo({String id, String memo, String tags}) {
     return IdeaMemo._internal(
-        id: id == null ? UUID.getUUID() : id,
-        memo: memo,
-        tags: tags,
-        documentID: documentID);
+        id: id == null ? UUID.getUUID() : id, memo: memo, tags: tags);
   }
 
   bool equals(Object other) {
@@ -56,8 +51,7 @@ class IdeaMemo extends Model {
     return other is IdeaMemo &&
         id == other.id &&
         memo == other.memo &&
-        tags == other.tags &&
-        documentID == other.documentID;
+        tags == other.tags;
   }
 
   @override
@@ -70,34 +64,27 @@ class IdeaMemo extends Model {
     buffer.write("IdeaMemo {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("memo=" + "$memo" + ", ");
-    buffer.write("tags=" + "$tags" + ", ");
-    buffer.write("documentID=" + "$documentID");
+    buffer.write("tags=" + "$tags");
     buffer.write("}");
 
     return buffer.toString();
   }
 
-  IdeaMemo copyWith({String id, String memo, String tags, String documentID}) {
+  IdeaMemo copyWith({String id, String memo, String tags}) {
     return IdeaMemo(
-        id: id ?? this.id,
-        memo: memo ?? this.memo,
-        tags: tags ?? this.tags,
-        documentID: documentID ?? this.documentID);
+        id: id ?? this.id, memo: memo ?? this.memo, tags: tags ?? this.tags);
   }
 
   IdeaMemo.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         memo = json['memo'],
-        tags = json['tags'],
-        documentID = json['documentID'];
+        tags = json['tags'];
 
-  Map<String, dynamic> toJson() =>
-      {'id': id, 'memo': memo, 'tags': tags, 'documentID': documentID};
+  Map<String, dynamic> toJson() => {'id': id, 'memo': memo, 'tags': tags};
 
   static final QueryField ID = QueryField(fieldName: "ideaMemo.id");
   static final QueryField MEMO = QueryField(fieldName: "memo");
   static final QueryField TAGS = QueryField(fieldName: "tags");
-  static final QueryField DOCUMENTID = QueryField(fieldName: "documentID");
   static var schema =
       Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "IdeaMemo";
@@ -121,11 +108,6 @@ class IdeaMemo extends Model {
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: IdeaMemo.TAGS,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: IdeaMemo.DOCUMENTID,
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
   });

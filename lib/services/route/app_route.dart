@@ -4,18 +4,21 @@ import 'package:project_writer_v04/landing_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/login_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/signup_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/verification_page.dart';
-import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_cubit.dart';
+import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_bloc.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_repository.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/free_write_page.dart';
 import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_bloc.dart';
 import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/bloc/auth_bloc.dart';
+import 'package:project_writer_v04/pages/document/my_life_page/parts/bloc/my_life_bloc.dart';
+import 'package:project_writer_v04/pages/document/my_life_page/parts/bloc/my_life_repository.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/my_life_page.dart';
 import 'package:project_writer_v04/pages/story_page/story_page.dart';
 
 class AppRouter {
   final _authService = AuthService();
   final _freeWriteCubit = FreeWriteCubit(newCombineRepository: FreeWriteRepository(), ideaMemo: [], searchHistory: []);
+  final _myStoryCubit = MyLifeStoryCubit(myLifeRepository: MyLifeRepository(), myLifeStory: []);
   final _introDocumentCubit = IntroDocumentCubit();
 
   Route onGeneratorRoute(RouteSettings routeSettings) {
@@ -59,7 +62,12 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => StoryPage());
         break;
       case '/my_life_page':
-        return MaterialPageRoute(builder: (_) => MyLifePage());
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider.value(
+            value: _myStoryCubit,
+            child: MyLifePage(),
+          ),
+        );
         break;
       case '/free_write_page':
         return MaterialPageRoute(
