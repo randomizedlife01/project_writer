@@ -48,8 +48,6 @@ class FreeWriteCubit extends Cubit<FreeWriteState> {
       final data = await newCombineRepository.createIdea(id: id, memo: memo, tags: tag);
       ideaMemo.add(data);
 
-      print(ideaMemo);
-
       emit(FreeWriteLoaded(ideaMemo: ideaMemo, searchHistory: searchHistory));
     } catch (e) {
       throw e;

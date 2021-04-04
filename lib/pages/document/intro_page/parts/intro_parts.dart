@@ -30,7 +30,7 @@ class IntroDocumentButton extends StatelessWidget {
           ),
           onPressed: () {
             //TODO: 스토리 속으로... 현재 진행중.
-            Navigator.pushNamed(context, '/story_page');
+            //Navigator.pushNamed(context, '/story_page');
             // Navigator.push(
             //   context,
             //   MaterialPageRoute(
@@ -118,20 +118,17 @@ class IntroDocumentButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      right: 8.0,
-      bottom: 8.0,
-      child: Align(
-        alignment: FractionalOffset.bottomRight,
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.65,
-          child: UnicornDialer(
-              backgroundColor: Color.fromRGBO(0, 0, 0, 0.8),
-              orientation: UnicornOrientation.VERTICAL,
-              parentButton: Icon(
-                Icons.list,
-              ),
-              childButtons: docMenuButtons(context: context)),
-        ),
+      right: 10.0,
+      bottom: 10.0,
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.65,
+        child: UnicornDialer(
+            backgroundColor: Color.fromRGBO(0, 0, 0, 0.8),
+            orientation: UnicornOrientation.VERTICAL,
+            parentButton: Icon(
+              Icons.list,
+            ),
+            childButtons: docMenuButtons(context: context)),
       ),
     );
   }

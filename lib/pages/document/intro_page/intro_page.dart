@@ -3,13 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
-import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_repository.dart';
-import 'package:project_writer_v04/pages/document/free_write_page/free_write_page.dart';
 import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_bloc.dart';
 import 'package:project_writer_v04/pages/document/intro_page/parts/intro_doc_create_pop.dart';
 import 'package:project_writer_v04/pages/document/intro_page/parts/intro_parts.dart';
-import 'package:project_writer_v04/pages/document/timer_write_page/timer_write_page.dart';
-import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_cubit.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class IntroPage extends StatelessWidget {
   final VoidCallback shouldLogOut;
@@ -22,7 +19,6 @@ class IntroPage extends StatelessWidget {
 
   Widget documentView({BuildContext context, IntroDocumentState state, int index}) {
     return Container(
-      padding: EdgeInsets.all(10.0),
       child: Stack(
         children: [
           IntroDocumentImage(
@@ -99,7 +95,6 @@ class IntroPage extends StatelessWidget {
       builder: (context, state) {
         if (state is IntroDocumentLoaded) {
           if (state.document.isNotEmpty) {
-            print(state.document.length);
             return Container(
               child: CarouselSlider.builder(
                 options: CarouselOptions(
@@ -172,30 +167,13 @@ class IntroPage extends StatelessWidget {
             BasicMenuButton(
               icon: FontAwesomeIcons.fileAlt,
               buttonText: '자유롭게\n쓰기',
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider<FreeWriteCubit>(
-                    create: (_) => FreeWriteCubit(newCombineRepository: FreeWriteRepository(), ideaMemo: [], searchHistory: []),
-                    child: FreeWritePage(
-                      appBarTitle: '자유롭게 쓰기',
-                    ),
-                  ),
-                ),
-              ),
+              onPressed: () => Navigator.of(context).pushNamed('/free_write_page'),
             ),
             BasicVerticalLine(),
             BasicMenuButton(
               icon: FontAwesomeIcons.calendar,
               buttonText: '내 삶의\n연표',
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TimerWritePage(
-                    appBarTitle: '타이머 글쓰기',
-                  ),
-                ),
-              ),
+              onPressed: () => Navigator.of(context).pushNamed('/my_life_page'),
             ),
             BasicVerticalLine(),
             BasicMenuButton(

@@ -5,22 +5,23 @@ import 'package:project_writer_v04/pages/auth_pages/login_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/signup_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/verification_page.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_cubit.dart';
+import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_repository.dart';
+import 'package:project_writer_v04/pages/document/free_write_page/free_write_page.dart';
 import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_bloc.dart';
 import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/bloc/auth_bloc.dart';
+import 'package:project_writer_v04/pages/document/my_life_page/parts/my_life_page.dart';
 import 'package:project_writer_v04/pages/story_page/story_page.dart';
 
 class AppRouter {
   final _authService = AuthService();
-  final _freeWriteCubit = FreeWriteCubit();
+  final _freeWriteCubit = FreeWriteCubit(newCombineRepository: FreeWriteRepository(), ideaMemo: [], searchHistory: []);
   final _introDocumentCubit = IntroDocumentCubit();
 
   Route onGeneratorRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
       case '/':
-        return MaterialPageRoute(
-          builder: (_) => LandingPage(),
-        );
+        return MaterialPageRoute(builder: (_) => LandingPage());
         break;
       case '/login_page':
         return MaterialPageRoute(
@@ -46,7 +47,6 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => MultiBlocProvider(
             providers: [
-              BlocProvider.value(value: _freeWriteCubit),
               BlocProvider.value(value: _introDocumentCubit),
             ],
             child: IntroPage(
@@ -57,6 +57,19 @@ class AppRouter {
         break;
       case '/story_page':
         return MaterialPageRoute(builder: (_) => StoryPage());
+        break;
+      case '/my_life_page':
+        return MaterialPageRoute(builder: (_) => MyLifePage());
+        break;
+      case '/free_write_page':
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider.value(
+            value: _freeWriteCubit,
+            child: FreeWritePage(
+              appBarTitle: '자유롭게 쓰기',
+            ),
+          ),
+        );
         break;
       default:
         return null;

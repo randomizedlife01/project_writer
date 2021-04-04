@@ -11,12 +11,11 @@ class SearchBar extends StatelessWidget {
   int firstIdIndex = 0;
 
   FloatingSearchBarController controller = FloatingSearchBarController();
-  //IdeasBloc _ideasBloc;
 
   //TODO: Bloc 작성은 끝났음. 태그 검색창 및 태그 리스트 진행.
   @override
   Widget build(BuildContext context) {
-    //final _allBloc = BlocProvider.of<ReFreeCubit>(context);
+    BlocProvider.of<FreeWriteCubit>(context).readIdeaAndTags();
     return BlocBuilder<FreeWriteCubit, FreeWriteState>(builder: (context, state) {
       if (state is FreeWriteLoaded) {
         return FloatingSearchBar(
