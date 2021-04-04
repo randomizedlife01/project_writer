@@ -12,7 +12,6 @@ class SearchBar extends StatelessWidget {
 
   FloatingSearchBarController controller = FloatingSearchBarController();
 
-  //TODO: Bloc 작성은 끝났음. 태그 검색창 및 태그 리스트 진행.
   @override
   Widget build(BuildContext context) {
     BlocProvider.of<FreeWriteCubit>(context).readIdeaAndTags();
@@ -144,7 +143,6 @@ class SearchResultsListView extends StatelessWidget {
 
   SearchResultsListView({Key key, this.searchTerm}) : super(key: key);
 
-  //TODO: Bloc 작성은 끝났음. 여기는 리스트 불러오고 필터 적용하는 곳.
   @override
   Widget build(BuildContext context) {
     final fsb = FloatingSearchBar.of(context);
@@ -183,7 +181,6 @@ class SearchResultsListView extends StatelessWidget {
                       color: Color(0xFFe23e57),
                       icon: Icons.delete,
                       onTap: () {
-                        //TODO: 아이디어 메모 삭제
                         BlocProvider.of<FreeWriteCubit>(context)..deleteIdea(id: state.ideaMemo[toIndex].id);
                       },
                     ),

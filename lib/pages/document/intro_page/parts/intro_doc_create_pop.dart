@@ -70,7 +70,6 @@ class DocCreatePopUp extends StatelessWidget {
                                               _lastIdeaIdNum = int.parse(number);
                                             }
 
-                                            //TODO: 아이디어 생성
                                             BlocProvider.of<IntroDocumentCubit>(context).createDoc(
                                               docName: _docNameController.text ?? '무 제',
                                               docDesc: _docDescController.text ?? '아직 없음',

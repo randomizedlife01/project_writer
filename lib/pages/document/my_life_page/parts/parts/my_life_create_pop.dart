@@ -13,27 +13,56 @@ class MyLifeCreatePop extends StatelessWidget {
   MyLifeCreatePop({Key key, this.nameLabelText, this.nameHintText, this.index}) : super(key: key);
 
   final _formKey = GlobalKey<FormState>();
-  final _memoController = TextEditingController();
-  final _tagsController = TextEditingController();
+  final _storyController = TextEditingController();
+  final _yearController = TextEditingController();
+  final _monthController = TextEditingController();
+  final _dayController = TextEditingController();
 
-  Widget dateWheelPicker(BuildContext context) {
-    DateTime now = new DateTime.now();
-    return TextButton(
-      onPressed: () {
-        DatePicker.showDatePicker(context,
-            showTitleActions: true,
-            minTime: DateTime(1930, 1, 1),
-            maxTime: DateTime(now.year, now.month, now.day),
-            onChanged: (date) {}, onConfirm: (date) {
-          //TODO: 태어난 날짜 선택하기
-        }, currentTime: DateTime.now(), locale: LocaleType.ko);
-      },
-      child: Text(
-        '소중한 당신 삶의 시작을 알려주세요',
-        style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 12.0),
+  Widget dateInputForm(BuildContext context, {String hintText, TextEditingController controller}) {
+    return Expanded(
+      child: TextFormField(
+        controller: controller,
+        style: Theme.of(context).textTheme.bodyText1.copyWith(color: Color(0xFF3b4445), fontWeight: FontWeight.w300, fontSize: 16.0),
+        textAlign: TextAlign.end,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5.0),
+            borderSide: BorderSide(
+              color: Color(0xFFe23e57),
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(5.0),
+            borderSide: BorderSide(
+              color: Color(0xFF8785a2),
+              width: 1.0,
+            ),
+          ),
+          hintText: hintText,
+          hintStyle: Theme.of(context).textTheme.bodyText1.copyWith(color: Color(0xffafbbbd), fontWeight: FontWeight.w300, fontSize: 16.0),
+        ),
       ),
     );
   }
+
+  // Widget dateWheelPicker(BuildContext context) {
+  //   DateTime now = new DateTime.now();
+  //   return TextButton(
+  //     onPressed: () {
+  //       DatePicker.showDatePicker(context,
+  //           showTitleActions: true,
+  //           minTime: DateTime(1930, 1, 1),
+  //           maxTime: DateTime(now.year, now.month, now.day),
+  //           onChanged: (date) {}, onConfirm: (date) {=
+  //       }, currentTime: DateTime.now(), locale: LocaleType.ko);
+  //     },
+  //     child: Text(
+  //       '소중한 당신 삶의 시작을 알려주세요',
+  //       style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 12.0),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -57,36 +86,85 @@ class MyLifeCreatePop extends StatelessWidget {
                               flex: 8,
                               child: Padding(
                                 padding: EdgeInsets.all(8.0),
-                                child: DocInputForm(hintText: nameHintText, labelText: nameLabelText, controller: _memoController),
+                                child: state.myLifeStory.isNotEmpty
+                                    ? DocInputForm(hintText: nameHintText, labelText: nameLabelText, controller: _storyController)
+                                    : Text(
+                                        '소중한 당신 삶의\n시작을 알려주세요',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1
+                                            .copyWith(color: Color(0xFF3b4445), fontWeight: FontWeight.w300),
+                                        textAlign: TextAlign.center,
+                                      ),
                               ),
                             ),
                             SizedBox(
                               height: 8.0,
                             ),
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: dateWheelPicker(context),
+                            Container(
+                              height: 40,
+                              //TODO: 지금 생각해보니 연월일이 아니라 분기로 하기로 했잖아?????
+                              child: Row(
+                                children: [
+                                  dateInputForm(context, hintText: '2000', controller: _yearController),
+                                  SizedBox(
+                                    width: 5.0,
+                                  ),
+                                  Text(
+                                    '년',
+                                    style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
+                                  ),
+                                  SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  dateInputForm(context, hintText: '01', controller: _monthController),
+                                  SizedBox(
+                                    width: 5.0,
+                                  ),
+                                  Text(
+                                    '월',
+                                    style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
+                                  ),
+                                  SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  dateInputForm(context, hintText: '31', controller: _dayController),
+                                  SizedBox(
+                                    width: 5.0,
+                                  ),
+                                  Text(
+                                    '일',
+                                    style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
                             ),
                             SizedBox(
                               width: double.infinity,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: OutlinedButton(
-                                        child: Text("취 소"),
-                                        onPressed: () => Navigator.pop(context),
-                                      ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: OutlinedButton(
+                                      child: Text("취 소"),
+                                      onPressed: () => Navigator.pop(context),
                                     ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Expanded(
-                                      child: ElevatedButton(
-                                        child: Text("저 장"),
-                                        onPressed: () {
-                                          if (_memoController.text.isNotEmpty && _tagsController.text.isNotEmpty) {
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      child: Text("저 장"),
+                                      onPressed: () {
+                                        if (state.myLifeStory.isNotEmpty) {
+                                          //TODO: 연표 데이터가 있을 경우 저장하는 곳.
+                                          if (_storyController.text.isNotEmpty &&
+                                              _yearController.text.isNotEmpty &&
+                                              _monthController.text.isNotEmpty &&
+                                              _dayController.text.isNotEmpty) {
                                             if (_formKey.currentState.validate()) {
                                               _formKey.currentState.save();
 
@@ -96,7 +174,6 @@ class MyLifeCreatePop extends StatelessWidget {
                                               //   _lastIdeaIdNum = int.parse(number);
                                               // }
                                               //
-                                              // //TODO: 아이디어 생성
                                               // BlocProvider.of<FreeWriteCubit>(context).createIdea(
                                               //   memo: _memoController.text ?? '',
                                               //   tag: _tagsController.text ?? '',
@@ -106,11 +183,21 @@ class MyLifeCreatePop extends StatelessWidget {
                                               Navigator.pop(context);
                                             }
                                           }
-                                        },
-                                      ),
+                                        } else if (state.myLifeStory.isEmpty) {
+                                          if (_yearController.text.isNotEmpty &&
+                                              _monthController.text.isNotEmpty &&
+                                              _dayController.text.isNotEmpty) {
+                                            if (_formKey.currentState.validate()) {
+                                              _formKey.currentState.save();
+
+                                              //TODO: 연표가 비었을 때 저장하는 곳
+                                            }
+                                          }
+                                        }
+                                      },
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             )
                           ],

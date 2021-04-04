@@ -79,14 +79,12 @@ class FreeWriteCreatePop extends StatelessWidget {
                                                 _lastIdeaIdNum = int.parse(number);
                                               }
 
-                                              //TODO: 아이디어 생성
                                               BlocProvider.of<FreeWriteCubit>(context).createIdea(
                                                 memo: _memoController.text ?? '',
                                                 tag: _tagsController.text ?? '',
                                                 id: 'idea_' + (_lastIdeaIdNum + 1).toString(),
                                               );
 
-                                              //TODO: 태그 생성
                                               BlocProvider.of<FreeWriteCubit>(context).createTag(tag: _tagsController.text);
 
                                               Navigator.pop(context);
