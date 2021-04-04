@@ -6,6 +6,7 @@ import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_repository.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/free_write_page.dart';
 import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_bloc.dart';
+import 'package:project_writer_v04/pages/document/intro_page/parts/intro_doc_create_pop.dart';
 import 'package:project_writer_v04/pages/document/intro_page/parts/intro_parts.dart';
 import 'package:project_writer_v04/pages/document/timer_write_page/timer_write_page.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_cubit.dart';
@@ -84,7 +85,9 @@ class IntroPage extends StatelessWidget {
               ),
             ),
           ),
-          IntroDocumentButton(),
+          IntroDocumentButton(
+            index: index,
+          ),
         ],
       ),
     );
@@ -96,12 +99,14 @@ class IntroPage extends StatelessWidget {
       builder: (context, state) {
         if (state is IntroDocumentLoaded) {
           if (state.document.isNotEmpty) {
+            print(state.document.length);
             return Container(
               child: CarouselSlider.builder(
                 options: CarouselOptions(
                   aspectRatio: 2.0,
                   enlargeCenterPage: true,
                   height: MediaQuery.of(context).size.height * 0.65,
+                  enableInfiniteScroll: false,
                 ),
                 itemCount: state.document.length,
                 itemBuilder: (context, itemIndex, realIdx) {
@@ -127,7 +132,16 @@ class IntroPage extends StatelessWidget {
                   style: Theme.of(context).outlinedButtonTheme.style.copyWith(
                         backgroundColor: MaterialStateProperty.all(Color(0xFF3b4445)),
                       ),
-                  onPressed: () {},
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (_) {
+                          return BlocProvider.value(
+                            value: BlocProvider.of<IntroDocumentCubit>(context),
+                            child: DocCreatePopUp(),
+                          );
+                        });
+                  },
                   child: Text('새로운 스토리 만들기'),
                 ),
               ],

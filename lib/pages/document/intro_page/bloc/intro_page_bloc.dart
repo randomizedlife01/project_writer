@@ -30,7 +30,7 @@ class IntroDocumentCubit extends Cubit<IntroDocumentState> {
       emit(IntroDocumentLoading());
 
       final data = await introDocumentRepository.createDocument(
-        id: 'docId' + state.document.length.toString(),
+        id: id,
         docName: docName,
         docDesc: docDesc,
       );

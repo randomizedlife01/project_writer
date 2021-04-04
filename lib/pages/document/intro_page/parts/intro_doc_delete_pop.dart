@@ -9,9 +9,8 @@ class DocDeletePopUp extends StatelessWidget {
 
   final FocusNode focusNode;
   final int index;
-  final String documentId;
 
-  DocDeletePopUp({Key key, this.focusNode, this.index, this.documentId}) : super(key: key);
+  DocDeletePopUp({Key key, this.focusNode, this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -68,12 +67,19 @@ class DocDeletePopUp extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Expanded(
-                              child: FlatButton(
+                              child: OutlinedButton(
+                                child: Text('취 소'),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              width: 20.0,
+                            ),
+                            Expanded(
+                              child: ElevatedButton(
                                 child: Text("삭 제"),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(40.0),
-                                ),
-                                color: Color(0xFFe23e57),
                                 onPressed: () {
                                   if (_formKey.currentState.validate()) {
                                     _formKey.currentState.save();
@@ -86,27 +92,6 @@ class DocDeletePopUp extends StatelessWidget {
                                       TextEditingController().clear();
                                     }
                                   }
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              width: 20.0,
-                            ),
-                            Expanded(
-                              child: FlatButton(
-                                child: Text('취 소'),
-                                color: Colors.white,
-                                textColor: Color(0xFF8785a2),
-                                shape: RoundedRectangleBorder(
-                                  side: BorderSide(
-                                    color: Color(0xFF8785a2),
-                                    width: 0.7,
-                                    style: BorderStyle.solid,
-                                  ),
-                                  borderRadius: BorderRadius.circular(40.0),
-                                ),
-                                onPressed: () {
-                                  Navigator.pop(context);
                                 },
                               ),
                             ),

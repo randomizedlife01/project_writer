@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_writer_v04/pages/document/intro_page/parts/intro_doc_delete_pop.dart';
 import 'package:unicorndial/unicorndial.dart';
+import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_bloc.dart';
 
 //도큐멘트 위의 버
 class IntroDocumentButton extends StatelessWidget {
+  final int index;
+
+  const IntroDocumentButton({Key key, this.index}) : super(key: key);
+
   //도튜멘트 팝업 메뉴버튼
-  List<UnicornButton> docMenuButtons(BuildContext context) {
+  List<UnicornButton> docMenuButtons({BuildContext context}) {
     var docMenuButton = List<UnicornButton>();
 
     docMenuButton.add(
@@ -89,15 +95,15 @@ class IntroDocumentButton extends StatelessWidget {
           ),
           onPressed: () {
             showDialog(
-              context: context,
-              builder: (context) {
-                //TODO: 스토리 속으로... 현재 진행중.
-                return DocDeletePopUp(
-                    //index: index,
-                    //documentId: snapshot.listValue[index].id,
-                    );
-              },
-            );
+                context: context,
+                builder: (_) {
+                  return BlocProvider.value(
+                    value: BlocProvider.of<IntroDocumentCubit>(context),
+                    child: DocDeletePopUp(
+                      index: index,
+                    ),
+                  );
+                });
           },
         ),
         labelBackgroundColor: Colors.transparent,
@@ -124,7 +130,7 @@ class IntroDocumentButton extends StatelessWidget {
               parentButton: Icon(
                 Icons.list,
               ),
-              childButtons: docMenuButtons(context)),
+              childButtons: docMenuButtons(context: context)),
         ),
       ),
     );

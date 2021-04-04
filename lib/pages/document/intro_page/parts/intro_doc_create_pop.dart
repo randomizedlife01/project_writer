@@ -46,32 +46,43 @@ class DocCreatePopUp extends StatelessWidget {
                               width: double.infinity,
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: RaisedButton(
-                                  child: Text("저 장"),
-                                  onPressed: () {
-                                    if (_formKey.currentState.validate()) {
-                                      _formKey.currentState.save();
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: OutlinedButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text('취 소'),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 15.0,
+                                    ),
+                                    Expanded(
+                                      child: ElevatedButton(
+                                        child: Text("저 장"),
+                                        onPressed: () {
+                                          if (_formKey.currentState.validate()) {
+                                            _formKey.currentState.save();
 
-                                      if (state.document.isNotEmpty) {
-                                        final lastId = state.document.last.id;
-                                        final number = lastId.split("_").last;
-                                        _lastIdeaIdNum = int.parse(number);
-                                      }
+                                            if (state.document.isNotEmpty) {
+                                              final lastId = state.document.last.id;
+                                              final number = lastId.split("_").last;
+                                              _lastIdeaIdNum = int.parse(number);
+                                            }
 
-                                      //TODO: 아이디어 생성
-                                      BlocProvider.of<IntroDocumentCubit>(context).createDoc(
-                                        docName: _docNameController.text ?? '',
-                                        docDesc: _docDescController.text ?? '',
-                                        id: 'document_' + (_lastIdeaIdNum + 1).toString(),
-                                      );
+                                            //TODO: 아이디어 생성
+                                            BlocProvider.of<IntroDocumentCubit>(context).createDoc(
+                                              docName: _docNameController.text ?? '무 제',
+                                              docDesc: _docDescController.text ?? '아직 없음',
+                                              id: 'document_' + (_lastIdeaIdNum + 1).toString(),
+                                            );
 
-                                      BlocProvider.of<IntroDocumentCubit>(context).createDoc(
-                                        docName: _docNameController.text == '' ? '무제' : _docNameController.text,
-                                        docDesc: _docDescController.text == '' ? '아직 없음' : _docDescController.text,
-                                      );
-                                      Navigator.pop(context);
-                                    }
-                                  },
+                                            Navigator.pop(context);
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             )
