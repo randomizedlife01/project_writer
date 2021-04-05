@@ -1,7 +1,14 @@
+type StorySummary @model @auth(rules: [{allow: public}]) @key(name: "byDocument", fields: ["documentID"]) {
+  id: ID!
+  storySummary: String
+  documentID: ID
+}
+
 type Document @model @auth(rules: [{allow: public}]) {
   id: ID!
   docName: String
   docDesc: String
+  StorySummaries: [StorySummary] @connection(keyName: "byDocument", fields: ["id"])
 }
 
 type MyLifeStory @model @auth(rules: [{allow: public}]) {

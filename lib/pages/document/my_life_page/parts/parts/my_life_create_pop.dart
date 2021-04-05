@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
-import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_bloc.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/bloc/my_life_bloc.dart';
 
 class MyLifeCreatePop extends StatelessWidget {
@@ -17,6 +15,7 @@ class MyLifeCreatePop extends StatelessWidget {
   final _yearController = TextEditingController();
   final _monthController = TextEditingController();
   final _dayController = TextEditingController();
+  final _quarterController = TextEditingController();
 
   Widget dateInputForm(BuildContext context, {String hintText, TextEditingController controller}) {
     return Expanded(
@@ -46,6 +45,97 @@ class MyLifeCreatePop extends StatelessWidget {
     );
   }
 
+  Widget emptyLifeStoryPopUp(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          '소중한 당신 삶의\n시작을 알려주세요',
+          style: Theme.of(context).textTheme.bodyText1.copyWith(color: Color(0xFF3b4445), fontWeight: FontWeight.w300),
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(
+          height: 8.0,
+        ),
+        Container(
+          height: 40,
+          child: Row(
+            children: [
+              dateInputForm(context, hintText: '1990', controller: _yearController),
+              SizedBox(
+                width: 5.0,
+              ),
+              Text(
+                '년',
+                style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              dateInputForm(context, hintText: '01', controller: _monthController),
+              SizedBox(
+                width: 5.0,
+              ),
+              Text(
+                '월',
+                style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              dateInputForm(context, hintText: '31', controller: _dayController),
+              SizedBox(
+                width: 5.0,
+              ),
+              Text(
+                '일',
+                style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget myLifeDateInput(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(child: DocInputForm(hintText: nameHintText, labelText: nameLabelText, controller: _storyController)),
+        SizedBox(
+          height: 8.0,
+        ),
+        Container(
+          height: 40,
+          child: Row(
+            children: [
+              dateInputForm(context, hintText: '1990', controller: _yearController),
+              SizedBox(
+                width: 5.0,
+              ),
+              Text(
+                '년',
+                style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              dateInputForm(context, hintText: '1', controller: _quarterController),
+              SizedBox(
+                width: 5.0,
+              ),
+              Text(
+                '분',
+                style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  //TODO: 지금 생각해보니 연월일이 아니라 분기로 하기로 했잖아?????
+
   // Widget dateWheelPicker(BuildContext context) {
   //   DateTime now = new DateTime.now();
   //   return TextButton(
@@ -63,6 +153,8 @@ class MyLifeCreatePop extends StatelessWidget {
   //     ),
   //   );
   // }
+
+  //TODO:+++++++++++++++++++++++++연표 작성을 분기로 하면 어떻게 정렬을 하지?++++++++++++++++++++++++++++++++//
 
   @override
   Widget build(BuildContext context) {
@@ -88,55 +180,7 @@ class MyLifeCreatePop extends StatelessWidget {
                                 padding: EdgeInsets.all(8.0),
                                 child: state.myLifeStory.isNotEmpty
                                     ? DocInputForm(hintText: nameHintText, labelText: nameLabelText, controller: _storyController)
-                                    : Text(
-                                        '소중한 당신 삶의\n시작을 알려주세요',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1
-                                            .copyWith(color: Color(0xFF3b4445), fontWeight: FontWeight.w300),
-                                        textAlign: TextAlign.center,
-                                      ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 8.0,
-                            ),
-                            Container(
-                              height: 40,
-                              //TODO: 지금 생각해보니 연월일이 아니라 분기로 하기로 했잖아?????
-                              child: Row(
-                                children: [
-                                  dateInputForm(context, hintText: '2000', controller: _yearController),
-                                  SizedBox(
-                                    width: 5.0,
-                                  ),
-                                  Text(
-                                    '년',
-                                    style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
-                                  ),
-                                  SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  dateInputForm(context, hintText: '01', controller: _monthController),
-                                  SizedBox(
-                                    width: 5.0,
-                                  ),
-                                  Text(
-                                    '월',
-                                    style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
-                                  ),
-                                  SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  dateInputForm(context, hintText: '31', controller: _dayController),
-                                  SizedBox(
-                                    width: 5.0,
-                                  ),
-                                  Text(
-                                    '일',
-                                    style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
-                                  ),
-                                ],
+                                    : emptyLifeStoryPopUp(context),
                               ),
                             ),
                             SizedBox(
@@ -161,10 +205,7 @@ class MyLifeCreatePop extends StatelessWidget {
                                       onPressed: () {
                                         if (state.myLifeStory.isNotEmpty) {
                                           //TODO: 연표 데이터가 있을 경우 저장하는 곳.
-                                          if (_storyController.text.isNotEmpty &&
-                                              _yearController.text.isNotEmpty &&
-                                              _monthController.text.isNotEmpty &&
-                                              _dayController.text.isNotEmpty) {
+                                          if (_storyController.text.isNotEmpty && _quarterController.text.isNotEmpty) {
                                             if (_formKey.currentState.validate()) {
                                               _formKey.currentState.save();
 

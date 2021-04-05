@@ -20,22 +20,19 @@ import 'Document.dart';
 import 'IdeaMemo.dart';
 import 'MyLifeStory.dart';
 import 'SearchHistory.dart';
+import 'StorySummary.dart';
 
 export 'Document.dart';
 export 'IdeaMemo.dart';
 export 'MyLifeStory.dart';
 export 'SearchHistory.dart';
+export 'StorySummary.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "42d62f63dac87eabc33ba1a41fac9e36";
+  String version = "d77f32a19775254de475d886ae3adaf2";
   @override
-  List<ModelSchema> modelSchemas = [
-    Document.schema,
-    IdeaMemo.schema,
-    MyLifeStory.schema,
-    SearchHistory.schema
-  ];
+  List<ModelSchema> modelSchemas = [Document.schema, IdeaMemo.schema, MyLifeStory.schema, SearchHistory.schema, StorySummary.schema];
   static final ModelProvider _instance = ModelProvider();
 
   static ModelProvider get instance => _instance;
@@ -62,11 +59,14 @@ class ModelProvider implements ModelProviderInterface {
           return SearchHistory.classType;
         }
         break;
+      case "StorySummary":
+        {
+          return StorySummary.classType;
+        }
+        break;
       default:
         {
-          throw Exception(
-              "Failed to find model in model provider for model name: " +
-                  modelName);
+          throw Exception("Failed to find model in model provider for model name: " + modelName);
         }
     }
   }

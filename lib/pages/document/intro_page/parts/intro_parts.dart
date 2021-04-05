@@ -30,7 +30,7 @@ class IntroDocumentButton extends StatelessWidget {
           ),
           onPressed: () {
             //TODO: 스토리 속으로... 현재 진행중.
-            //Navigator.pushNamed(context, '/story_page');
+            Navigator.pushNamed(context, '/story_page');
             // Navigator.push(
             //   context,
             //   MaterialPageRoute(

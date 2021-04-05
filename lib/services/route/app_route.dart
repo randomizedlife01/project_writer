@@ -8,18 +8,20 @@ import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_writ
 import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_repository.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/free_write_page.dart';
 import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_bloc.dart';
+import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_repository.dart';
 import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/bloc/auth_bloc.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/bloc/my_life_bloc.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/bloc/my_life_repository.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/my_life_page.dart';
+import 'package:project_writer_v04/pages/story_page/bloc/story_bloc.dart';
 import 'package:project_writer_v04/pages/story_page/story_page.dart';
 
 class AppRouter {
   final _authService = AuthService();
   final _freeWriteCubit = FreeWriteCubit(newCombineRepository: FreeWriteRepository(), ideaMemo: [], searchHistory: []);
   final _myStoryCubit = MyLifeStoryCubit(myLifeRepository: MyLifeRepository(), myLifeStory: []);
-  final _introDocumentCubit = IntroDocumentCubit();
+  final _introDocumentCubit = IntroDocumentCubit(introDocumentRepository: IntroDocumentRepository(), document: []);
 
   Route onGeneratorRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
@@ -59,7 +61,10 @@ class AppRouter {
         );
         break;
       case '/story_page':
-        return MaterialPageRoute(builder: (_) => StoryPage());
+        final ScreenArguments args = routeSettings.arguments as ScreenArguments;
+        return MaterialPageRoute(
+          builder: (_) => StoryPage(),
+        );
         break;
       case '/my_life_page':
         return MaterialPageRoute(
