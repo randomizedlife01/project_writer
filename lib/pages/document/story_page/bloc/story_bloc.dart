@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_writer_v04/models/ModelProvider.dart';
-import 'package:project_writer_v04/pages/story_page/bloc/story_repository.dart';
+import 'package:project_writer_v04/pages/document/story_page/bloc/story_repository.dart';
 
 part 'story_state.dart';
 

@@ -23,7 +23,7 @@ import 'package:flutter/foundation.dart';
 /** This is an auto generated class representing the Document type in your schema. */
 @immutable
 class Document extends Model {
-  static const classType = const DocumentType();
+  static const classType = const _DocumentModelType();
   final String id;
   final String docName;
   final String docDesc;
@@ -37,14 +37,21 @@ class Document extends Model {
     return id;
   }
 
-  const Document._internal({@required this.id, this.docName, this.docDesc, this.StorySummaries});
+  const Document._internal(
+      {@required this.id, this.docName, this.docDesc, this.StorySummaries});
 
-  factory Document({String id, String docName, String docDesc, List<StorySummary> StorySummaries}) {
+  factory Document(
+      {String id,
+      String docName,
+      String docDesc,
+      List<StorySummary> StorySummaries}) {
     return Document._internal(
         id: id == null ? UUID.getUUID() : id,
         docName: docName,
         docDesc: docDesc,
-        StorySummaries: StorySummaries != null ? List.unmodifiable(StorySummaries) : StorySummaries);
+        StorySummaries: StorySummaries != null
+            ? List.unmodifiable(StorySummaries)
+            : StorySummaries);
   }
 
   bool equals(Object other) {
@@ -77,7 +84,11 @@ class Document extends Model {
     return buffer.toString();
   }
 
-  Document copyWith({String id, String docName, String docDesc, List<StorySummary> StorySummaries}) {
+  Document copyWith(
+      {String id,
+      String docName,
+      String docDesc,
+      List<StorySummary> StorySummaries}) {
     return Document(
         id: id ?? this.id,
         docName: docName ?? this.docName,
@@ -90,42 +101,62 @@ class Document extends Model {
         docName = json['docName'],
         docDesc = json['docDesc'],
         StorySummaries = json['StorySummaries'] is List
-            ? (json['StorySummaries'] as List).map((e) => StorySummary.fromJson(new Map<String, dynamic>.from(e))).toList()
+            ? (json['StorySummaries'] as List)
+                .map((e) =>
+                    StorySummary.fromJson(new Map<String, dynamic>.from(e)))
+                .toList()
             : null;
 
-  Map<String, dynamic> toJson() =>
-      {'id': id, 'docName': docName, 'docDesc': docDesc, 'StorySummaries': StorySummaries?.map((e) => e?.toJson())?.toList()};
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'docName': docName,
+        'docDesc': docDesc,
+        'StorySummaries': StorySummaries?.map((e) => e?.toJson())?.toList()
+      };
 
   static final QueryField ID = QueryField(fieldName: "document.id");
   static final QueryField DOCNAME = QueryField(fieldName: "docName");
   static final QueryField DOCDESC = QueryField(fieldName: "docDesc");
-  static final QueryField STORYSUMMARIES =
-      QueryField(fieldName: "StorySummaries", fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (StorySummary).toString()));
-  static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
+  static final QueryField STORYSUMMARIES = QueryField(
+      fieldName: "StorySummaries",
+      fieldType: ModelFieldType(ModelFieldTypeEnum.model,
+          ofModelName: (StorySummary).toString()));
+  static var schema =
+      Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Document";
     modelSchemaDefinition.pluralName = "Documents";
 
     modelSchemaDefinition.authRules = [
-      AuthRule(
-          authStrategy: AuthStrategy.PUBLIC,
-          operations: [ModelOperation.CREATE, ModelOperation.UPDATE, ModelOperation.DELETE, ModelOperation.READ])
+      AuthRule(authStrategy: AuthStrategy.PUBLIC, operations: [
+        ModelOperation.CREATE,
+        ModelOperation.UPDATE,
+        ModelOperation.DELETE,
+        ModelOperation.READ
+      ])
     ];
 
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
 
-    modelSchemaDefinition
-        .addField(ModelFieldDefinition.field(key: Document.DOCNAME, isRequired: false, ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: Document.DOCNAME,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
 
-    modelSchemaDefinition
-        .addField(ModelFieldDefinition.field(key: Document.DOCDESC, isRequired: false, ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: Document.DOCDESC,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
 
     modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-        key: Document.STORYSUMMARIES, isRequired: false, ofModelName: (StorySummary).toString(), associatedKey: StorySummary.DOCUMENTID));
+        key: Document.STORYSUMMARIES,
+        isRequired: false,
+        ofModelName: (StorySummary).toString(),
+        associatedKey: StorySummary.DOCUMENTID));
   });
 }
 
-class DocumentType extends ModelType<Document> {
-  const DocumentType();
+class _DocumentModelType extends ModelType<Document> {
+  const _DocumentModelType();
 
   @override
   Document fromJson(Map<String, dynamic> jsonData) {

@@ -84,9 +84,9 @@ class StoryThemeData {
         fontWeight: FontWeight.w600,
       ),
       bodyText1: TextStyle(
-        fontSize: 17.0,
+        fontSize: 15.0,
         fontFamily: 'GothicA1',
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w500,
         color: Color(0xFFc4d6cb),
         height: 1.5,
       ),

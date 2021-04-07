@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
 
 class StoryPage extends StatelessWidget {
   final String documentId;
@@ -8,7 +7,6 @@ class StoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(documentId);
     return Scaffold();
   }
 }

@@ -1,3 +1,4 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,21 +7,19 @@ import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_bloc.dart';
 import 'package:project_writer_v04/pages/document/intro_page/parts/intro_doc_create_pop.dart';
 import 'package:project_writer_v04/pages/document/intro_page/parts/intro_parts.dart';
-import 'package:project_writer_v04/pages/story_page/story_page.dart';
 
 class IntroPage extends StatelessWidget {
-  static const routeName = '/intro_page';
-
   final VoidCallback shouldLogOut;
+  final String documentId;
+  final AmplifyAuthCognito auth;
 
-  const IntroPage({Key key, this.shouldLogOut}) : super(key: key);
+  const IntroPage({Key key, this.shouldLogOut, this.documentId, this.auth}) : super(key: key);
 
   Widget userInfo() {
     return Container();
   }
 
   Widget documentView({BuildContext context, IntroDocumentState state, int index}) {
-    final StoryPage args = ModalRoute.of(context)!.settings.arguments as StoryPage;
     return Container(
       child: Stack(
         children: [
@@ -86,6 +85,7 @@ class IntroPage extends StatelessWidget {
           ),
           IntroDocumentButton(
             index: index,
+            documentId: state.document[index].id,
           ),
         ],
       ),

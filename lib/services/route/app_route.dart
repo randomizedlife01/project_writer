@@ -14,8 +14,7 @@ import 'package:project_writer_v04/pages/auth_pages/bloc/auth_bloc.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/bloc/my_life_bloc.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/bloc/my_life_repository.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/my_life_page.dart';
-import 'package:project_writer_v04/pages/story_page/bloc/story_bloc.dart';
-import 'package:project_writer_v04/pages/story_page/story_page.dart';
+import 'package:project_writer_v04/pages/document/story_page/story_page.dart';
 
 class AppRouter {
   final _authService = AuthService();
@@ -26,8 +25,16 @@ class AppRouter {
   Route onGeneratorRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => LandingPage());
-        break;
+        return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider.value(value: _introDocumentCubit),
+            ],
+            child: IntroPage(
+              shouldLogOut: _authService.logOut,
+            ),
+          ),
+        );
       case '/login_page':
         return MaterialPageRoute(
             builder: (_) => LoginPage(
@@ -48,22 +55,10 @@ class AppRouter {
                   didProvideVerificationCode: _authService.verifyCode,
                 ));
         break;
-      case '/intro_page':
-        return MaterialPageRoute(
-          builder: (_) => MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: _introDocumentCubit),
-            ],
-            child: IntroPage(
-              shouldLogOut: _authService.logOut,
-            ),
-          ),
-        );
-        break;
       case '/story_page':
-        final ScreenArguments args = routeSettings.arguments as ScreenArguments;
+        final IntroPage args = routeSettings.arguments as IntroPage;
         return MaterialPageRoute(
-          builder: (_) => StoryPage(),
+          builder: (_) => StoryPage(documentId: args.documentId),
         );
         break;
       case '/my_life_page':

@@ -21,7 +21,7 @@ import 'package:flutter/foundation.dart';
 /** This is an auto generated class representing the IdeaMemo type in your schema. */
 @immutable
 class IdeaMemo extends Model {
-  static const classType = const IdeaMemoType();
+  static const classType = const _IdeaMemoModelType();
   final String id;
   final String memo;
   final String tags;
@@ -113,8 +113,8 @@ class IdeaMemo extends Model {
   });
 }
 
-class IdeaMemoType extends ModelType<IdeaMemo> {
-  const IdeaMemoType();
+class _IdeaMemoModelType extends ModelType<IdeaMemo> {
+  const _IdeaMemoModelType();
 
   @override
   IdeaMemo fromJson(Map<String, dynamic> jsonData) {
