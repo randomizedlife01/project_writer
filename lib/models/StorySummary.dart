@@ -21,7 +21,7 @@ import 'package:flutter/foundation.dart';
 /** This is an auto generated class representing the StorySummary type in your schema. */
 @immutable
 class StorySummary extends Model {
-  static const classType = const StorySummaryType();
+  static const classType = const _StorySummaryModelType();
   final String id;
   final String storySummary;
   final String documentID;
@@ -119,8 +119,8 @@ class StorySummary extends Model {
   });
 }
 
-class StorySummaryType extends ModelType<StorySummary> {
-  const StorySummaryType();
+class _StorySummaryModelType extends ModelType<StorySummary> {
+  const _StorySummaryModelType();
 
   @override
   StorySummary fromJson(Map<String, dynamic> jsonData) {

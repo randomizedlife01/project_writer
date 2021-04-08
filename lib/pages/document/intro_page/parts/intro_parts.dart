@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
 import 'package:project_writer_v04/pages/document/intro_page/parts/intro_doc_delete_pop.dart';
 import 'package:unicorndial/unicorndial.dart';
 import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_bloc.dart';
@@ -8,8 +9,9 @@ import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_blo
 //도큐멘트 위의 버
 class IntroDocumentButton extends StatelessWidget {
   final int index;
+  final String documentId;
 
-  const IntroDocumentButton({Key key, this.index}) : super(key: key);
+  const IntroDocumentButton({Key key, this.index, this.documentId}) : super(key: key);
 
   //도튜멘트 팝업 메뉴버튼
   List<UnicornButton> docMenuButtons({BuildContext context}) {
@@ -30,7 +32,10 @@ class IntroDocumentButton extends StatelessWidget {
           ),
           onPressed: () {
             //TODO: 스토리 속으로... 현재 진행중.
-            Navigator.pushNamed(context, '/story_page');
+            Navigator.pushNamed(context, '/story_page',
+                arguments: IntroPage(
+                  documentId: documentId,
+                ));
             // Navigator.push(
             //   context,
             //   MaterialPageRoute(

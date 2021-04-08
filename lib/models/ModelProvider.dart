@@ -32,7 +32,13 @@ class ModelProvider implements ModelProviderInterface {
   @override
   String version = "d77f32a19775254de475d886ae3adaf2";
   @override
-  List<ModelSchema> modelSchemas = [Document.schema, IdeaMemo.schema, MyLifeStory.schema, SearchHistory.schema, StorySummary.schema];
+  List<ModelSchema> modelSchemas = [
+    Document.schema,
+    IdeaMemo.schema,
+    MyLifeStory.schema,
+    SearchHistory.schema,
+    StorySummary.schema
+  ];
   static final ModelProvider _instance = ModelProvider();
 
   static ModelProvider get instance => _instance;
@@ -66,7 +72,9 @@ class ModelProvider implements ModelProviderInterface {
         break;
       default:
         {
-          throw Exception("Failed to find model in model provider for model name: " + modelName);
+          throw Exception(
+              "Failed to find model in model provider for model name: " +
+                  modelName);
         }
     }
   }

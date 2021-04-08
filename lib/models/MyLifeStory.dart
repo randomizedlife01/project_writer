@@ -21,7 +21,7 @@ import 'package:flutter/foundation.dart';
 /** This is an auto generated class representing the MyLifeStory type in your schema. */
 @immutable
 class MyLifeStory extends Model {
-  static const classType = const MyLifeStoryType();
+  static const classType = const _MyLifeStoryModelType();
   final String id;
   final String lifeMemo;
   final TemporalDate myLifeDate;
@@ -123,8 +123,8 @@ class MyLifeStory extends Model {
   });
 }
 
-class MyLifeStoryType extends ModelType<MyLifeStory> {
-  const MyLifeStoryType();
+class _MyLifeStoryModelType extends ModelType<MyLifeStory> {
+  const _MyLifeStoryModelType();
 
   @override
   MyLifeStory fromJson(Map<String, dynamic> jsonData) {

@@ -21,7 +21,7 @@ import 'package:flutter/foundation.dart';
 /** This is an auto generated class representing the SearchHistory type in your schema. */
 @immutable
 class SearchHistory extends Model {
-  static const classType = const SearchHistoryType();
+  static const classType = const _SearchHistoryModelType();
   final String id;
   final String searchHistory;
 
@@ -104,8 +104,8 @@ class SearchHistory extends Model {
   });
 }
 
-class SearchHistoryType extends ModelType<SearchHistory> {
-  const SearchHistoryType();
+class _SearchHistoryModelType extends ModelType<SearchHistory> {
+  const _SearchHistoryModelType();
 
   @override
   SearchHistory fromJson(Map<String, dynamic> jsonData) {

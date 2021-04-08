@@ -18,7 +18,7 @@ class MyLifeStoryCubit extends Cubit<MyLifeStoryState> {
     try {
       emit(MyLifeStoryLoading());
 
-      myLifeStory = await myLifeRepository.readMyStory();
+      //myLifeStory = await myLifeRepository.readMyStory();
 
       emit(MyLifeStoryLoaded(myLifeStory: myLifeStory));
     } catch (e) {

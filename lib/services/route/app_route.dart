@@ -61,7 +61,7 @@ class AppRouter {
         );
         break;
       case '/story_page':
-        //final ScreenArguments args = routeSettings.arguments as ScreenArguments;
+        final ScreenArguments args = routeSettings.arguments as ScreenArguments;
         return MaterialPageRoute(
           builder: (_) => StoryPage(),
         );
