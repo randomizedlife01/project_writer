@@ -20,7 +20,7 @@ class IntroPage extends StatelessWidget {
   }
 
   Widget documentView({BuildContext context, IntroDocumentState state, int index}) {
-    final StoryPage args = ModalRoute.of(context)!.settings.arguments as StoryPage;
+    final StoryPage args = ModalRoute.of(context).settings.arguments as StoryPage;
     return Container(
       child: Stack(
         children: [
