@@ -16,16 +16,15 @@ import 'package:project_writer_v04/services/route/app_route.dart';
 
 import 'models/ModelProvider.dart';
 
-// 1
 class LandingPage extends StatefulWidget {
   @override
   _LandingPageState createState() => _LandingPageState();
 }
 
 class _LandingPageState extends State<LandingPage> {
-  final _authService = AuthService();
   final _appRouter = AppRouter();
 
+  final _authService = AuthService();
   final _amplify = Amplify;
 
   @override
