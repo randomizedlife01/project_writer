@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:project_writer_v04/models/MyLifeStory.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/bloc/my_life_bloc.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/parts/my_life_create_pop.dart';

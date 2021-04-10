@@ -14,8 +14,7 @@ import 'package:project_writer_v04/pages/auth_pages/bloc/auth_bloc.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/bloc/my_life_bloc.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/bloc/my_life_repository.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/my_life_page.dart';
-import 'package:project_writer_v04/pages/story_page/bloc/story_bloc.dart';
-import 'package:project_writer_v04/pages/story_page/story_page.dart';
+import 'package:project_writer_v04/pages/document/story_page/story_page.dart';
 
 class AppRouter {
   final _authService = AuthService();

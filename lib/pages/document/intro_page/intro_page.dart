@@ -6,7 +6,7 @@ import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_bloc.dart';
 import 'package:project_writer_v04/pages/document/intro_page/parts/intro_doc_create_pop.dart';
 import 'package:project_writer_v04/pages/document/intro_page/parts/intro_parts.dart';
-import 'package:project_writer_v04/pages/story_page/story_page.dart';
+import 'package:project_writer_v04/pages/document/story_page/story_page.dart';
 
 class IntroPage extends StatelessWidget {
   static const routeName = '/intro_page';
@@ -20,7 +20,7 @@ class IntroPage extends StatelessWidget {
   }
 
   Widget documentView({BuildContext context, IntroDocumentState state, int index}) {
-    //final StoryPage args = ModalRoute.of(context)!.settings.arguments as StoryPage;
+    final StoryPage args = ModalRoute.of(context).settings.arguments as StoryPage;
     return Container(
       child: Stack(
         children: [

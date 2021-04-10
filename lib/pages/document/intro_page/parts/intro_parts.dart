@@ -34,8 +34,8 @@ class IntroDocumentButton extends StatelessWidget {
             //TODO: 스토리 속으로... 현재 진행중.
             Navigator.pushNamed(context, '/story_page',
                 arguments: IntroPage(
-                  documentId: documentId,
-                ));
+                    //documentId: documentId,
+                    ));
             // Navigator.push(
             //   context,
             //   MaterialPageRoute(

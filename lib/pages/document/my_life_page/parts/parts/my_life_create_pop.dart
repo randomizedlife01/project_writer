@@ -1,4 +1,3 @@
-import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
@@ -14,7 +13,6 @@ class MyLifeCreatePop extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final _storyController = TextEditingController();
   final _yearController = TextEditingController();
-  final _monthController = TextEditingController();
   final _dayController = TextEditingController();
   final _quarterController = TextEditingController();
 
