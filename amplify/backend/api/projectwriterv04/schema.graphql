@@ -13,8 +13,10 @@ type Document @model @auth(rules: [{allow: public}]) {
 
 type MyLifeStory @model @auth(rules: [{allow: public}]) {
   id: ID!
-  lifeMemo: String
-  myLifeDate: AWSDate!
+  lifeMemo: String!
+  year: String!
+  date: String
+  season: String!
 }
 
 type SearchHistory @model @auth(rules: [{allow: public}]) {

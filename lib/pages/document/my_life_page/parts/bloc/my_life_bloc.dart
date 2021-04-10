@@ -9,10 +9,12 @@ part 'my_life_state.dart';
 
 class MyLifeStoryCubit extends Cubit<MyLifeStoryState> {
   List<MyLifeStory> myLifeStory;
+  List<String> years;
+  List<String> seasons;
 
   final MyLifeRepository myLifeRepository;
 
-  MyLifeStoryCubit({this.myLifeRepository, this.myLifeStory}) : super(MyLifeStoryLoading());
+  MyLifeStoryCubit({this.myLifeRepository, this.myLifeStory, this.years, this.seasons}) : super(MyLifeStoryLoading());
 
   Future<void> readMyStory() async {
     try {
@@ -20,17 +22,29 @@ class MyLifeStoryCubit extends Cubit<MyLifeStoryState> {
 
       myLifeStory = await myLifeRepository.readMyStory();
 
-      emit(MyLifeStoryLoaded(myLifeStory: myLifeStory));
+      myLifeStory.forEach((element) {
+        if (!years.contains(element.year)) {
+          years.add(element.year);
+        }
+      });
+
+      myLifeStory.forEach((element) {
+        if (!seasons.contains(element.season)) {
+          seasons.add(element.season);
+        }
+      });
+
+      emit(MyLifeStoryLoaded(myLifeStory: myLifeStory, years: years, seasons: seasons));
     } catch (e) {
       emit(MyLifeStoryNotLoaded());
     }
   }
 
-  Future<void> createMyStory({String id, String lifeMemo, TemporalDate date}) async {
+  Future<void> createMyStory({String id, String lifeMemo, String year, String season}) async {
     try {
       emit(MyLifeStoryLoading());
 
-      final data = await myLifeRepository.createMyStory(id: id, lifeMemo: lifeMemo, date: date);
+      final data = await myLifeRepository.createMyStory(id: id, lifeMemo: lifeMemo, year: year, season: season);
       myLifeStory.add(data);
 
       emit(MyLifeStoryLoaded(myLifeStory: myLifeStory));

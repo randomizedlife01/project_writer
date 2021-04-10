@@ -133,6 +133,10 @@ Parameters:
     Type: String
   
             
+  hostedUIProviderCreds:
+    Type: String
+  
+            
   oAuthMetadata:
     Type: String
   
@@ -141,6 +145,7 @@ Parameters:
   userPoolGroupList:
     Type: CommaDelimitedList
       
+            
   serviceName:
     Type: String
   
@@ -153,10 +158,6 @@ Parameters:
   dependsOn:
     Type: CommaDelimitedList
       
-  hostedUIProviderCreds:
-    Type: String
-  
-            
 Conditions:
   ShouldNotCreateEnvResources: !Equals [ !Ref env, NONE ]
   
@@ -171,7 +172,7 @@ Resources:
   # Created to allow the UserPool SMS Config to publish via the Simple Notification Service during MFA Process
     Type: AWS::IAM::Role
     Properties:
-      RoleName: !If [ShouldNotCreateEnvResources, 'projec81e0eaf2_sns-role', !Join ['',[ 'sns', '81e0eaf2', !Select [3, !Split ['-', !Ref 'AWS::StackName']], '-', !Ref env]]]
+      RoleName: !If [ShouldNotCreateEnvResources, 'projecc6239c4d_sns-role', !Join ['',[ 'sns', 'c6239c4d', !Select [3, !Split ['-', !Ref 'AWS::StackName']], '-', !Ref env]]]
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -183,10 +184,10 @@ Resources:
               - "sts:AssumeRole"
             Condition:
               StringEquals:
-                sts:ExternalId: projec81e0eaf2_role_external_id
+                sts:ExternalId: projecc6239c4d_role_external_id
       Policies:
         -
-          PolicyName: projec81e0eaf2-sns-policy
+          PolicyName: projecc6239c4d-sns-policy
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
@@ -236,9 +237,10 @@ Resources:
       
       MfaConfiguration: !Ref mfaConfiguration
       SmsVerificationMessage: !Ref smsVerificationMessage
+      SmsAuthenticationMessage: !Ref smsAuthenticationMessage
       SmsConfiguration:
         SnsCallerArn: !GetAtt SNSRole.Arn
-        ExternalId: projec81e0eaf2_role_external_id
+        ExternalId: projecc6239c4d_role_external_id
     
   
   UserPoolClientWeb:
@@ -246,7 +248,7 @@ Resources:
   # Depends on UserPool for ID reference
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
-      ClientName: projec81e0eaf2_app_clientWeb
+      ClientName: projecc6239c4d_app_clientWeb
       
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
       UserPoolId: !Ref UserPool
@@ -256,7 +258,7 @@ Resources:
   # Depends on UserPool for ID reference
     Type: "AWS::Cognito::UserPoolClient"
     Properties:
-      ClientName: projec81e0eaf2_app_client
+      ClientName: projecc6239c4d_app_client
       
       GenerateSecret: !Ref userpoolClientGenerateSecret
       RefreshTokenValidity: !Ref userpoolClientRefreshTokenValidity
@@ -267,7 +269,7 @@ Resources:
   # Created to execute Lambda which gets userpool app client config values
     Type: 'AWS::IAM::Role'
     Properties:
-      RoleName: !If [ShouldNotCreateEnvResources, !Ref userpoolClientLambdaRole, !Join ['',['upClientLambdaRole', '81e0eaf2', !Select [3, !Split ['-', !Ref 'AWS::StackName']], '-', !Ref env]]]
+      RoleName: !If [ShouldNotCreateEnvResources, !Ref userpoolClientLambdaRole, !Join ['',['upClientLambdaRole', 'c6239c4d', !Select [3, !Split ['-', !Ref 'AWS::StackName']], '-', !Ref env]]]
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -321,7 +323,7 @@ Resources:
   # Marked as depending on UserPoolClientRole for easier to understand CFN sequencing
     Type: 'AWS::IAM::Policy'
     Properties:
-      PolicyName: projec81e0eaf2_userpoolclient_lambda_iam_policy
+      PolicyName: projecc6239c4d_userpoolclient_lambda_iam_policy
       Roles:
         - !Ref UserPoolClientRole
       PolicyDocument:
@@ -338,7 +340,7 @@ Resources:
   # Marked as depending on UserPoolClientLambdaPolicy for easier to understand CFN sequencing
     Type: 'AWS::IAM::Policy'
     Properties:
-      PolicyName: projec81e0eaf2_userpoolclient_lambda_log_policy
+      PolicyName: projecc6239c4d_userpoolclient_lambda_log_policy
       Roles:
         - !Ref UserPoolClientRole
       PolicyDocument:
@@ -364,6 +366,129 @@ Resources:
       clientId: !Ref UserPoolClient
       userpoolId: !Ref UserPool
     DependsOn: UserPoolClientLogPolicy
+  
+  HostedUICustomResource:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      Code:
+        ZipFile: !Join
+          - |+
+          - - 'const response = require(''cfn-response'');'
+            - 'const aws = require(''aws-sdk'');'
+            - 'const identity = new aws.CognitoIdentityServiceProvider();'
+            - 'exports.handler = (event, context, callback) => {'
+            - ' const userPoolId = event.ResourceProperties.userPoolId;'
+            - ' const inputDomainName = event.ResourceProperties.hostedUIDomainName;'
+            - ' let deleteUserPoolDomain = (domainName) => {'
+            - '   let params = { Domain: domainName, UserPoolId: userPoolId };'
+            - '   return identity.deleteUserPoolDomain(params).promise();'
+            - ' };'
+            - ' if (event.RequestType == ''Delete'') {'
+            - '   deleteUserPoolDomain(inputDomainName)'
+            - '   .then(() => {response.send(event, context, response.SUCCESS, {})})'
+            - '   .catch((err) => { console.log(err); response.send(event, context, response.FAILED, {err}) });'
+            - ' }'
+            - ' if (event.RequestType == ''Update'' || event.RequestType == ''Create'') {'
+            - '  let checkDomainAvailability = (domainName) => {'
+            - '  let params = { Domain: domainName };'
+            - '  return identity.describeUserPoolDomain(params).promise().then((res) => {'
+            - '   if (res.DomainDescription && res.DomainDescription.UserPool) {'
+            - '    return false;'
+            - '   }'
+            - '   return true;'
+            - '   }).catch((err) => { return false; });'
+            - ' };'
+            - ' let createUserPoolDomain = (domainName) => {'
+            - '  let params = { Domain: domainName, UserPoolId: userPoolId };'
+            - '   return identity.createUserPoolDomain(params).promise();'
+            - ' };'
+            - ' identity.describeUserPool({UserPoolId: userPoolId }).promise().then((result) => {'
+            - '  if (inputDomainName) {'
+            - '   if (result.UserPool.Domain === inputDomainName) {'
+            - '    return;'
+            - '    } else {'
+            - '       if (!result.UserPool.Domain) {'
+            - '         return checkDomainAvailability(inputDomainName).then((isDomainAvailable) => {'
+            - '           if (isDomainAvailable) {'
+            - '             return createUserPoolDomain(inputDomainName);'
+            - '           } else {'
+            - '               throw new Error(''Domain not available'');'
+            - '           }'
+            - '         });'
+            - '       } else {'
+            - '           return checkDomainAvailability(inputDomainName).then((isDomainAvailable) => {'
+            - '             if (isDomainAvailable) {'
+            - '               return deleteUserPoolDomain(result.UserPool.Domain).then(() => createUserPoolDomain(inputDomainName));'
+            - '             } else {'
+            - '                 throw new Error(''Domain not available'');'
+            - '             }'
+            - '           });'
+            - '       }'
+            - '     }'
+            - '   } else {'
+            - '       if (result.UserPool.Domain) {'
+            - '         return deleteUserPoolDomain(result.UserPool.Domain);'
+            - '       }'
+            - '   }'
+            - ' }).then(() => {response.send(event, context, response.SUCCESS, {})}).catch((err) => {'
+            - ' console.log(err);  response.send(event, context, response.FAILED, {err});'
+            - ' });'
+            - '}}'
+
+
+      Handler: index.handler
+      Runtime: nodejs12.x
+      Timeout: '300'
+      Role: !GetAtt
+        - UserPoolClientRole
+        - Arn
+    DependsOn: UserPoolClientRole
+
+  HostedUICustomResourcePolicy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: !Join ['-',[!Ref UserPool, 'hostedUI']]
+      Roles:
+        - !Ref UserPoolClientRole
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'cognito-idp:CreateUserPoolDomain'
+              - 'cognito-idp:DescribeUserPool'
+              - 'cognito-idp:DeleteUserPoolDomain'
+            Resource: !GetAtt UserPool.Arn
+          - Effect: Allow
+            Action:
+              - 'cognito-idp:DescribeUserPoolDomain'
+            Resource: '*'
+    DependsOn: HostedUICustomResource
+  HostedUICustomResourceLogPolicy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      PolicyName: !Join ['-',[!Ref UserPool, 'hostedUILogPolicy']]
+      Roles:
+        - !Ref UserPoolClientRole
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - 'logs:CreateLogGroup'
+              - 'logs:CreateLogStream'
+              - 'logs:PutLogEvents'
+            Resource: !Sub
+              - arn:aws:logs:${region}:${account}:log-group:/aws/lambda/${lambda}:log-stream:*
+              - { region: !Ref "AWS::Region",  account: !Ref "AWS::AccountId", lambda: !Ref HostedUICustomResource}
+    DependsOn: HostedUICustomResourcePolicy
+  HostedUICustomResourceInputs:
+    Type: 'Custom::LambdaCallout'
+    Properties:
+      ServiceToken: !GetAtt HostedUICustomResource.Arn
+      userPoolId: !Ref UserPool
+      hostedUIDomainName: !If [ShouldNotCreateEnvResources, !Ref hostedUIDomainName, !Join ['-',[!Ref hostedUIDomainName, !Ref env]]]
+    DependsOn: HostedUICustomResourceLogPolicy
   
 
   
@@ -605,7 +730,7 @@ Resources:
   # Always created
     Type: AWS::Cognito::IdentityPool
     Properties:
-      IdentityPoolName: !If [ShouldNotCreateEnvResources, 'projectwriterv0481e0eaf2_identitypool_81e0eaf2', !Join ['',['projectwriterv0481e0eaf2_identitypool_81e0eaf2', '__', !Ref env]]]
+      IdentityPoolName: !If [ShouldNotCreateEnvResources, 'projectwriterv04c6239c4d_identitypool_c6239c4d', !Join ['',['projectwriterv04c6239c4d_identitypool_c6239c4d', '__', !Ref env]]]
       
       CognitoIdentityProviders:
         - ClientId:  !Ref UserPoolClient
@@ -643,6 +768,9 @@ Outputs :
   IdentityPoolName:
     Value: !GetAtt IdentityPool.Name
   
+  
+  HostedUIDomain:
+    Value: !If [ShouldNotCreateEnvResources, !Ref hostedUIDomainName, !Join ['-',[!Ref hostedUIDomainName, !Ref env]]]
   
   
   OAuthMetadata:

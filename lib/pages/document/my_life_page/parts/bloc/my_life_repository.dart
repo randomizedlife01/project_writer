@@ -3,20 +3,23 @@ import 'package:amplify_flutter/amplify.dart';
 import 'package:project_writer_v04/models/ModelProvider.dart';
 
 class MyLifeRepository {
-  Future<List<MyLifeStory>> readMyStory({List<MyLifeStory> myLifeStory}) async {
+  Future<List<MyLifeStory>> readMyStory() async {
     try {
-      myLifeStory = await Amplify.DataStore.query(MyLifeStory.classType);
+      final myLifeStory =
+          await Amplify.DataStore.query(MyLifeStory.classType, sortBy: [MyLifeStory.YEAR.ascending(), MyLifeStory.SEASON.ascending()]);
+
       return myLifeStory;
     } catch (e) {
       throw e;
     }
   }
 
-  Future<MyLifeStory> createMyStory({String lifeMemo, TemporalDate date, String id}) async {
+  Future<MyLifeStory> createMyStory({String lifeMemo, String year, String season, String id}) async {
     final myLifeStory = MyLifeStory(
       id: id,
       lifeMemo: lifeMemo,
-      myLifeDate: date,
+      year: year,
+      season: season,
     );
 
     try {
@@ -46,14 +49,13 @@ class MyLifeRepository {
 
       return myLifeStory;
     } catch (e) {
-      print(e);
       throw (e);
     }
   }
 
-  Future<MyLifeStory> updateMyStory({String id, String lifeMemo, TemporalDate date}) async {
+  Future<MyLifeStory> updateMyStory({String id, String lifeMemo}) async {
     final myLifeStory = await readByIdMyStory(id: id);
-    final updateMyStory = myLifeStory.copyWith(lifeMemo: lifeMemo, myLifeDate: date);
+    final updateMyStory = myLifeStory.copyWith(lifeMemo: lifeMemo);
 
     await Amplify.DataStore.save(updateMyStory);
 

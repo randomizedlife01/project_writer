@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "projectwriterv0481e0eaf2_identitypool_81e0eaf2",
-    "allowUnauthenticatedIdentities": true,
-    "resourceNameTruncated": "projec81e0eaf2",
-    "userPoolName": "projectwriterv0481e0eaf2_userpool_81e0eaf2",
+    "identityPoolName": "projectwriterv04c6239c4d_identitypool_c6239c4d",
+    "allowUnauthenticatedIdentities": false,
+    "resourceNameTruncated": "projecc6239c4d",
+    "userPoolName": "projectwriterv04c6239c4d_userpool_c6239c4d",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -28,10 +28,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "projec81e0eaf2_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "projecc6239c4d_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "81e0eaf2",
-    "resourceName": "projectwriterv0481e0eaf2",
+    "sharedId": "c6239c4d",
+    "resourceName": "projectwriterv04c6239c4d",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
@@ -50,13 +50,13 @@
     "usernameAttributes": [
         "email"
     ],
-    "hostedUIDomainName": "",
+    "hostedUIDomainName": "projectwriterv04c6239c4d-c6239c4d",
     "authProvidersUserPool": [
         "Facebook",
         "Google"
     ],
     "hostedUIProviderMeta": "[{\"ProviderName\":\"Facebook\",\"authorize_scopes\":\"email,public_profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"id\"}},{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"applogauth://\"],\"LogoutURLs\":[\"applogauth://\"]}",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"app://\"],\"LogoutURLs\":[\"app://\"]}",
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,

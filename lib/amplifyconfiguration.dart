@@ -12,24 +12,25 @@ const amplifyconfig = ''' {
                 "CredentialsProvider": {
                     "CognitoIdentity": {
                         "Default": {
-                            "PoolId": "us-east-1:5c71f59a-f924-40ee-b031-7230e472125b",
+                            "PoolId": "us-east-1:6c33cec7-8b54-4c4b-8596-75949ee048e1",
                             "Region": "us-east-1"
                         }
                     }
                 },
                 "CognitoUserPool": {
                     "Default": {
-                        "PoolId": "us-east-1_VRkB27v1a",
-                        "AppClientId": "gtfia60ng0ustfmgl8kcg5pj6",
+                        "PoolId": "us-east-1_MUSVTlXcP",
+                        "AppClientId": "7b6pu0p7dfuj4sgmik355puo75",
                         "Region": "us-east-1"
                     }
                 },
                 "Auth": {
                     "Default": {
                         "OAuth": {
-                            "AppClientId": "gtfia60ng0ustfmgl8kcg5pj6",
-                            "SignInRedirectURI": "applogauth://",
-                            "SignOutRedirectURI": "applogauth://",
+                            "WebDomain": "projectwriterv04c6239c4d-c6239c4d-dev.auth.us-east-1.amazoncognito.com",
+                            "AppClientId": "7b6pu0p7dfuj4sgmik355puo75",
+                            "SignInRedirectURI": "app://",
+                            "SignOutRedirectURI": "app://",
                             "Scopes": [
                                 "phone",
                                 "email",

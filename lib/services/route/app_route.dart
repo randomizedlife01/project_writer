@@ -20,7 +20,7 @@ import 'package:project_writer_v04/pages/story_page/story_page.dart';
 class AppRouter {
   final _authService = AuthService();
   final _freeWriteCubit = FreeWriteCubit(newCombineRepository: FreeWriteRepository(), ideaMemo: [], searchHistory: []);
-  final _myStoryCubit = MyLifeStoryCubit(myLifeRepository: MyLifeRepository(), myLifeStory: []);
+  final _myStoryCubit = MyLifeStoryCubit(myLifeRepository: MyLifeRepository(), myLifeStory: [], years: [], seasons: []);
   final _introDocumentCubit = IntroDocumentCubit(introDocumentRepository: IntroDocumentRepository(), document: []);
 
   Route onGeneratorRoute(RouteSettings routeSettings) {
@@ -61,7 +61,7 @@ class AppRouter {
         );
         break;
       case '/story_page':
-        final ScreenArguments args = routeSettings.arguments as ScreenArguments;
+        //final ScreenArguments args = routeSettings.arguments as ScreenArguments;
         return MaterialPageRoute(
           builder: (_) => StoryPage(),
         );
