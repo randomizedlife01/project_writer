@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_material_pickers/helpers/show_date_picker.dart';
+import 'package:flutter_material_pickers/helpers/show_number_picker.dart';
+import 'package:flutter_material_pickers/helpers/show_scroll_picker.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/bloc/my_life_bloc.dart';
 
-class MyLifeCreatePop extends StatelessWidget {
+class MyLifeCreatePop extends StatefulWidget {
   final String nameLabelText;
   final String nameHintText;
   final int index;
 
   MyLifeCreatePop({Key key, this.nameLabelText, this.nameHintText, this.index}) : super(key: key);
 
+  @override
+  _MyLifeCreatePopState createState() => _MyLifeCreatePopState();
+}
+
+class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
   final _formKey = GlobalKey<FormState>();
   final _storyController = TextEditingController();
   final _yearController = TextEditingController();
@@ -17,6 +25,111 @@ class MyLifeCreatePop extends StatelessWidget {
   final _quarterController = TextEditingController();
 
   int _lastMyStoryIdNum = 0;
+
+  var selectedSeason = "한봄";
+
+  List<String> seasons = <String>[
+    '초봄',
+    '힌봄',
+    '늦봄',
+    '초여름',
+    '한여름',
+    '늦여름',
+    '초가을',
+    '한가을',
+    '늦가을',
+    '초겨울',
+    '한겨울',
+    '늦겨울',
+  ];
+
+  var selectYear = 1990;
+
+  Widget seasonSelector() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        TextButton(
+          onPressed: () {
+            final getYear = DateTime.now().toString();
+            final yearText = getYear.substring(0, 4);
+
+            showMaterialNumberPicker(
+              context: context,
+              title: "연도를 선택하세요",
+              maxNumber: int.parse(yearText),
+              minNumber: 1930,
+              selectedNumber: selectYear,
+              onChanged: (value) {
+                setState(() {
+                  selectYear = value;
+                });
+              },
+            );
+          },
+          child: Text(
+            '${selectYear.toString()}',
+            textAlign: TextAlign.end,
+            style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 18),
+          ),
+        ),
+        //dateInputForm(context, hintText: '1990', controller: _yearController),
+        Text('년,   그 해', style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16)),
+        TextButton(
+          onPressed: () {
+            showMaterialScrollPicker(
+              context: context,
+              title: "계절",
+              items: seasons,
+              selectedItem: selectedSeason,
+              onChanged: (value) {
+                setState(() {
+                  selectedSeason = value;
+                });
+              },
+            );
+          },
+          child: Text(
+            '$selectedSeason',
+            style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 18),
+          ),
+        ),
+        //dateInputForm(context, hintText: '01', controller: _quarterController),
+        // SizedBox(
+        //   width: 10.0,
+        // ),
+        // dateInputForm(context, hintText: '31', controller: _dayController),
+        // SizedBox(
+        //   width: 5.0,
+        // ),
+        // Text(
+        //   '일',
+        //   style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
+        // ),
+      ],
+    );
+  }
+
+  Widget notingData() {
+    var date = DateTime.now();
+    return TextButton(
+      onPressed: () {
+        showMaterialDatePicker(
+          title: '생년월일 선택',
+          firstDate: DateTime(1940),
+          lastDate: DateTime.now(),
+          context: context,
+          selectedDate: date,
+          onChanged: (value) => setState(() => date = value),
+        );
+      },
+      child: Text(
+        '${date.toString()}',
+        textAlign: TextAlign.center,
+        style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 18),
+      ),
+    );
+  }
 
   Widget dateInputForm(BuildContext context, {String hintText, TextEditingController controller}) {
     return Expanded(
@@ -63,47 +176,11 @@ class MyLifeCreatePop extends StatelessWidget {
         ),
         Container(
           height: 40,
-          child: Row(
-            children: [
-              dateInputForm(context, hintText: '1990', controller: _yearController),
-              SizedBox(
-                width: 5.0,
-              ),
-              Text(
-                '년',
-                style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
-              ),
-              SizedBox(
-                width: 10.0,
-              ),
-              dateInputForm(context, hintText: '01', controller: _quarterController),
-              SizedBox(
-                width: 5.0,
-              ),
-              Text(
-                '계절',
-                style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
-              ),
-              // SizedBox(
-              //   width: 10.0,
-              // ),
-              // dateInputForm(context, hintText: '31', controller: _dayController),
-              // SizedBox(
-              //   width: 5.0,
-              // ),
-              // Text(
-              //   '일',
-              //   style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
-              // ),
-            ],
-          ),
+          child: state.myLifeStory.isNotEmpty ? seasonSelector() : notingData(),
         ),
       ],
     );
   }
-
-  //TODO: 지금 생각해보니 연월일이 아니라 분기로 하기로 했잖아?????
-  //TODO:+++++++++++++++++++++++++연표 작성을 분기로 하면 어떻게 정렬을 하지?++++++++++++++++++++++++++++++++//
 
   @override
   Widget build(BuildContext context) {
