@@ -20,30 +20,21 @@ class MyLifeCreatePop extends StatefulWidget {
 class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
   final _formKey = GlobalKey<FormState>();
   final _storyController = TextEditingController();
-  final _yearController = TextEditingController();
-  final _dayController = TextEditingController();
-  final _quarterController = TextEditingController();
 
   int _lastMyStoryIdNum = 0;
+  String birthDayData = '';
+  var selectedSeason = "봄";
+  var date = DateTime.now();
 
-  var selectedSeason = "한봄";
-
-  List<String> seasons = <String>[
-    '초봄',
-    '힌봄',
-    '늦봄',
-    '초여름',
-    '한여름',
-    '늦여름',
-    '초가을',
-    '한가을',
-    '늦가을',
-    '초겨울',
-    '한겨울',
-    '늦겨울',
-  ];
+  List<String> seasons = <String>['봄', '여름', '가을', '겨울'];
 
   var selectYear = 1990;
+
+  String year = '';
+  String season = '';
+  String month = '';
+  String day = '';
+  String seasonToHangul = '';
 
   Widget seasonSelector() {
     return Row(
@@ -111,7 +102,6 @@ class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
   }
 
   Widget notingData() {
-    var date = DateTime.now();
     return TextButton(
       onPressed: () {
         showMaterialDatePicker(
@@ -120,41 +110,29 @@ class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
           lastDate: DateTime.now(),
           context: context,
           selectedDate: date,
-          onChanged: (value) => setState(() => date = value),
+          onChanged: (value) => setState(() {
+            year = value.year.toString();
+            season = '';
+            if ((value.month.toInt() >= 1 && value.month.toInt() < 3) || (value.month.toInt() == 12)) {
+              seasonToHangul = '겨울';
+              season = '01';
+            } else if (value.month.toInt() >= 3 && value.month.toInt() < 6) {
+              seasonToHangul = '봄';
+              season = '02';
+            } else if (value.month.toInt() >= 6 && value.month.toInt() < 9) {
+              seasonToHangul = '여름';
+              season = '03';
+            } else if (value.month.toInt() >= 9 && value.month.toInt() < 12) {
+              seasonToHangul = '가을';
+              season = '04';
+            }
+          }),
         );
       },
       child: Text(
-        '${date.toString()}',
+        '${'$year년, 그 해 $seasonToHangul'}',
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 18),
-      ),
-    );
-  }
-
-  Widget dateInputForm(BuildContext context, {String hintText, TextEditingController controller}) {
-    return Expanded(
-      child: TextFormField(
-        controller: controller,
-        style: Theme.of(context).textTheme.bodyText1.copyWith(color: Color(0xFF3b4445), fontWeight: FontWeight.w300, fontSize: 16.0),
-        textAlign: TextAlign.end,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5.0),
-            borderSide: BorderSide(
-              color: Color(0xFFe23e57),
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5.0),
-            borderSide: BorderSide(
-              color: Color(0xFF8785a2),
-              width: 1.0,
-            ),
-          ),
-          hintText: hintText,
-          hintStyle: Theme.of(context).textTheme.bodyText1.copyWith(color: Color(0xffafbbbd), fontWeight: FontWeight.w300, fontSize: 16.0),
-        ),
       ),
     );
   }
@@ -182,6 +160,7 @@ class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
     );
   }
 
+  //TODO: 저장 기능 완료하기.
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MyLifeStoryCubit, MyLifeStoryState>(
@@ -239,8 +218,8 @@ class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
                                           BlocProvider.of<MyLifeStoryCubit>(context).createMyStory(
                                             id: 'my_life_' + (_lastMyStoryIdNum + 1).toString(),
                                             lifeMemo: _storyController.text.isNotEmpty ? _storyController.text : '나의 시작',
-                                            year: _yearController.text,
-                                            season: _quarterController.text,
+                                            year: year,
+                                            season: season,
                                           );
 
                                           Navigator.pop(context);
