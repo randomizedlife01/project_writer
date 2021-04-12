@@ -20,6 +20,12 @@ class MyLifeCreatePop extends StatefulWidget {
 class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
   final _formKey = GlobalKey<FormState>();
   final _storyController = TextEditingController();
+  final _yearController = TextEditingController();
+  final _seasonController = TextEditingController();
+  final _monthController = TextEditingController();
+  final _dayController = TextEditingController();
+
+  String dropdownValue = '봄';
 
   int _lastMyStoryIdNum = 0;
   String birthDayData = '';
@@ -36,103 +42,72 @@ class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
   String day = '';
   String seasonToHangul = '';
 
-  Widget seasonSelector() {
+  Widget birthdayForm() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        TextButton(
-          onPressed: () {
-            final getYear = DateTime.now().toString();
-            final yearText = getYear.substring(0, 4);
-
-            showMaterialNumberPicker(
-              context: context,
-              title: "연도를 선택하세요",
-              maxNumber: int.parse(yearText),
-              minNumber: 1930,
-              selectedNumber: selectYear,
-              onChanged: (value) {
-                setState(() {
-                  selectYear = value;
-                });
-              },
-            );
-          },
-          child: Text(
-            '${selectYear.toString()}',
-            textAlign: TextAlign.end,
-            style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 18),
+        Expanded(
+          child: DocInputForm(
+            hintText: '3',
+            labelText: '월',
+            controller: _monthController,
           ),
         ),
-        //dateInputForm(context, hintText: '1990', controller: _yearController),
-        Text('년,   그 해', style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16)),
-        TextButton(
-          onPressed: () {
-            showMaterialScrollPicker(
-              context: context,
-              title: "계절",
-              items: seasons,
-              selectedItem: selectedSeason,
-              onChanged: (value) {
-                setState(() {
-                  selectedSeason = value;
-                });
-              },
-            );
-          },
-          child: Text(
-            '$selectedSeason',
-            style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 18),
+        SizedBox(
+          width: 10.0,
+        ),
+        Expanded(
+          child: DocInputForm(
+            hintText: '10',
+            labelText: '일',
+            controller: _dayController,
           ),
         ),
-        //dateInputForm(context, hintText: '01', controller: _quarterController),
-        // SizedBox(
-        //   width: 10.0,
-        // ),
-        // dateInputForm(context, hintText: '31', controller: _dayController),
-        // SizedBox(
-        //   width: 5.0,
-        // ),
-        // Text(
-        //   '일',
-        //   style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 16),
-        // ),
       ],
     );
   }
 
-  Widget notingData() {
-    return TextButton(
-      onPressed: () {
-        showMaterialDatePicker(
-          title: '생년월일 선택',
-          firstDate: DateTime(1940),
-          lastDate: DateTime.now(),
-          context: context,
-          selectedDate: date,
-          onChanged: (value) => setState(() {
-            year = value.year.toString();
-            season = '';
-            if ((value.month.toInt() >= 1 && value.month.toInt() < 3) || (value.month.toInt() == 12)) {
-              seasonToHangul = '겨울';
-              season = '01';
-            } else if (value.month.toInt() >= 3 && value.month.toInt() < 6) {
-              seasonToHangul = '봄';
-              season = '02';
-            } else if (value.month.toInt() >= 6 && value.month.toInt() < 9) {
-              seasonToHangul = '여름';
-              season = '03';
-            } else if (value.month.toInt() >= 9 && value.month.toInt() < 12) {
-              seasonToHangul = '가을';
-              season = '04';
-            }
-          }),
-        );
-      },
-      child: Text(
-        '${'$year년, 그 해 $seasonToHangul'}',
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 18),
+  Widget memoryForm() {
+    return Row(
+      children: [
+        Expanded(
+          child: DropdownButton(
+            value: dropdownValue,
+            onChanged: (String newValue) {
+              setState(() {
+                dropdownValue = newValue;
+              });
+            },
+            items: <String>['봄', '여름', '가을', '겨울'].map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget myLifeForm({MyLifeStoryState state}) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 80,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: DocInputForm(
+              hintText: '1990',
+              labelText: '연도',
+              controller: _yearController,
+            ),
+          ),
+          SizedBox(
+            width: 10.0,
+          ),
+          state.myLifeStory.isEmpty ? Expanded(child: birthdayForm()) : Expanded(child: memoryForm()),
+        ],
       ),
     );
   }
@@ -153,14 +128,13 @@ class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
           height: 8.0,
         ),
         Container(
-          height: 40,
-          child: state.myLifeStory.isNotEmpty ? seasonSelector() : notingData(),
+          height: 60,
+          child: myLifeForm(state: state),
         ),
       ],
     );
   }
 
-  //TODO: 저장 기능 완료하기.
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MyLifeStoryCubit, MyLifeStoryState>(
@@ -215,12 +189,26 @@ class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
                                             _lastMyStoryIdNum = int.parse(number);
                                           }
 
+                                          if (dropdownValue == '봄') {
+                                            _seasonController.text = '1';
+                                          } else if (dropdownValue == '여름') {
+                                            _seasonController.text = '2';
+                                          } else if (dropdownValue == '가을') {
+                                            _seasonController.text = '3';
+                                          } else {
+                                            _seasonController.text = '4';
+                                          }
+
                                           BlocProvider.of<MyLifeStoryCubit>(context).createMyStory(
                                             id: 'my_life_' + (_lastMyStoryIdNum + 1).toString(),
                                             lifeMemo: _storyController.text.isNotEmpty ? _storyController.text : '나의 시작',
-                                            year: year,
-                                            season: season,
+                                            year: _yearController.text,
+                                            season: _seasonController.text,
+                                            month: _monthController.text,
+                                            day: _dayController.text,
                                           );
+
+                                          print('save data : year - ${_yearController.text}, season - ${_seasonController.text}');
 
                                           Navigator.pop(context);
                                         }

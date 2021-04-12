@@ -139,6 +139,7 @@ class DocInputForm extends StatelessWidget {
   final TextEditingController controller;
   final bool autoFocus;
   final VoidCallback onTap;
+  final Function validator;
 
   const DocInputForm({
     Key key,
@@ -147,6 +148,7 @@ class DocInputForm extends StatelessWidget {
     this.controller,
     this.autoFocus = true,
     this.onTap,
+    this.validator,
   }) : super(key: key);
 
   Widget inputForm({String hintText, String labelText, TextEditingController controller}) {
@@ -163,6 +165,7 @@ class DocInputForm extends StatelessWidget {
       onTap: onTap,
       autofocus: autoFocus,
       autocorrect: false,
+      validator: validator,
       decoration: InputDecoration(
         isDense: true,
         contentPadding: EdgeInsets.symmetric(

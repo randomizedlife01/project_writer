@@ -39,14 +39,16 @@ class MyLifeStoryCubit extends Cubit<MyLifeStoryState> {
     }
   }
 
-  Future<void> createMyStory({String id, String lifeMemo, String year, String season}) async {
+  Future<void> createMyStory({String id, String lifeMemo, String year, String season, String month, String day}) async {
     try {
       emit(MyLifeStoryLoading());
 
-      final data = await myLifeRepository.createMyStory(id: id, lifeMemo: lifeMemo, year: year, season: season);
+      final data = await myLifeRepository.createMyStory(id: id, lifeMemo: lifeMemo, year: year, season: season, month: month, day: day);
       myLifeStory.add(data);
 
-      emit(MyLifeStoryLoaded(myLifeStory: myLifeStory));
+      readMyStory();
+
+      emit(MyLifeStoryLoaded(myLifeStory: myLifeStory, years: years, seasons: seasons));
     } catch (e) {
       throw e;
     }

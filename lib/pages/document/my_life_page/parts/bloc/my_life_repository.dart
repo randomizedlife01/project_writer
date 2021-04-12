@@ -13,12 +13,14 @@ class MyLifeRepository {
     }
   }
 
-  Future<MyLifeStory> createMyStory({String lifeMemo, String year, String season, String id}) async {
+  Future<MyLifeStory> createMyStory({String lifeMemo, String year, String season, String month, String day, String id}) async {
     final myLifeStory = MyLifeStory(
       id: id,
       lifeMemo: lifeMemo,
       year: year,
       season: season,
+      month: month,
+      date: day,
     );
 
     try {

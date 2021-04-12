@@ -4,7 +4,6 @@ import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project_writer_v04/amplifyconfiguration.dart';
 import 'package:project_writer_v04/pages/auth_pages/login_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/signup_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/verification_page.dart';
@@ -13,6 +12,7 @@ import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_rep
 import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/bloc/auth_bloc.dart';
 import 'package:project_writer_v04/services/route/app_route.dart';
+import 'package:project_writer_v04/amplifyconfiguration.dart';
 
 import 'models/ModelProvider.dart';
 

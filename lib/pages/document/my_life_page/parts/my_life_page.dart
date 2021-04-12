@@ -11,8 +11,9 @@ class MyLifePage extends StatefulWidget {
 }
 
 class _MyLifePageState extends State<MyLifePage> {
-  bool _isVisible = false;
-  final _pageController = PageController(viewportFraction: 0.8);
+  final _scrollController = ScrollController();
+
+  String seasonToHangul = '';
 
   @override
   void initState() {
@@ -21,7 +22,6 @@ class _MyLifePageState extends State<MyLifePage> {
   }
 
   Widget nothingInMyLifeStory() {
-    _isVisible = false;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -60,26 +60,22 @@ class _MyLifePageState extends State<MyLifePage> {
     );
   }
 
-  //TODO: 연표 리스트 뷰
+  //TODO: 연표 리스트 뷰 - 오늘 연표 디자인 빼고 기능은 전부 완료하기...
   Widget myLifeStory() {
-    //BlocProvider.of<MyLifeStoryCubit>(context)..deleteMyStory(id: 'my_life_4');
+    //BlocProvider.of<MyLifeStoryCubit>(context)..deleteMyStory(id: 'my_life_1');
     return BlocBuilder<MyLifeStoryCubit, MyLifeStoryState>(
       builder: (context, state) {
         if (state is MyLifeStoryLoaded) {
-          print(state.years);
-          state.myLifeStory.isNotEmpty ? _isVisible = true : _isVisible = false;
-          return PageView.builder(
-            controller: _pageController,
-            scrollDirection: Axis.horizontal,
-            itemCount: state.years.length,
-            itemBuilder: (context, toIndex) {
-              //서브리스트
-              var subList = state.myLifeStory.where((element) => element.year == state.years[toIndex]).toList();
-              return Container(
-                margin: EdgeInsets.fromLTRB(0, 0, 5.0, 0),
-                alignment: Alignment.centerLeft,
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: ListTile(
+          //state.myLifeStory.isNotEmpty ? _isVisible = true : _isVisible = false;
+          return Container(
+            child: ListView.builder(
+              shrinkWrap: true,
+              controller: _scrollController,
+              scrollDirection: Axis.vertical,
+              itemCount: state.years.length,
+              itemBuilder: (context, toIndex) {
+                var subList = state.myLifeStory.where((element) => element.year == state.years[toIndex]).toList();
+                return ListTile(
                   title: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,7 +83,7 @@ class _MyLifePageState extends State<MyLifePage> {
                       Row(
                         children: [
                           Text(
-                            state.myLifeStory.isNotEmpty ? state.myLifeStory[toIndex].year : '',
+                            state.myLifeStory.isNotEmpty ? state.years[toIndex] : '',
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyText2
@@ -97,74 +93,81 @@ class _MyLifePageState extends State<MyLifePage> {
                           SizedBox(
                             width: 12.0,
                           ),
-                          Expanded(
-                            child: Container(
-                              height: 1.0,
-                              color: Colors.grey,
-                            ),
+                          Container(
+                            height: 1.0,
+                            color: Colors.grey,
                           ),
                         ],
                       ),
-                      Container(
-                        height: 300.0,
-                        child: ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          itemCount: subList.length,
-                          itemBuilder: (context, seasonIndex) {
-                            var seasonList = subList.where((element) => element.season == subList[seasonIndex].season).toList();
-                            return Container(
-                              width: MediaQuery.of(context).size.width,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(seasonList[seasonIndex].season),
-                                  Expanded(
-                                    child: Container(
-                                      padding: EdgeInsets.all(10.0),
-                                      height: 200.0,
-                                      child: ListView.builder(
-                                        itemCount: seasonList.length,
-                                        itemBuilder: (context, index) {
-                                          return Column(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              //날짜와 시간 분리되는 곳
-                                              // Container(
-                                              //   child: Text(
-                                              //     seasonList.isNotEmpty ? seasonList[index].date : '',
-                                              //     style: Theme.of(context)
-                                              //         .textTheme
-                                              //         .bodyText2
-                                              //         .copyWith(color: Color(0xFFF8FEE9), fontSize: 16.0, fontWeight: FontWeight.w200),
-                                              //   ),
-                                              // ),
-                                              Text(
-                                                seasonList.isNotEmpty ? seasonList[index].lifeMemo : '',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1
-                                                    .copyWith(fontSize: 18.0, fontWeight: FontWeight.w500, color: Color(0xFFF8FEE9)),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      ),
-                                    ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        itemCount: subList.length,
+                        itemBuilder: (context, seasonIndex) {
+                          var seasonList = subList.where((element) => element.season == subList[seasonIndex].season).toList();
+                          if (subList[seasonIndex].season == '1') {
+                            seasonToHangul = '봄';
+                          } else if (subList[seasonIndex].season == '2') {
+                            seasonToHangul = '여름';
+                          } else if (subList[seasonIndex].season == '3') {
+                            seasonToHangul = '가을';
+                          } else {
+                            seasonToHangul = '겨울';
+                          }
+                          return ListTile(
+                            title: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(seasonToHangul),
+                                Container(
+                                  padding: EdgeInsets.all(10.0),
+                                  height: 200.0,
+                                  child: ListView.builder(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: seasonList.length,
+                                    itemBuilder: (context, index) {
+                                      return Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          //날짜와 시간 분리되는 곳
+                                          Container(
+                                            child: Text(
+                                              seasonList[index].month.isNotEmpty && seasonList[index].date.isNotEmpty
+                                                  ? (seasonList[index].month + '.' + seasonList[index].date)
+                                                  : '어느 날',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText2
+                                                  .copyWith(color: Color(0xFFF8FEE9), fontSize: 16.0, fontWeight: FontWeight.w200),
+                                            ),
+                                          ),
+                                          Text(
+                                            seasonList.isNotEmpty ? seasonList[index].lifeMemo : '',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1
+                                                .copyWith(fontSize: 18.0, fontWeight: FontWeight.w500, color: Color(0xFFF8FEE9)),
+                                          ),
+                                        ],
+                                      );
+                                    },
                                   ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           );
         } else if (state is MyLifeStoryLoading) {
           return Center(
@@ -201,7 +204,7 @@ class _MyLifePageState extends State<MyLifePage> {
         },
       ),
       floatingActionButton: Visibility(
-        visible: _isVisible,
+        //visible: _isVisible,
         child: BasicFloatingButton(
           icon: Icons.add,
           onPressed: () => showDialog(

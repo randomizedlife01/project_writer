@@ -27,6 +27,7 @@ class MyLifeStory extends Model {
   final String year;
   final String date;
   final String season;
+  final String month;
 
   @override
   getInstanceType() => classType;
@@ -41,20 +42,23 @@ class MyLifeStory extends Model {
       @required this.lifeMemo,
       @required this.year,
       this.date,
-      @required this.season});
+      @required this.season,
+      this.month});
 
   factory MyLifeStory(
       {String id,
       @required String lifeMemo,
       @required String year,
       String date,
-      @required String season}) {
+      @required String season,
+      String month}) {
     return MyLifeStory._internal(
         id: id == null ? UUID.getUUID() : id,
         lifeMemo: lifeMemo,
         year: year,
         date: date,
-        season: season);
+        season: season,
+        month: month);
   }
 
   bool equals(Object other) {
@@ -69,7 +73,8 @@ class MyLifeStory extends Model {
         lifeMemo == other.lifeMemo &&
         year == other.year &&
         date == other.date &&
-        season == other.season;
+        season == other.season &&
+        month == other.month;
   }
 
   @override
@@ -84,20 +89,27 @@ class MyLifeStory extends Model {
     buffer.write("lifeMemo=" + "$lifeMemo" + ", ");
     buffer.write("year=" + "$year" + ", ");
     buffer.write("date=" + "$date" + ", ");
-    buffer.write("season=" + "$season");
+    buffer.write("season=" + "$season" + ", ");
+    buffer.write("month=" + "$month");
     buffer.write("}");
 
     return buffer.toString();
   }
 
   MyLifeStory copyWith(
-      {String id, String lifeMemo, String year, String date, String season}) {
+      {String id,
+      String lifeMemo,
+      String year,
+      String date,
+      String season,
+      String month}) {
     return MyLifeStory(
         id: id ?? this.id,
         lifeMemo: lifeMemo ?? this.lifeMemo,
         year: year ?? this.year,
         date: date ?? this.date,
-        season: season ?? this.season);
+        season: season ?? this.season,
+        month: month ?? this.month);
   }
 
   MyLifeStory.fromJson(Map<String, dynamic> json)
@@ -105,14 +117,16 @@ class MyLifeStory extends Model {
         lifeMemo = json['lifeMemo'],
         year = json['year'],
         date = json['date'],
-        season = json['season'];
+        season = json['season'],
+        month = json['month'];
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'lifeMemo': lifeMemo,
         'year': year,
         'date': date,
-        'season': season
+        'season': season,
+        'month': month
       };
 
   static final QueryField ID = QueryField(fieldName: "myLifeStory.id");
@@ -120,6 +134,7 @@ class MyLifeStory extends Model {
   static final QueryField YEAR = QueryField(fieldName: "year");
   static final QueryField DATE = QueryField(fieldName: "date");
   static final QueryField SEASON = QueryField(fieldName: "season");
+  static final QueryField MONTH = QueryField(fieldName: "month");
   static var schema =
       Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "MyLifeStory";
@@ -154,6 +169,11 @@ class MyLifeStory extends Model {
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: MyLifeStory.SEASON,
         isRequired: true,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: MyLifeStory.MONTH,
+        isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
   });
 }

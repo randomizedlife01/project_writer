@@ -17,6 +17,7 @@ type MyLifeStory @model @auth(rules: [{allow: public}]) {
   year: String!
   date: String
   season: String!
+  month: String
 }
 
 type SearchHistory @model @auth(rules: [{allow: public}]) {

@@ -1,6 +1,32 @@
 const amplifyconfig = ''' {
     "UserAgent": "aws-amplify-cli/2.0",
     "Version": "1.0",
+    "analytics": {
+        "plugins": {
+            "awsPinpointAnalyticsPlugin": {
+                "pinpointAnalytics": {
+                    "appId": "66b2a8ef08a84cac99255a7b1e11f650",
+                    "region": "us-east-1"
+                },
+                "pinpointTargeting": {
+                    "region": "us-east-1"
+                }
+            }
+        }
+    },
+    "api": {
+        "plugins": {
+            "awsAPIPlugin": {
+                "projectwriterv04": {
+                    "endpointType": "GraphQL",
+                    "endpoint": "https://kfpkngsycnewzbmr6gywc2t4vy.appsync-api.us-east-1.amazonaws.com/graphql",
+                    "region": "us-east-1",
+                    "authorizationType": "API_KEY",
+                    "apiKey": "da2-c3fvyebo7ncfpdz4hodgnw3uoi"
+                }
+            }
+        }
+    },
     "auth": {
         "plugins": {
             "awsCognitoAuthPlugin": {
@@ -67,32 +93,6 @@ const amplifyconfig = ''' {
                         "AuthMode": "AWS_IAM",
                         "ClientDatabasePrefix": "projectwriterv04_AWS_IAM"
                     }
-                }
-            }
-        }
-    },
-    "analytics": {
-        "plugins": {
-            "awsPinpointAnalyticsPlugin": {
-                "pinpointAnalytics": {
-                    "appId": "66b2a8ef08a84cac99255a7b1e11f650",
-                    "region": "us-east-1"
-                },
-                "pinpointTargeting": {
-                    "region": "us-east-1"
-                }
-            }
-        }
-    },
-    "api": {
-        "plugins": {
-            "awsAPIPlugin": {
-                "projectwriterv04": {
-                    "endpointType": "GraphQL",
-                    "endpoint": "https://kfpkngsycnewzbmr6gywc2t4vy.appsync-api.us-east-1.amazonaws.com/graphql",
-                    "region": "us-east-1",
-                    "authorizationType": "API_KEY",
-                    "apiKey": "da2-c3fvyebo7ncfpdz4hodgnw3uoi"
                 }
             }
         }
