@@ -75,6 +75,7 @@ class _MyLifePageState extends State<MyLifePage> {
               itemCount: state.years.length,
               itemBuilder: (context, toIndex) {
                 var subList = state.myLifeStory.where((element) => element.year == state.years[toIndex]).toList();
+                print(subList);
                 return ListTile(
                   title: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -121,42 +122,38 @@ class _MyLifePageState extends State<MyLifePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(seasonToHangul),
-                                Container(
-                                  padding: EdgeInsets.all(10.0),
-                                  height: 200.0,
-                                  child: ListView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: seasonList.length,
-                                    itemBuilder: (context, index) {
-                                      return Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          //날짜와 시간 분리되는 곳
-                                          Container(
-                                            child: Text(
-                                              seasonList[index].month.isNotEmpty && seasonList[index].date.isNotEmpty
-                                                  ? (seasonList[index].month + '.' + seasonList[index].date)
-                                                  : '어느 날',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyText2
-                                                  .copyWith(color: Color(0xFFF8FEE9), fontSize: 16.0, fontWeight: FontWeight.w200),
-                                            ),
-                                          ),
-                                          Text(
-                                            seasonList.isNotEmpty ? seasonList[index].lifeMemo : '',
+                                ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount: seasonList.length,
+                                  itemBuilder: (context, index) {
+                                    return Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        //날짜와 시간 분리되는 곳
+                                        Container(
+                                          child: Text(
+                                            seasonList[index].month.isNotEmpty && seasonList[index].date.isNotEmpty
+                                                ? (seasonList[index].month + '.' + seasonList[index].date)
+                                                : '어느 날',
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .bodyText1
-                                                .copyWith(fontSize: 18.0, fontWeight: FontWeight.w500, color: Color(0xFFF8FEE9)),
+                                                .bodyText2
+                                                .copyWith(color: Color(0xFFF8FEE9), fontSize: 16.0, fontWeight: FontWeight.w200),
                                           ),
-                                        ],
-                                      );
-                                    },
-                                  ),
+                                        ),
+                                        Text(
+                                          seasonList.isNotEmpty ? seasonList[index].lifeMemo : '',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .copyWith(fontSize: 18.0, fontWeight: FontWeight.w500, color: Color(0xFFF8FEE9)),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 ),
                               ],
                             ),

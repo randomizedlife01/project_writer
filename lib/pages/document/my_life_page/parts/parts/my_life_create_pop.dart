@@ -208,8 +208,6 @@ class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
                                             day: _dayController.text,
                                           );
 
-                                          print('save data : year - ${_yearController.text}, season - ${_seasonController.text}');
-
                                           Navigator.pop(context);
                                         }
                                       },
