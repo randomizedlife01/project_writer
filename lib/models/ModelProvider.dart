@@ -16,12 +16,14 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_interface.dart';
+import 'CharacterData.dart';
 import 'Document.dart';
 import 'IdeaMemo.dart';
 import 'MyLifeStory.dart';
 import 'SearchHistory.dart';
 import 'StorySummary.dart';
 
+export 'CharacterData.dart';
 export 'Document.dart';
 export 'IdeaMemo.dart';
 export 'MyLifeStory.dart';
@@ -30,9 +32,10 @@ export 'StorySummary.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "fb381b00354d223fa0d0377e92dcac2c";
+  String version = "c917aba0fb2d3f98d541185697a35428";
   @override
   List<ModelSchema> modelSchemas = [
+    CharacterData.schema,
     Document.schema,
     IdeaMemo.schema,
     MyLifeStory.schema,
@@ -45,6 +48,11 @@ class ModelProvider implements ModelProviderInterface {
 
   ModelType getModelTypeByModelName(String modelName) {
     switch (modelName) {
+      case "CharacterData":
+        {
+          return CharacterData.classType;
+        }
+        break;
       case "Document":
         {
           return Document.classType;

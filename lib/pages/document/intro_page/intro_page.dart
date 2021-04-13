@@ -188,7 +188,7 @@ class IntroPage extends StatelessWidget {
             BasicMenuButton(
               icon: FontAwesomeIcons.users,
               buttonText: '캐릭터\n만들기',
-              onPressed: () {},
+              onPressed: () => Navigator.of(context).pushNamed('/character_page'),
             ),
             BasicVerticalLine(),
             BasicMenuButton(

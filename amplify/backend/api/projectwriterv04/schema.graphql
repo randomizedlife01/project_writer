@@ -1,3 +1,13 @@
+type CharacterData @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  motivation: String
+  tendency: Int
+  description: String
+  gender: String
+  age: String
+  name: String!
+}
+
 type StorySummary @model @auth(rules: [{allow: public}]) @key(name: "byDocument", fields: ["documentID"]) {
   id: ID!
   storySummary: String

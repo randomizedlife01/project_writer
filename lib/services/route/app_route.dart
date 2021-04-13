@@ -4,6 +4,10 @@ import 'package:project_writer_v04/landing_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/login_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/signup_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/verification_page.dart';
+import 'package:project_writer_v04/pages/document/character_page/bloc/character_bloc.dart';
+import 'package:project_writer_v04/pages/document/character_page/bloc/character_repository.dart';
+import 'package:project_writer_v04/pages/document/character_page/character_page.dart';
+import 'package:project_writer_v04/pages/document/character_page/character_write_page.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_bloc.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_repository.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/free_write_page.dart';
@@ -21,6 +25,7 @@ class AppRouter {
   final _freeWriteCubit = FreeWriteCubit(newCombineRepository: FreeWriteRepository(), ideaMemo: [], searchHistory: []);
   final _myStoryCubit = MyLifeStoryCubit(myLifeRepository: MyLifeRepository(), myLifeStory: [], years: [], seasons: []);
   final _introDocumentCubit = IntroDocumentCubit(introDocumentRepository: IntroDocumentRepository(), document: []);
+  final _charactersCubit = CharactersCubit(myCharacterRepository: CharactersRepository(), myCharacters: []);
 
   Route onGeneratorRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
@@ -80,6 +85,22 @@ class AppRouter {
             child: FreeWritePage(
               appBarTitle: '자유롭게 쓰기',
             ),
+          ),
+        );
+        break;
+      case '/character_page':
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider.value(
+            value: _charactersCubit,
+            child: CharactersPage(),
+          ),
+        );
+        break;
+      case '/character_write_page':
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider.value(
+            value: _charactersCubit,
+            child: CharacterWritePage(),
           ),
         );
         break;

@@ -19,7 +19,7 @@ class MyLifeStoryCubit extends Cubit<MyLifeStoryState> {
     try {
       emit(MyLifeStoryLoading());
 
-      //myLifeStory = await myLifeRepository.readMyStory();
+      myLifeStory = await myLifeRepository.readMyStory();
 
       myLifeStory.forEach((element) {
         if (!years.contains(element.year)) {
@@ -45,8 +45,6 @@ class MyLifeStoryCubit extends Cubit<MyLifeStoryState> {
 
       final data = await myLifeRepository.createMyStory(id: id, lifeMemo: lifeMemo, year: year, season: season, month: month, day: day);
       myLifeStory.add(data);
-
-      readMyStory();
 
       emit(MyLifeStoryLoaded(myLifeStory: myLifeStory, years: years, seasons: seasons));
     } catch (e) {
