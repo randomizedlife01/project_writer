@@ -15,6 +15,10 @@ class MyLifeStoryCubit extends Cubit<MyLifeStoryState> {
 
   MyLifeStoryCubit({this.myLifeRepository, this.myLifeStory, this.years, this.seasons}) : super(MyLifeStoryLoading());
 
+  Future<void> changeSeasonToInt() async {
+
+  }
+
   Future<void> readMyStory() async {
     try {
       emit(MyLifeStoryLoading());
@@ -39,11 +43,26 @@ class MyLifeStoryCubit extends Cubit<MyLifeStoryState> {
     }
   }
 
-  Future<void> createMyStory({String id, String lifeMemo, String year, String season, String month, String day}) async {
+  Future<void> createMyStory({String lifeMemo, String year, String season, String month, String day}) async {
     try {
       emit(MyLifeStoryLoading());
 
-      final data = await myLifeRepository.createMyStory(id: id, lifeMemo: lifeMemo, year: year, season: season, month: month, day: day);
+      int _lastMyStoryIdNum = 0;
+
+      if (myLifeStory.isNotEmpty) {
+        final lastId = myLifeStory.last.id;
+        final number = lastId.split("_").last;
+        _lastMyStoryIdNum = int.parse(number);
+      }
+
+      final data = await myLifeRepository.createMyStory(
+        id: 'my_life_' + (_lastMyStoryIdNum + 1).toString(),
+        lifeMemo: lifeMemo,
+        year: year,
+        season: season,
+        month: month,
+        day: day,
+      );
       myLifeStory.add(data);
 
       emit(MyLifeStoryLoaded(myLifeStory: myLifeStory, years: years, seasons: seasons));

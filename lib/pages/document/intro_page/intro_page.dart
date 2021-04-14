@@ -193,8 +193,8 @@ class IntroPage extends StatelessWidget {
             BasicVerticalLine(),
             BasicMenuButton(
               icon: FontAwesomeIcons.sitemap,
-              buttonText: '마인드맵\n작성',
-              onPressed: () {},
+              buttonText: '로그아웃\n임시',
+              onPressed: () => shouldLogOut(),
             ),
           ],
         ),

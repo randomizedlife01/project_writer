@@ -41,11 +41,17 @@ class _LoginPageState extends State<LoginPage> {
     ),
   );
 
-  //TODO: 구글 로그인 리다이렉트 URI 수정
-
   void signInGoogle() async {
     try {
-      var res = await Amplify.Auth.signInWithWebUI(provider: AuthProvider.google);
+      await Amplify.Auth.signInWithWebUI(provider: AuthProvider.google);
+    } on AmplifyException catch (e) {
+      print(e.message);
+    }
+  }
+
+  void signInFacebook() async {
+    try {
+      await Amplify.Auth.signInWithWebUI(provider: AuthProvider.facebook);
     } on AmplifyException catch (e) {
       print(e.message);
     }
@@ -61,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
 
     facebookButton = AuthButton(
       icon: FontAwesomeIcons.facebook,
-      onPressed: () {},
+      onPressed: signInFacebook,
     );
   }
 

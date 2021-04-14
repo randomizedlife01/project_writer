@@ -86,6 +86,7 @@ class _LandingPageState extends State<LandingPage> {
                     child: BlocProvider<IntroDocumentCubit>(
                       create: (_) => IntroDocumentCubit(introDocumentRepository: IntroDocumentRepository(), document: []),
                       child: IntroPage(
+                        //TODO: 구글 로그아웃시 리다이렉트 수정하기.
                         shouldLogOut: _authService.logOut,
                       ),
                     ),

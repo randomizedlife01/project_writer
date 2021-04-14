@@ -27,21 +27,6 @@ class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
 
   String dropdownValue = '봄';
 
-  int _lastMyStoryIdNum = 0;
-  String birthDayData = '';
-  var selectedSeason = "봄";
-  var date = DateTime.now();
-
-  List<String> seasons = <String>['봄', '여름', '가을', '겨울'];
-
-  var selectYear = 1990;
-
-  String year = '';
-  String season = '';
-  String month = '';
-  String day = '';
-  String seasonToHangul = '';
-
   Widget birthdayForm() {
     return Row(
       children: [
@@ -183,12 +168,6 @@ class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
                                         if (_formKey.currentState.validate()) {
                                           _formKey.currentState.save();
 
-                                          if (state.myLifeStory.isNotEmpty) {
-                                            final lastId = state.myLifeStory.last.id;
-                                            final number = lastId.split("_").last;
-                                            _lastMyStoryIdNum = int.parse(number);
-                                          }
-
                                           if (dropdownValue == '봄') {
                                             _seasonController.text = '1';
                                           } else if (dropdownValue == '여름') {
@@ -200,7 +179,6 @@ class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
                                           }
 
                                           BlocProvider.of<MyLifeStoryCubit>(context).createMyStory(
-                                            id: 'my_life_' + (_lastMyStoryIdNum + 1).toString(),
                                             lifeMemo: _storyController.text.isNotEmpty ? _storyController.text : '나의 시작',
                                             year: _yearController.text,
                                             season: _seasonController.text,

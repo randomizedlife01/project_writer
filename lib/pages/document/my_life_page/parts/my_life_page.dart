@@ -60,7 +60,6 @@ class _MyLifePageState extends State<MyLifePage> {
     );
   }
 
-  //TODO: 연표 리스트 뷰 - 오늘 연표 디자인 빼고 기능은 전부 완료하기...
   Widget myLifeStory() {
     //BlocProvider.of<MyLifeStoryCubit>(context)..deleteMyStory(id: 'my_life_1');
     return BlocBuilder<MyLifeStoryCubit, MyLifeStoryState>(
