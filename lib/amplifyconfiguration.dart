@@ -55,8 +55,8 @@ const amplifyconfig = ''' {
                         "OAuth": {
                             "WebDomain": "projectwriterv04c6239c4d-c6239c4d-dev.auth.us-east-1.amazoncognito.com",
                             "AppClientId": "7b6pu0p7dfuj4sgmik355puo75",
-                            "SignInRedirectURI": "myapp://localhost:3000/signin/",
-                            "SignOutRedirectURI": "myapp://localhost:3000/signout/",
+                            "SignInRedirectURI": "myapp://",
+                            "SignOutRedirectURI": "myapp://",
                             "Scopes": [
                                 "phone",
                                 "email",

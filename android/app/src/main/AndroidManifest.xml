@@ -33,8 +33,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data android:scheme="myapp://localhost:3000/signin/"/>
-                <data android:scheme="myapp://localhost:3000/signout/"/>
+                <data android:scheme="myapp" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

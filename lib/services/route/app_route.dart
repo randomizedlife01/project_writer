@@ -112,5 +112,8 @@ class AppRouter {
 
   void dispose() {
     _freeWriteCubit.close();
+    _charactersCubit.close();
+    _introDocumentCubit.close();
+    _myStoryCubit.close();
   }
 }

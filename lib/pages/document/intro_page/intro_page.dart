@@ -1,3 +1,4 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,11 +10,10 @@ import 'package:project_writer_v04/pages/document/intro_page/parts/intro_parts.d
 import 'package:project_writer_v04/pages/document/story_page/story_page.dart';
 
 class IntroPage extends StatelessWidget {
-  static const routeName = '/intro_page';
-
   final VoidCallback shouldLogOut;
+  final AmplifyAuthCognito auth;
 
-  const IntroPage({Key key, this.shouldLogOut}) : super(key: key);
+  const IntroPage({Key key, this.shouldLogOut, this.auth}) : super(key: key);
 
   Widget userInfo() {
     return Container();

@@ -46,8 +46,7 @@
              <dict>
                  <key>CFBundleURLSchemes</key>
                  <array>
-                     <string>myapp://localhost:3000/signin/</string>
-                     <string>myapp://localhost:3000/signout/</string>
+                     <string>myapp</string>
                  </array>
              </dict>
          </array>
