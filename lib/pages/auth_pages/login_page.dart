@@ -7,8 +7,8 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_writer_v04/services/analytics/analytics_events.dart';
 import 'package:project_writer_v04/services/analytics/analytics_service.dart';
-import 'package:project_writer_v04/pages/auth_pages/bloc/auth_credentials.dart';
-import 'package:project_writer_v04/pages/auth_pages/bloc/auth_bloc.dart';
+import 'package:project_writer_v04/services/controller/auth_credentials.dart';
+import 'package:project_writer_v04/services/controller/auth_bloc.dart';
 
 import 'parts/auth_source.dart';
 

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:project_writer_v04/pages/document/character_page/bloc/character_bloc.dart';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:project_writer_v04/services/controller/character_controller.dart';
 
 class CharactersPage extends StatelessWidget {
+  final characterController = CharactersController.to;
   var cardIndex = 0;
+
   ScrollController scrollController = ScrollController();
 
   Widget nothingInMyLifeStory({BuildContext context}) {
@@ -33,7 +35,7 @@ class CharactersPage extends StatelessWidget {
     );
   }
 
-  Widget characterCards({CharactersState state, BuildContext context}) {
+  Widget characterCards({CharactersController state, BuildContext context}) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.65,
       child: ListView.builder(
@@ -105,21 +107,13 @@ class CharactersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<CharactersCubit>(context).readMyCharacters();
+    characterController.readMyCharacters();
     return Scaffold(
-      body: BlocBuilder<CharactersCubit, CharactersState>(
-        builder: (context, state) {
-          if (state is CharactersLoaded) {
-            return state.myCharacters.isNotEmpty ? characterCards(context: context, state: state) : nothingInMyLifeStory(context: context);
-          } else if (state is CharactersLoading) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return Center(
-              child: Text('ERROR!!'),
-            );
-          }
+      body: GetBuilder<CharactersController>(
+        builder: (controller) {
+          return controller.myCharacters.isNotEmpty
+              ? characterCards(context: context, state: controller)
+              : nothingInMyLifeStory(context: context);
         },
       ),
     );

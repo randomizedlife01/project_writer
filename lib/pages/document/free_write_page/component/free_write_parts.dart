@@ -1,9 +1,9 @@
 //기본 서치 바
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:get/get.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_bloc.dart';
+import 'package:project_writer_v04/services/controller/free_write_controller.dart';
 
 class SearchBar extends StatelessWidget {
   String selectTerm = '';
@@ -14,9 +14,8 @@ class SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<FreeWriteCubit>(context).readIdeaAndTags();
-    return BlocBuilder<FreeWriteCubit, FreeWriteState>(builder: (context, state) {
-      if (state is FreeWriteLoaded) {
+    return GetBuilder<FreeWriteController>(
+      builder: (freeController) {
         return FloatingSearchBar(
           autocorrect: false,
           shadowColor: Colors.transparent,
@@ -45,14 +44,12 @@ class SearchBar extends StatelessWidget {
             FloatingSearchBarAction.searchToClear(),
           ],
           onQueryChanged: (query) {
-            BlocProvider.of<FreeWriteCubit>(context).filteredSearchTerms(filter: query);
+            freeController.filteredSearchTerms(filter: query);
           },
           onSubmitted: (query) {
-            BlocProvider.of<FreeWriteCubit>(context).createTag(tag: query);
+            freeController.createTag(tag: query);
             selectTerm = query;
-            query.isEmpty
-                ? BlocProvider.of<FreeWriteCubit>(context).readIdeaAndTags()
-                : BlocProvider.of<FreeWriteCubit>(context).filteredIdeaAndTags(filter: query);
+            query.isEmpty ? freeController.readIdeaAndTags() : freeController.filteredIdeaAndTags(filter: query);
             controller.close();
           },
           builder: (context, transition) {
@@ -63,7 +60,7 @@ class SearchBar extends StatelessWidget {
                 elevation: 0.0,
                 child: Builder(
                   builder: (context) {
-                    if (state.searchHistory.isEmpty && controller.query.isEmpty) {
+                    if (freeController.searchHistory.isEmpty && controller.query.isEmpty) {
                       return Container(
                         height: 56.0,
                         width: double.infinity,
@@ -75,7 +72,7 @@ class SearchBar extends StatelessWidget {
                           style: Theme.of(context).textTheme.bodyText2,
                         ),
                       );
-                    } else if (state.searchHistory.isEmpty) {
+                    } else if (freeController.searchHistory.isEmpty) {
                       return ListTile(
                         title: Text(
                           controller.query,
@@ -90,7 +87,7 @@ class SearchBar extends StatelessWidget {
                     } else {
                       return Column(
                         mainAxisSize: MainAxisSize.max,
-                        children: state.searchHistory
+                        children: freeController.searchHistory
                             .map(
                               (term) => ListTile(
                                 title: Text(
@@ -109,11 +106,11 @@ class SearchBar extends StatelessWidget {
                                     color: Color(0xFF3b4445),
                                   ),
                                   onPressed: () {
-                                    BlocProvider.of<FreeWriteCubit>(context).deleteSearchTerms(term: term.searchHistory);
+                                    freeController.deleteSearchTerms(term: term.searchHistory);
                                   },
                                 ),
                                 onTap: () {
-                                  BlocProvider.of<FreeWriteCubit>(context).putSearchTerms(term: term.searchHistory);
+                                  freeController.putSearchTerms(term: term.searchHistory);
                                   selectTerm = term.searchHistory;
                                   controller.close();
                                 },
@@ -128,12 +125,8 @@ class SearchBar extends StatelessWidget {
             );
           },
         );
-      } else if (state is FreeWriteLoading) {
-        return CircularProgressIndicator();
-      } else {
-        return Center(child: Text('데이터 로드 중\n오류가 발생하였습니다.'));
-      }
-    });
+      },
+    );
   }
 }
 
@@ -146,94 +139,84 @@ class SearchResultsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fsb = FloatingSearchBar.of(context);
-    return BlocBuilder<FreeWriteCubit, FreeWriteState>(
-      builder: (context, state) {
-        if (state is FreeWriteLoaded) {
-          return Padding(
-            padding: const EdgeInsets.only(top: 15.0),
-            child: ListView.separated(
-              padding: EdgeInsets.only(top: fsb.value.height + fsb.value.margins.vertical),
-              shrinkWrap: true,
-              physics: ScrollPhysics(),
-              itemCount: state.ideaMemo.length,
-              separatorBuilder: (context, index) {
-                return Divider(
-                  height: 50.0,
-                  color: Colors.white,
-                  indent: 150.0,
-                  endIndent: 150.0,
-                );
-              },
-              itemBuilder: (context, toIndex) {
-                final tags = state.ideaMemo[toIndex].tags.split(" ");
-                return Slidable(
-                  actionPane: SlidableStrechActionPane(),
-                  enabled: true,
-                  secondaryActions: [
-                    IconSlideAction(
-                      caption: '미정',
-                      color: Colors.transparent,
-                      icon: Icons.archive,
-                      onTap: () {},
-                    ),
-                    IconSlideAction(
-                      caption: '삭제',
-                      color: Color(0xFFe23e57),
-                      icon: Icons.delete,
-                      onTap: () {
-                        BlocProvider.of<FreeWriteCubit>(context)..deleteIdea(id: state.ideaMemo[toIndex].id);
+    return Padding(
+      padding: const EdgeInsets.only(top: 15.0),
+      child: GetBuilder<FreeWriteController>(
+        builder: (freeController) {
+          return ListView.separated(
+            padding: EdgeInsets.only(top: fsb.value.height + fsb.value.margins.vertical),
+            shrinkWrap: true,
+            physics: ScrollPhysics(),
+            itemCount: freeController.ideaMemo.length,
+            separatorBuilder: (context, index) {
+              return Divider(
+                height: 50.0,
+                color: Colors.white,
+                indent: 150.0,
+                endIndent: 150.0,
+              );
+            },
+            itemBuilder: (context, toIndex) {
+              final tags = freeController.ideaMemo[toIndex].tags.split(" ");
+              return Slidable(
+                actionPane: SlidableStrechActionPane(),
+                enabled: true,
+                secondaryActions: [
+                  IconSlideAction(
+                    caption: '미정',
+                    color: Colors.transparent,
+                    icon: Icons.archive,
+                    onTap: () {},
+                  ),
+                  IconSlideAction(
+                    caption: '삭제',
+                    color: Color(0xFFe23e57),
+                    icon: Icons.delete,
+                    onTap: () {
+                      freeController.deleteIdea(id: freeController.ideaMemo[toIndex].id);
+                    },
+                  ),
+                ],
+                //RxDart 데이터 리스트타일
+                child: ListTile(
+                  title: Text(
+                    freeController.ideaMemo.isNotEmpty ? freeController.ideaMemo[toIndex].memo : '',
+                    style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w400),
+                  ),
+                  //아이디어 메모당 태그 리스트(가로)
+                  subtitle: Container(
+                    height: 38.0,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: tags.length,
+                      itemBuilder: (_, index) {
+                        if (tags.isNotEmpty) {
+                          return Container(
+                            margin: const EdgeInsets.only(top: 15.0, right: 10.0),
+                            padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 15.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Color(0xFF6c5c7a)),
+                              color: Color(0xFF6c5c7a),
+                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            child: Text(
+                              '#' + tags[index],
+                              style: Theme.of(context).textTheme.bodyText2.copyWith(color: Color(0xFFfae3da), fontSize: 14.0),
+                            ),
+                          );
+                        } else {
+                          return Text('No Tags Data!!');
+                        }
                       },
                     ),
-                  ],
-                  //RxDart 데이터 리스트타일
-                  child: ListTile(
-                    title: Text(
-                      state.ideaMemo.isNotEmpty ? state.ideaMemo[toIndex].memo : '',
-                      style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w400),
-                    ),
-                    //아이디어 메모당 태그 리스트(가로)
-                    subtitle: Container(
-                      height: 38.0,
-                      child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: tags.length,
-                        itemBuilder: (_, index) {
-                          if (tags.isNotEmpty) {
-                            return Container(
-                              margin: const EdgeInsets.only(top: 15.0, right: 10.0),
-                              padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 15.0),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: Color(0xFF6c5c7a)),
-                                color: Color(0xFF6c5c7a),
-                                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                              ),
-                              child: Text(
-                                '#' + tags[index],
-                                style: Theme.of(context).textTheme.bodyText2.copyWith(color: Color(0xFFfae3da), fontSize: 14.0),
-                              ),
-                            );
-                          } else {
-                            return Text('No Tags Data!!');
-                          }
-                        },
-                      ),
-                    ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           );
-        } else if (state is FreeWriteLoading) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          return Center(
-            child: Text('ERROR!'),
-          );
-        }
-      },
+        },
+      ),
     );
   }
 }

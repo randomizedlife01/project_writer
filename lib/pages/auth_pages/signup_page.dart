@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project_writer_v04/pages/auth_pages/parts/auth_source.dart';
 import 'package:project_writer_v04/services/analytics/analytics_events.dart';
 import 'package:project_writer_v04/services/analytics/analytics_service.dart';
-import 'package:project_writer_v04/pages/auth_pages/bloc/auth_credentials.dart';
+import 'package:project_writer_v04/services/controller/auth_credentials.dart';
 
 class SignUpPage extends StatefulWidget {
   final ValueChanged<SignUpCredentials> didProvideCredentials;

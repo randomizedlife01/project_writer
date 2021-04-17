@@ -1,82 +1,72 @@
 import 'package:amplify_flutter/amplify.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:project_writer_v04/models/IdeaMemo.dart';
 import 'package:project_writer_v04/models/ModelProvider.dart';
-import 'package:project_writer_v04/pages/document/free_write_page/bloc/free_write_repository.dart';
+import 'package:project_writer_v04/services/controller/free_write_repository.dart';
 
-part 'free_write_state.dart';
+class FreeWriteController extends GetxController {
+  List<IdeaMemo> ideaMemo = [];
+  List<SearchHistory> searchHistory = [];
+  List<SearchHistory> _filteredSearchHistory = [];
 
-class FreeWriteCubit extends Cubit<FreeWriteState> {
-  List<IdeaMemo> ideaMemo;
-  List<SearchHistory> searchHistory;
-  List<SearchHistory> _filteredSearchHistory;
+  final FreeWriteRepository newCombineRepository = FreeWriteRepository();
 
-  final FreeWriteRepository newCombineRepository;
+  static FreeWriteController get to => Get.find<FreeWriteController>();
 
-  FreeWriteCubit({this.newCombineRepository, this.ideaMemo, this.searchHistory}) : super(FreeWriteLoading());
+  @override
+  void onInit() {
+    super.onInit();
+  }
 
-  Future<void> readIdeaAndTags() async {
+  readIdeaAndTags() async {
     try {
-      emit(FreeWriteLoading());
-
       ideaMemo = await newCombineRepository.readIdeas();
-
       searchHistory = await newCombineRepository.readTags();
-      emit(FreeWriteLoaded(ideaMemo: ideaMemo, searchHistory: searchHistory));
+
+      update();
     } catch (e) {
-      emit(FreeWriteNotLoaded());
+      print(e);
     }
   }
 
-  Future<void> filteredIdeaAndTags({@required String filter}) async {
+  filteredIdeaAndTags({@required String filter}) async {
     try {
-      emit(FreeWriteLoading());
-
       ideaMemo = ideaMemo.where((element) => element.tags.contains(filter)).toList();
-      emit(FreeWriteLoaded(ideaMemo: ideaMemo, searchHistory: searchHistory));
+      update();
     } catch (e) {
-      throw e;
+      print(e);
     }
   }
 
-  Future<void> createIdea({String id, String memo, String tag}) async {
+  createIdea({String id, String memo, String tag}) async {
     try {
-      emit(FreeWriteLoading());
-
       final data = await newCombineRepository.createIdea(id: id, memo: memo, tags: tag);
       ideaMemo.add(data);
-
-      emit(FreeWriteLoaded(ideaMemo: ideaMemo, searchHistory: searchHistory));
+      update();
     } catch (e) {
-      throw e;
+      print(e);
     }
   }
 
-  Future<void> updateIdea({String id, String memo, String tag}) async {
+  updateIdea({String id, String memo, String tag}) async {
     try {} catch (e) {
-      throw e;
+      print(e);
     }
   }
 
-  Future<void> deleteIdea({String id}) async {
+  deleteIdea({String id}) async {
     try {
-      emit(FreeWriteLoading());
-
       final data = await newCombineRepository.deleteIdea(id: id);
       ideaMemo.remove(data);
-
-      emit(FreeWriteLoaded(ideaMemo: ideaMemo, searchHistory: searchHistory));
+      update();
     } catch (e) {
-      throw e;
+      print(e);
     }
   }
 
-  Future<void> createTag({String tag}) async {
+  createTag({String tag}) async {
     try {
-      emit(FreeWriteLoading());
-
       searchHistory = await Amplify.DataStore.query(SearchHistory.classType);
       if (searchHistory.contains(tag)) {
         putSearchTerms(term: tag);
@@ -90,17 +80,17 @@ class FreeWriteCubit extends Cubit<FreeWriteState> {
           int firstIndex = searchHistory.isNotEmpty ? int.parse(searchHistory.first.id.split('_').last) : 0;
           final firstHistory = await newCombineRepository.deleteTag(id: 'history_' + firstIndex.toString());
           searchHistory.remove(firstHistory);
+          update();
         }
         int lastIndex = searchHistory.isNotEmpty ? int.parse(searchHistory.last.id.split('_').last) : 0;
         final lastHistory = await newCombineRepository.createTag(id: 'history_' + lastIndex.toString(), tags: tag);
         searchHistory.add(lastHistory);
+        update();
       });
 
       filteredSearchTerms(filter: null);
-
-      emit(FreeWriteLoaded(ideaMemo: ideaMemo, searchHistory: searchHistory));
     } catch (e) {
-      throw e;
+      print(e);
     }
   }
 
@@ -117,6 +107,7 @@ class FreeWriteCubit extends Cubit<FreeWriteState> {
   void deleteSearchTerms({String term}) {
     searchHistory.removeWhere((element) => element.id == term);
     _filteredSearchHistory = filteredSearchTerms(filter: null);
+    update();
   }
 
   void putSearchTerms({String term}) {

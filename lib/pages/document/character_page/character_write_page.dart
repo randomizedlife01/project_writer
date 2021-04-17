@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
-import 'package:project_writer_v04/pages/document/character_page/bloc/character_bloc.dart';
+import 'package:project_writer_v04/services/controller/character_controller.dart';
 
 class CharacterWritePage extends StatefulWidget {
   @override
@@ -130,60 +130,60 @@ class _CharacterWritePageState extends State<CharacterWritePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CharactersCubit, CharactersState>(
-      builder: (context, state) {
-        return Scaffold(
-          body: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  nameBar(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  genderAndAge(),
-                  SizedBox(
-                    height: 40,
-                  ),
-                  motivationForm(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  descriptionForm(),
-                  tendencySlider(),
-                  SizedBox(
-                    height: 40,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(backgroundColor: Colors.transparent),
-                            child: Text("취 소"),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: ElevatedButton(
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              nameBar(),
+              SizedBox(
+                height: 10,
+              ),
+              genderAndAge(),
+              SizedBox(
+                height: 40,
+              ),
+              motivationForm(),
+              SizedBox(
+                height: 10,
+              ),
+              descriptionForm(),
+              tendencySlider(),
+              SizedBox(
+                height: 40,
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(backgroundColor: Colors.transparent),
+                        child: Text("취 소"),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Expanded(
+                      child: GetBuilder<CharactersController>(
+                        builder: (controller) {
+                          return ElevatedButton(
                             child: Text("저 장"),
                             onPressed: () {
                               if (_characterKey.currentState.validate()) {
                                 _characterKey.currentState.save();
 
-                                if (state.myCharacters.isNotEmpty) {
-                                  final lastId = state.myCharacters.last.id;
+                                if (controller.myCharacters.isNotEmpty) {
+                                  final lastId = controller.myCharacters.last.id;
                                   final number = lastId.split("_").last;
                                   _lastMyCharacterIdNum = int.parse(number);
                                 }
 
-                                BlocProvider.of<CharactersCubit>(context).createMyCharacter(
+                                controller.createMyCharacter(
                                   id: 'my_character_' + (_lastMyCharacterIdNum + 1).toString(),
                                   motivation: _motiveController.text,
                                   description: _descController.text,
@@ -194,17 +194,17 @@ class _CharacterWritePageState extends State<CharacterWritePage> {
                                 Navigator.pop(context);
                               }
                             },
-                          ),
-                        ),
-                      ],
+                          );
+                        },
+                      ),
                     ),
-                  )
-                ],
-              ),
-            ),
+                  ],
+                ),
+              )
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 

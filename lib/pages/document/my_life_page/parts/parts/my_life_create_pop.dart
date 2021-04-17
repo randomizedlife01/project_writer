@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_material_pickers/helpers/show_date_picker.dart';
-import 'package:flutter_material_pickers/helpers/show_number_picker.dart';
-import 'package:flutter_material_pickers/helpers/show_scroll_picker.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
-import 'package:project_writer_v04/pages/document/my_life_page/parts/bloc/my_life_bloc.dart';
+import 'package:project_writer_v04/services/controller/my_life_controller.dart';
 
 class MyLifeCreatePop extends StatefulWidget {
   final String nameLabelText;
@@ -26,6 +22,8 @@ class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
   final _dayController = TextEditingController();
 
   String dropdownValue = '봄';
+
+  final myLifeController = MyLifeStoryController.to;
 
   Widget birthdayForm() {
     return Row(
@@ -74,7 +72,7 @@ class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
     );
   }
 
-  Widget myLifeForm({MyLifeStoryState state}) {
+  Widget myLifeForm({MyLifeStoryController state}) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 80,
@@ -97,7 +95,7 @@ class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
     );
   }
 
-  Widget lifeStoryPopUp({BuildContext context, MyLifeStoryState state, String labelText, String hintText}) {
+  Widget lifeStoryPopUp({BuildContext context, MyLifeStoryController state, String labelText, String hintText}) {
     return Column(
       children: [
         Expanded(
@@ -122,97 +120,83 @@ class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MyLifeStoryCubit, MyLifeStoryState>(
-      builder: (context, state) {
-        if (state is MyLifeStoryLoaded) {
-          return AlertDialog(
-            backgroundColor: Color(0xFFf6f6f6),
-            content: SingleChildScrollView(
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.35,
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: Stack(
-                  children: <Widget>[
-                    Center(
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 8,
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: lifeStoryPopUp(context: context, state: state, labelText: '그 때의 이야기', hintText: '이야기를 적어주세요'),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            SizedBox(
-                              width: double.infinity,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: OutlinedButton(
-                                      child: Text("취 소"),
-                                      onPressed: () => Navigator.pop(context),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      child: Text("저 장"),
-                                      onPressed: () {
-                                        if (_formKey.currentState.validate()) {
-                                          _formKey.currentState.save();
-
-                                          if (dropdownValue == '봄') {
-                                            _seasonController.text = '1';
-                                          } else if (dropdownValue == '여름') {
-                                            _seasonController.text = '2';
-                                          } else if (dropdownValue == '가을') {
-                                            _seasonController.text = '3';
-                                          } else {
-                                            _seasonController.text = '4';
-                                          }
-
-                                          BlocProvider.of<MyLifeStoryCubit>(context).createMyStory(
-                                            lifeMemo: _storyController.text.isNotEmpty ? _storyController.text : '나의 시작',
-                                            year: _yearController.text,
-                                            season: _seasonController.text,
-                                            month: _monthController.text,
-                                            day: _dayController.text,
-                                          );
-
-                                          Navigator.pop(context);
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
+    return AlertDialog(
+      backgroundColor: Color(0xFFf6f6f6),
+      content: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.35,
+          width: MediaQuery.of(context).size.width * 0.9,
+          child: Stack(
+            children: <Widget>[
+              Center(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 8,
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: lifeStoryPopUp(context: context, state: myLifeController, labelText: '그 때의 이야기', hintText: '이야기를 적어주세요'),
                         ),
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        height: 20,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton(
+                                child: Text("취 소"),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: ElevatedButton(
+                                child: Text("저 장"),
+                                onPressed: () {
+                                  if (_formKey.currentState.validate()) {
+                                    _formKey.currentState.save();
+
+                                    if (dropdownValue == '봄') {
+                                      _seasonController.text = '1';
+                                    } else if (dropdownValue == '여름') {
+                                      _seasonController.text = '2';
+                                    } else if (dropdownValue == '가을') {
+                                      _seasonController.text = '3';
+                                    } else {
+                                      _seasonController.text = '4';
+                                    }
+
+                                    myLifeController.createMyStory(
+                                      lifeMemo: _storyController.text.isNotEmpty ? _storyController.text : '나의 시작',
+                                      year: _yearController.text,
+                                      season: _seasonController.text,
+                                      month: _monthController.text,
+                                      day: _dayController.text,
+                                    );
+
+                                    Navigator.pop(context);
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        } else if (state is MyLifeStoryLoading) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          return Center(
-            child: Text('ERROR!'),
-          );
-        }
-      },
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

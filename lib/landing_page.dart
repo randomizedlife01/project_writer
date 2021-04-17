@@ -3,14 +3,16 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/instance_manager.dart';
 import 'package:project_writer_v04/pages/auth_pages/login_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/signup_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/verification_page.dart';
-import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_bloc.dart';
-import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_repository.dart';
+import 'package:project_writer_v04/services/controller/my_life_controller.dart';
+import 'package:project_writer_v04/services/controller/character_controller.dart';
+import 'package:project_writer_v04/services/controller/free_write_controller.dart';
 import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
-import 'package:project_writer_v04/pages/auth_pages/bloc/auth_bloc.dart';
+import 'package:project_writer_v04/services/controller/auth_bloc.dart';
+import 'package:project_writer_v04/services/controller/intro_page_controller.dart';
 import 'package:project_writer_v04/services/route/app_route.dart';
 import 'package:project_writer_v04/amplifyconfiguration.dart';
 
@@ -32,6 +34,11 @@ class _LandingPageState extends State<LandingPage> {
     super.initState();
     _configureAmplify();
     _authService.checkAuthStatus();
+
+    Get.put(FreeWriteController());
+    Get.put(CharactersController());
+    Get.put(IntroDocumentController());
+    Get.put(MyLifeStoryController());
   }
 
   void _configureAmplify() async {
@@ -83,12 +90,9 @@ class _LandingPageState extends State<LandingPage> {
                 if (snapshot.data.authFlowStatus == AuthFlowStatus.session)
                   MaterialPage(
                     name: '/intro_page',
-                    child: BlocProvider<IntroDocumentCubit>(
-                      create: (_) => IntroDocumentCubit(introDocumentRepository: IntroDocumentRepository(), document: []),
-                      child: IntroPage(
-                        //TODO: 구글 로그아웃시 리다이렉트 수정하기.
-                        shouldLogOut: _authService.logOut,
-                      ),
+                    child: IntroPage(
+                      //TODO: 구글 로그아웃시 리다이렉트 수정하기.
+                      shouldLogOut: _authService.logOut,
                     ),
                   ),
               ],
@@ -101,11 +105,5 @@ class _LandingPageState extends State<LandingPage> {
             );
           }
         });
-  }
-
-  @override
-  void dispose() {
-    _appRouter.dispose();
-    super.dispose();
   }
 }

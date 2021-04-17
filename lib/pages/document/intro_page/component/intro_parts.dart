@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:project_writer_v04/pages/document/intro_page/component/intro_doc_delete_pop.dart';
 import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
-import 'package:project_writer_v04/pages/document/intro_page/parts/intro_doc_delete_pop.dart';
 import 'package:unicorndial/unicorndial.dart';
-import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_bloc.dart';
 
 //도큐멘트 위의 버
 class IntroDocumentButton extends StatelessWidget {
@@ -102,11 +100,8 @@ class IntroDocumentButton extends StatelessWidget {
             showDialog(
                 context: context,
                 builder: (_) {
-                  return BlocProvider.value(
-                    value: BlocProvider.of<IntroDocumentCubit>(context),
-                    child: DocDeletePopUp(
-                      index: index,
-                    ),
+                  return DocDeletePopUp(
+                    index: index,
                   );
                 });
           },

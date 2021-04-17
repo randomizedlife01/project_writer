@@ -1,25 +1,27 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
-import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_bloc.dart';
-import 'package:project_writer_v04/pages/document/intro_page/parts/intro_doc_create_pop.dart';
-import 'package:project_writer_v04/pages/document/intro_page/parts/intro_parts.dart';
+import 'package:project_writer_v04/pages/document/intro_page/component/intro_doc_create_pop.dart';
+import 'package:project_writer_v04/pages/document/intro_page/component/intro_parts.dart';
 import 'package:project_writer_v04/pages/document/story_page/story_page.dart';
+import 'package:project_writer_v04/services/controller/intro_page_controller.dart';
 
 class IntroPage extends StatelessWidget {
   final VoidCallback shouldLogOut;
   final AmplifyAuthCognito auth;
 
-  const IntroPage({Key key, this.shouldLogOut, this.auth}) : super(key: key);
+  IntroPage({Key key, this.shouldLogOut, this.auth}) : super(key: key);
+
+  final introController = IntroDocumentController.to;
 
   Widget userInfo() {
     return Container();
   }
 
-  Widget documentView({BuildContext context, IntroDocumentState state, int index}) {
+  Widget documentView({BuildContext context, IntroDocumentController state, int index}) {
     final StoryPage args = ModalRoute.of(context).settings.arguments as StoryPage;
     return Container(
       child: Stack(
@@ -93,65 +95,52 @@ class IntroPage extends StatelessWidget {
   }
 
   Widget noteListView(BuildContext context) {
-    BlocProvider.of<IntroDocumentCubit>(context).readDocument();
-    return BlocBuilder<IntroDocumentCubit, IntroDocumentState>(
-      builder: (context, state) {
-        if (state is IntroDocumentLoaded) {
-          if (state.document.isNotEmpty) {
-            return Container(
-              child: CarouselSlider.builder(
-                options: CarouselOptions(
-                  aspectRatio: 2.0,
-                  enlargeCenterPage: true,
-                  height: MediaQuery.of(context).size.height * 0.65,
-                  enableInfiniteScroll: false,
-                ),
-                itemCount: state.document.length,
-                itemBuilder: (context, itemIndex, realIdx) {
-                  return documentView(context: context, state: state, index: itemIndex);
-                },
+    introController.readDocument();
+    return GetBuilder<IntroDocumentController>(
+      builder: (controller) {
+        if (controller.document.isNotEmpty) {
+          return Container(
+            child: CarouselSlider.builder(
+              options: CarouselOptions(
+                aspectRatio: 2.0,
+                enlargeCenterPage: true,
+                height: MediaQuery.of(context).size.height * 0.65,
+                enableInfiniteScroll: false,
               ),
-            );
-          } else {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: Text(
-                    '아직 저장된\n데이터가 없습니다.',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w100),
-                  ),
-                ),
-                SizedBox(
-                  height: 30.0,
-                ),
-                OutlinedButton(
-                  style: Theme.of(context).outlinedButtonTheme.style.copyWith(
-                        backgroundColor: MaterialStateProperty.all(Color(0xFF3b4445)),
-                      ),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (_) {
-                          return BlocProvider.value(
-                            value: BlocProvider.of<IntroDocumentCubit>(context),
-                            child: DocCreatePopUp(),
-                          );
-                        });
-                  },
-                  child: Text('새로운 스토리 만들기'),
-                ),
-              ],
-            );
-          }
-        } else if (state is IntroDocumentLoading) {
-          return Center(
-            child: CircularProgressIndicator(),
+              itemCount: controller.document.length,
+              itemBuilder: (context, itemIndex, realIdx) {
+                return documentView(context: context, state: controller, index: itemIndex);
+              },
+            ),
           );
         } else {
-          return Center(
-            child: Text('ERROR!!'),
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Text(
+                  '아직 저장된\n데이터가 없습니다.',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w100),
+                ),
+              ),
+              SizedBox(
+                height: 30.0,
+              ),
+              OutlinedButton(
+                style: Theme.of(context).outlinedButtonTheme.style.copyWith(
+                      backgroundColor: MaterialStateProperty.all(Color(0xFF3b4445)),
+                    ),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (_) {
+                        return DocCreatePopUp();
+                      });
+                },
+                child: Text('새로운 스토리 만들기'),
+              ),
+            ],
           );
         }
       },

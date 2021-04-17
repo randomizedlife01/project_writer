@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
-import 'package:project_writer_v04/pages/document/intro_page/bloc/intro_page_bloc.dart';
+import 'package:project_writer_v04/services/controller/intro_page_controller.dart';
 
 class DocDeletePopUp extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -14,7 +14,6 @@ class DocDeletePopUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final data = BlocProvider.of<IntroDocumentCubit>(context);
     return AlertDialog(
       content: SingleChildScrollView(
         child: Container(
@@ -78,20 +77,24 @@ class DocDeletePopUp extends StatelessWidget {
                               width: 20.0,
                             ),
                             Expanded(
-                              child: ElevatedButton(
-                                child: Text("삭 제"),
-                                onPressed: () {
-                                  if (_formKey.currentState.validate()) {
-                                    _formKey.currentState.save();
-                                    if (_docDeleteKeyController.text == '지우기') {
-                                      data.deleteDoc(id: data.document[index].id);
-                                      Navigator.pop(context);
-                                    } else {
-                                      _docDeleteKeyController.text = '\'지우기\'를 입력하셔야 합니다.';
-                                      FocusScope.of(context).unfocus();
-                                      TextEditingController().clear();
-                                    }
-                                  }
+                              child: GetBuilder<IntroDocumentController>(
+                                builder: (controller) {
+                                  return ElevatedButton(
+                                    child: Text("삭 제"),
+                                    onPressed: () {
+                                      if (_formKey.currentState.validate()) {
+                                        _formKey.currentState.save();
+                                        if (_docDeleteKeyController.text == '지우기') {
+                                          controller.deleteDoc(id: controller.document[index].id);
+                                          Navigator.pop(context);
+                                        } else {
+                                          _docDeleteKeyController.text = '\'지우기\'를 입력하셔야 합니다.';
+                                          FocusScope.of(context).unfocus();
+                                          TextEditingController().clear();
+                                        }
+                                      }
+                                    },
+                                  );
                                 },
                               ),
                             ),
