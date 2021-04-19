@@ -12,6 +12,8 @@ type StorySummary @model @auth(rules: [{allow: public}]) @key(name: "byDocument"
   id: ID!
   storySummary: String
   documentID: ID
+  space: String
+  time: String
 }
 
 type Document @model @auth(rules: [{allow: public}]) {

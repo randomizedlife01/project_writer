@@ -1,29 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:project_writer_v04/models/ModelProvider.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
+import 'package:project_writer_v04/pages/document/my_life_page/parts/component/my_life_create_pop.dart';
 import 'package:project_writer_v04/services/controller/my_life_controller.dart';
-import 'package:project_writer_v04/pages/document/my_life_page/parts/parts/my_life_create_pop.dart';
 
-class MyLifePage extends StatefulWidget {
-  @override
-  _MyLifePageState createState() => _MyLifePageState();
-}
-
-class _MyLifePageState extends State<MyLifePage> {
+class MyLifePage extends StatelessWidget {
   final _scrollController = ScrollController();
-
   final myLifeController = MyLifeStoryController.to;
 
   String seasonToHangul = '';
 
-  @override
-  void initState() {
-    super.initState();
-    myLifeController.readMyStory();
-  }
-
-  Widget nothingInMyLifeStory() {
+  Widget nothingInMyLifeStory({BuildContext context}) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -59,122 +48,106 @@ class _MyLifePageState extends State<MyLifePage> {
     );
   }
 
-  Widget myLifeStory() {
-    //BlocProvider.of<MyLifeStoryCubit>(context)..deleteMyStory(id: 'my_life_1');
-    return Container(
-      child: GetBuilder<MyLifeStoryController>(
-        builder: (controller) {
-          return ListView.builder(
-            shrinkWrap: true,
-            controller: _scrollController,
-            scrollDirection: Axis.vertical,
-            itemCount: controller.years.length,
-            itemBuilder: (context, toIndex) {
-              var subList = controller.myLifeStory.where((element) => element.year == controller.years[toIndex]).toList();
-              print(subList);
-              return ListTile(
-                title: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+  Widget myLifeStory({BuildContext context}) {
+    return Obx(() {
+      var years = [];
+      myLifeController.myLifeStory.forEach((element) {
+        if (!years.contains(element.year)) {
+          years.add(element.year);
+        }
+      });
+      return ListView.builder(
+        shrinkWrap: true,
+        controller: _scrollController,
+        scrollDirection: Axis.vertical,
+        itemCount: years.length,
+        itemBuilder: (context, yearIndex) {
+          List<MyLifeStory> yearList = myLifeController.myLifeStory.value
+              .where((element) => element.year == myLifeController.myLifeStory.value[yearIndex].year)
+              .toList();
+          return ListTile(
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          controller.myLifeStory.isNotEmpty ? controller.years[toIndex] : '',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2
-                              .copyWith(color: Color(0xFFF8FEE9), fontSize: 40.0, fontWeight: FontWeight.w700),
-                          textAlign: TextAlign.start,
-                        ),
-                        SizedBox(
-                          width: 12.0,
-                        ),
-                        Container(
-                          height: 1.0,
-                          color: Colors.grey,
-                        ),
-                      ],
+                    Text(
+                      years.isNotEmpty ? years[yearIndex] : '',
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText2
+                          .copyWith(color: Color(0xFFF8FEE9), fontSize: 40.0, fontWeight: FontWeight.w700),
+                      textAlign: TextAlign.start,
                     ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      itemCount: subList.length,
-                      itemBuilder: (context, seasonIndex) {
-                        var seasonList = subList.where((element) => element.season == subList[seasonIndex].season).toList();
-                        if (subList[seasonIndex].season == '1') {
-                          seasonToHangul = '봄';
-                        } else if (subList[seasonIndex].season == '2') {
-                          seasonToHangul = '여름';
-                        } else if (subList[seasonIndex].season == '3') {
-                          seasonToHangul = '가을';
-                        } else {
-                          seasonToHangul = '겨울';
-                        }
-                        return ListTile(
-                          title: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(seasonToHangul),
-                              ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                scrollDirection: Axis.vertical,
-                                itemCount: seasonList.length,
-                                itemBuilder: (context, index) {
-                                  return Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      //날짜와 시간 분리되는 곳
-                                      Container(
-                                        child: Text(
-                                          seasonList[index].month.isNotEmpty && seasonList[index].date.isNotEmpty
-                                              ? (seasonList[index].month + '.' + seasonList[index].date)
-                                              : '어느 날',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyText2
-                                              .copyWith(color: Color(0xFFF8FEE9), fontSize: 16.0, fontWeight: FontWeight.w200),
-                                        ),
-                                      ),
-                                      Text(
-                                        seasonList.isNotEmpty ? seasonList[index].lifeMemo : '',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyText1
-                                            .copyWith(fontSize: 18.0, fontWeight: FontWeight.w500, color: Color(0xFFF8FEE9)),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        );
-                      },
+                    SizedBox(
+                      width: 12.0,
+                    ),
+                    Container(
+                      height: 1.0,
+                      color: Colors.grey,
                     ),
                   ],
                 ),
-              );
-            },
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  itemCount: yearList.length,
+                  itemBuilder: (context, seasonIndex) {
+                    List<MyLifeStory> seasonList = yearList.where((element) => element.season == yearList[seasonIndex].season).toList();
+                    if (yearList[seasonIndex].season == '1') {
+                      seasonToHangul = '봄';
+                    } else if (yearList[seasonIndex].season == '2') {
+                      seasonToHangul = '여름';
+                    } else if (yearList[seasonIndex].season == '3') {
+                      seasonToHangul = '가을';
+                    } else {
+                      seasonToHangul = '겨울';
+                    }
+                    return Column(
+                      children: [
+                        Text(seasonToHangul ?? ''),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: seasonList.length,
+                          itemBuilder: (context, memoIndex) {
+                            return Column(
+                              children: [
+                                Text(seasonList[memoIndex].lifeMemo ?? ''),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
+                    );
+                    //return Text(yearList[seasonIndex].season.toString());
+                  },
+                ),
+              ],
+            ),
           );
         },
-      ),
-    );
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    myLifeController.readMyStory();
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50.0),
+        child: BasicAppBar(
+          appBarTitle: '내 삶의 연표',
+        ),
+      ),
       body: Container(
         padding: EdgeInsets.all(15.0),
-        child: myLifeController.myLifeStory.isEmpty ? nothingInMyLifeStory() : myLifeStory(),
+        child: myLifeController.myLifeStory.isEmpty ? nothingInMyLifeStory(context: context) : myLifeStory(context: context),
       ),
       floatingActionButton: Visibility(
-        //visible: _isVisible,
+        visible: myLifeController.myLifeStory.isEmpty ? false : true,
         child: BasicFloatingButton(
           icon: Icons.add,
           onPressed: () => showDialog(

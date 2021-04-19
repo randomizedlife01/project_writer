@@ -32,7 +32,7 @@ export 'StorySummary.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "c917aba0fb2d3f98d541185697a35428";
+  String version = "a88639a0fa8f69063c57ac321ef28677";
   @override
   List<ModelSchema> modelSchemas = [
     CharacterData.schema,

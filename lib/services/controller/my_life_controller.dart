@@ -3,9 +3,7 @@ import 'package:project_writer_v04/models/ModelProvider.dart';
 import 'package:project_writer_v04/services/controller/my_life_repository.dart';
 
 class MyLifeStoryController extends GetxController {
-  List<MyLifeStory> myLifeStory = [];
-  List<String> years = [];
-  List<String> seasons = [];
+  final myLifeStory = <MyLifeStory>[].obs;
 
   final MyLifeRepository myLifeRepository = MyLifeRepository();
 
@@ -20,24 +18,7 @@ class MyLifeStoryController extends GetxController {
 
   readMyStory() async {
     try {
-      myLifeStory = await myLifeRepository.readMyStory();
-
-      myLifeStory.forEach((element) {
-        if (!years.contains(element.year)) {
-          years.add(element.year);
-
-          update();
-        }
-      });
-
-      myLifeStory.forEach((element) {
-        if (!seasons.contains(element.season)) {
-          seasons.add(element.season);
-
-          update();
-        }
-      });
-      update();
+      myLifeStory(await myLifeRepository.readMyStory());
     } catch (e) {
       print(e);
     }
@@ -62,7 +43,6 @@ class MyLifeStoryController extends GetxController {
         day: day,
       );
       myLifeStory.add(data);
-      update();
     } catch (e) {
       print(e);
     }
@@ -78,7 +58,6 @@ class MyLifeStoryController extends GetxController {
     try {
       final data = await myLifeRepository.deleteMyStory(id: id);
       myLifeStory.remove(data);
-      update();
     } catch (e) {
       print(e);
     }

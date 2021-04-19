@@ -25,6 +25,8 @@ class StorySummary extends Model {
   final String id;
   final String storySummary;
   final String documentID;
+  final String space;
+  final String time;
 
   @override
   getInstanceType() => classType;
@@ -35,13 +37,24 @@ class StorySummary extends Model {
   }
 
   const StorySummary._internal(
-      {@required this.id, this.storySummary, this.documentID});
+      {@required this.id,
+      this.storySummary,
+      this.documentID,
+      this.space,
+      this.time});
 
-  factory StorySummary({String id, String storySummary, String documentID}) {
+  factory StorySummary(
+      {String id,
+      String storySummary,
+      String documentID,
+      String space,
+      String time}) {
     return StorySummary._internal(
         id: id == null ? UUID.getUUID() : id,
         storySummary: storySummary,
-        documentID: documentID);
+        documentID: documentID,
+        space: space,
+        time: time);
   }
 
   bool equals(Object other) {
@@ -54,7 +67,9 @@ class StorySummary extends Model {
     return other is StorySummary &&
         id == other.id &&
         storySummary == other.storySummary &&
-        documentID == other.documentID;
+        documentID == other.documentID &&
+        space == other.space &&
+        time == other.time;
   }
 
   @override
@@ -67,30 +82,48 @@ class StorySummary extends Model {
     buffer.write("StorySummary {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("storySummary=" + "$storySummary" + ", ");
-    buffer.write("documentID=" + "$documentID");
+    buffer.write("documentID=" + "$documentID" + ", ");
+    buffer.write("space=" + "$space" + ", ");
+    buffer.write("time=" + "$time");
     buffer.write("}");
 
     return buffer.toString();
   }
 
-  StorySummary copyWith({String id, String storySummary, String documentID}) {
+  StorySummary copyWith(
+      {String id,
+      String storySummary,
+      String documentID,
+      String space,
+      String time}) {
     return StorySummary(
         id: id ?? this.id,
         storySummary: storySummary ?? this.storySummary,
-        documentID: documentID ?? this.documentID);
+        documentID: documentID ?? this.documentID,
+        space: space ?? this.space,
+        time: time ?? this.time);
   }
 
   StorySummary.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         storySummary = json['storySummary'],
-        documentID = json['documentID'];
+        documentID = json['documentID'],
+        space = json['space'],
+        time = json['time'];
 
-  Map<String, dynamic> toJson() =>
-      {'id': id, 'storySummary': storySummary, 'documentID': documentID};
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'storySummary': storySummary,
+        'documentID': documentID,
+        'space': space,
+        'time': time
+      };
 
   static final QueryField ID = QueryField(fieldName: "storySummary.id");
   static final QueryField STORYSUMMARY = QueryField(fieldName: "storySummary");
   static final QueryField DOCUMENTID = QueryField(fieldName: "documentID");
+  static final QueryField SPACE = QueryField(fieldName: "space");
+  static final QueryField TIME = QueryField(fieldName: "time");
   static var schema =
       Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "StorySummary";
@@ -114,6 +147,16 @@ class StorySummary extends Model {
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: StorySummary.DOCUMENTID,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: StorySummary.SPACE,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: StorySummary.TIME,
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
   });

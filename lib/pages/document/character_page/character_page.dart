@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/services/controller/character_controller.dart';
 
 class CharactersPage extends StatelessWidget {
@@ -109,6 +110,12 @@ class CharactersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     characterController.readMyCharacters();
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(50.0),
+        child: BasicAppBar(
+          appBarTitle: '캐릭터 만들기',
+        ),
+      ),
       body: GetBuilder<CharactersController>(
         builder: (controller) {
           return controller.myCharacters.isNotEmpty

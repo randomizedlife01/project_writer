@@ -13,6 +13,7 @@ import 'package:project_writer_v04/services/controller/free_write_controller.dar
 import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
 import 'package:project_writer_v04/services/controller/auth_bloc.dart';
 import 'package:project_writer_v04/services/controller/intro_page_controller.dart';
+import 'package:project_writer_v04/services/controller/story_summary_controller.dart';
 import 'package:project_writer_v04/services/route/app_route.dart';
 import 'package:project_writer_v04/amplifyconfiguration.dart';
 
@@ -39,6 +40,7 @@ class _LandingPageState extends State<LandingPage> {
     Get.put(CharactersController());
     Get.put(IntroDocumentController());
     Get.put(MyLifeStoryController());
+    Get.put(StorySummaryController());
   }
 
   void _configureAmplify() async {
@@ -91,7 +93,6 @@ class _LandingPageState extends State<LandingPage> {
                   MaterialPage(
                     name: '/intro_page',
                     child: IntroPage(
-                      //TODO: 구글 로그아웃시 리다이렉트 수정하기.
                       shouldLogOut: _authService.logOut,
                     ),
                   ),

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_writer_v04/pages/document/intro_page/component/intro_doc_delete_pop.dart';
-import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
+import 'package:project_writer_v04/pages/document/story_page/story_page.dart';
 import 'package:unicorndial/unicorndial.dart';
 
-//도큐멘트 위의 버
 class IntroDocumentButton extends StatelessWidget {
   final int index;
   final String documentId;
@@ -29,30 +28,7 @@ class IntroDocumentButton extends StatelessWidget {
             size: 16.0,
           ),
           onPressed: () {
-            //TODO: 스토리 속으로... 현재 진행중.
-            Navigator.pushNamed(context, '/story_page',
-                arguments: IntroPage(
-                    //documentId: documentId,
-                    ));
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(
-            //     builder: (context) => MultiBlocProvider(
-            //       providers: [
-            //         BlocProvider<SummaryCubit>(
-            //           create: (context) => SummaryCubit(snapshot.listValue[index].id)..getSummaries(),
-            //         ),
-            //         BlocProvider<EditCubit>(
-            //           create: (context) => EditCubit()..editDisabled(),
-            //         ),
-            //       ],
-            //       child: StoryPage(
-            //         getDocId: snapshot.listValue[index].id,
-            //         getDocName: snapshot.listValue[index].docName,
-            //       ),
-            //     ),
-            //   ),
-            // );
+            Navigator.pushNamed(context, '/story_page', arguments: StoryPage(documentId: documentId));
           },
         ),
         labelBackgroundColor: Colors.transparent,
