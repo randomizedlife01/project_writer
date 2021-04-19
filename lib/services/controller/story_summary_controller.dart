@@ -16,6 +16,12 @@ class StorySummaryController extends GetxController {
     super.onInit();
   }
 
+  getDocumentName() async {
+    try {} catch (e) {
+      print(e);
+    }
+  }
+
   readStorySummaries({String getDocumentId}) async {
     try {
       summaries(await storySummaryRepository.readStorySummary(documentId: documentId(getDocumentId)));

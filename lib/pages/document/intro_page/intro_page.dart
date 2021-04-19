@@ -88,6 +88,8 @@ class IntroPage extends StatelessWidget {
           ),
           IntroDocumentButton(
             index: index,
+            documentId: introController.document[index].id,
+            docName: introController.document[index].docName,
           ),
         ],
       ),

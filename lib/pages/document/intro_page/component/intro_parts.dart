@@ -4,11 +4,19 @@ import 'package:project_writer_v04/pages/document/intro_page/component/intro_doc
 import 'package:project_writer_v04/pages/document/story_page/story_page.dart';
 import 'package:unicorndial/unicorndial.dart';
 
+class ScreenArguments {
+  final String documentId;
+  final String docName;
+
+  ScreenArguments(this.documentId, this.docName);
+}
+
 class IntroDocumentButton extends StatelessWidget {
   final int index;
   final String documentId;
+  final String docName;
 
-  const IntroDocumentButton({Key key, this.index, this.documentId}) : super(key: key);
+  const IntroDocumentButton({Key key, this.index, this.documentId, this.docName}) : super(key: key);
 
   //도튜멘트 팝업 메뉴버튼
   List<UnicornButton> docMenuButtons({BuildContext context}) {
@@ -28,7 +36,7 @@ class IntroDocumentButton extends StatelessWidget {
             size: 16.0,
           ),
           onPressed: () {
-            Navigator.pushNamed(context, '/story_page', arguments: StoryPage(documentId: documentId));
+            Navigator.pushNamed(context, '/story_page', arguments: ScreenArguments(documentId, docName));
           },
         ),
         labelBackgroundColor: Colors.transparent,
