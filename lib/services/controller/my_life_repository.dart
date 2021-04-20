@@ -24,7 +24,7 @@ class MyLifeRepository {
     );
 
     try {
-      //await Amplify.DataStore.save(myLifeStory);
+      await Amplify.DataStore.save(myLifeStory);
 
       return myLifeStory;
     } catch (e) {

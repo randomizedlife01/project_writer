@@ -6,6 +6,7 @@ import 'package:project_writer_v04/pages/auth_pages/verification_page.dart';
 import 'package:project_writer_v04/pages/document/character_page/character_page.dart';
 import 'package:project_writer_v04/pages/document/character_page/character_write_page.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/free_write_page.dart';
+import 'package:project_writer_v04/pages/document/import_page/import_page.dart';
 import 'package:project_writer_v04/pages/document/intro_page/component/intro_parts.dart';
 import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
 import 'package:project_writer_v04/services/controller/auth_bloc.dart';
@@ -68,6 +69,9 @@ class AppRouter {
         break;
       case '/character_write_page':
         return MaterialPageRoute(builder: (_) => CharacterWritePage());
+        break;
+      case '/import_page':
+        return MaterialPageRoute(builder: (_) => ImportPage());
         break;
       default:
         return null;

@@ -63,12 +63,17 @@ class StoryPage extends StatelessWidget {
                 getDocId: documentId,
                 context: context,
                 scrollController: _scrollController,
+                //TODO: 문장 추가 버튼
                 onAddSentenceTap: () {
                   // storySummaryController.createSummary(length: state.summaries.length);
                   // scrollController.animateTo(0.0, duration: Duration(microseconds: 1000), curve: Curves.easeInOut);
                 },
+                //TODO: 대화 추가 버튼.
                 onAddTalkTap: () {},
-                onImportTap: () {},
+                //TODO: 메모 가져오기 버튼.
+                onImportTap: () {
+                  Navigator.of(context).pushNamed('/import_page');
+                },
               )
             : Column(
                 children: [

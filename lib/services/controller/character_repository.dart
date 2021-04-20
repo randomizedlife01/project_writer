@@ -22,7 +22,7 @@ class CharactersRepository {
     );
 
     try {
-      //await Amplify.DataStore.save(myLifeStory);
+      await Amplify.DataStore.save(myCharacter);
 
       return myCharacter;
     } catch (e) {

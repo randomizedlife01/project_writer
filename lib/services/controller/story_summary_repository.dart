@@ -30,7 +30,7 @@ class StorySummaryRepository {
         time: time,
         weather: weather,
       );
-      //await Amplify.DataStore.save(summaryObject);
+      await Amplify.DataStore.save(summaryObject);
       return summaryObject;
     } catch (e) {
       throw e;
