@@ -1,11 +1,14 @@
 import 'package:get/get.dart';
+import 'package:project_writer_v04/models/StorySummary.dart';
 import 'package:project_writer_v04/services/controller/story_summary_repository.dart';
 
 class StorySummaryController extends GetxController {
   final documentId = ''.obs;
   final summaries = [].obs;
-
   final isVisible = false.obs;
+  final selectTimes = '새벽'.obs;
+  final spaceList = ''.obs;
+  final selectWeathers = '맑음'.obs;
 
   final StorySummaryRepository storySummaryRepository = StorySummaryRepository();
 
@@ -14,6 +17,18 @@ class StorySummaryController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+  }
+
+  selectTime({String timeValue}) {
+    selectTimes(timeValue);
+  }
+
+  selectSpace({String spaceValue}) {
+    spaceList(spaceValue);
+  }
+
+  selectWeather({String weatherValue}) {
+    selectWeathers(weatherValue);
   }
 
   getDocumentName() async {
@@ -30,11 +45,14 @@ class StorySummaryController extends GetxController {
     }
   }
 
-  createSummary({String id, String storySummary}) async {
+  createSummary({String id, String storySummary, String space, String time, String weather}) async {
     try {
       final data = await storySummaryRepository.createStorySummary(
         id: id,
         storySummary: storySummary,
+        space: space,
+        time: time,
+        weather: weather,
       );
       summaries.add(data);
     } catch (e) {

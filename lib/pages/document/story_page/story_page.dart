@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/pages/document/intro_page/component/intro_parts.dart';
+import 'package:project_writer_v04/pages/document/story_page/component/story_summary_create_pop.dart';
 import 'package:project_writer_v04/services/controller/intro_page_controller.dart';
 import 'package:project_writer_v04/services/controller/story_summary_controller.dart';
 
@@ -13,6 +15,8 @@ class StoryPage extends StatelessWidget {
   final storySummaryController = StorySummaryController.to;
 
   StoryPage({Key key, this.documentId, this.documentName}) : super(key: key);
+
+  final _scrollController = ScrollController();
 
   Widget emptyScreen({BuildContext context}) {
     return Center(
@@ -34,14 +38,11 @@ class StoryPage extends StatelessWidget {
                   backgroundColor: MaterialStateProperty.all(Color(0xFF3b4445)),
                 ),
             onPressed: () {
-              // showDialog(
-              //     context: context,
-              //     builder: (_) {
-              //       return MyLifeCreatePop(
-              //         nameLabelText: '태그 입력',
-              //         nameHintText: '#제외, 띄어쓰기로 구분합니다.',
-              //       );
-              //     });
+              showDialog(
+                  context: context,
+                  builder: (_) {
+                    return StorySummaryCreatePopUp();
+                  });
             },
             child: Text('스토리 요약 추가'),
           ),
@@ -51,14 +52,34 @@ class StoryPage extends StatelessWidget {
   }
 
   Widget summaryScreen() {
-    return ListView.builder(
-      itemCount: storySummaryController.summaries.length,
-      itemBuilder: (context, index) {
-        return Container();
-      },
+    return Obx(
+      () => ListView.separated(
+        shrinkWrap: true,
+        controller: _scrollController,
+        itemCount: storySummaryController.summaries.length,
+        separatorBuilder: (context, index) => Divider(),
+        itemBuilder: (context, index) {
+          return Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(storySummaryController.summaries[index].time),
+                  SizedBox(width: 5.0),
+                  Text(storySummaryController.summaries[index].space),
+                  SizedBox(width: 5.0),
+                  Text(storySummaryController.summaries[index].weather),
+                ],
+              ),
+              Text(storySummaryController.summaries[index].storySummary),
+            ],
+          );
+        },
+      ),
     );
   }
 
+  //TODO: 디버그 - 기능 구현중.
   @override
   Widget build(BuildContext context) {
     storySummaryController.readStorySummaries(getDocumentId: documentId);
@@ -71,24 +92,18 @@ class StoryPage extends StatelessWidget {
       ),
       body: Padding(
         padding: EdgeInsets.all(8.0),
-        child: Container(child: storySummaryController.summaries.isEmpty ? emptyScreen(context: context) : summaryScreen()),
+        child: Obx(() => Container(child: storySummaryController.summaries.isEmpty ? emptyScreen(context: context) : summaryScreen())),
       ),
       floatingActionButton: Visibility(
         visible: storySummaryController.summaries.isEmpty ? false : true,
         child: BasicFloatingButton(
           icon: Icons.add,
-          onPressed: () {},
-          // onPressed: () => showDialog(
-          //   context: context,
-          //   builder: (_) {
-          //     return FreeWriteCreatePop(
-          //       nameLabelText: '태그 입력',
-          //       nameHintText: '#제외, 띄어쓰기로 구분합니다.',
-          //       descLabelText: '아이디어 메모 작성',
-          //       descHintText: '떠오른 아이디어를 작성해 주세요',
-          //     );
-          //   },
-          // ),
+          onPressed: () => showDialog(
+            context: context,
+            builder: (_) {
+              return StorySummaryCreatePopUp();
+            },
+          ),
         ),
       ),
     );

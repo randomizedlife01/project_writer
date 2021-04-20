@@ -20,10 +20,18 @@ class StorySummaryRepository {
     }
   }
 
-  Future<StorySummary> createStorySummary({String id, String storySummary}) async {
+  Future<StorySummary> createStorySummary({String id, String storySummary, String space, String time, String weather}) async {
     try {
-      final summaryObject = StorySummary(documentID: documentId, id: id, storySummary: storySummary);
-      await Amplify.DataStore.save(summaryObject);
+      final summaryObject = StorySummary(
+        documentID: documentId,
+        id: id,
+        storySummary: storySummary,
+        space: space,
+        time: time,
+        weather: weather,
+      );
+      //await Amplify.DataStore.save(summaryObject);
+      return summaryObject;
     } catch (e) {
       throw e;
     }
