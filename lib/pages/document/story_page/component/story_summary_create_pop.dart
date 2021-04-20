@@ -22,7 +22,7 @@ class StorySummaryCreatePopUp extends StatelessWidget {
       content: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(8.0),
-          height: MediaQuery.of(context).size.height * 0.35,
+          height: MediaQuery.of(context).size.height * 0.5,
           width: MediaQuery.of(context).size.width * 0.9,
           child: Stack(
             children: <Widget>[
@@ -31,6 +31,23 @@ class StorySummaryCreatePopUp extends StatelessWidget {
                   key: _formKey,
                   child: Column(
                     children: <Widget>[
+                      Expanded(
+                        child: DocInputForm(hintText: '한줄 설명', labelText: '스토리의 한줄 설명', controller: _summaryController),
+                      ),
+                      SizedBox(
+                        height: 15.0,
+                      ),
+                      Text(
+                        '선택사항',
+                        style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 12.0),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Expanded(child: DocInputForm(hintText: '장소를 입력해주세요', labelText: '장소', controller: _spaceController)),
+                      SizedBox(
+                        height: 10.0,
+                      ),
                       Obx(
                         () => Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -71,16 +88,6 @@ class StorySummaryCreatePopUp extends StatelessWidget {
                       ),
                       SizedBox(
                         width: 15.0,
-                      ),
-                      Expanded(child: DocInputForm(hintText: '장소를 입력해주세요', labelText: '장소', controller: _spaceController)),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Expanded(
-                        child: DocInputForm(hintText: '한줄 설명', labelText: '스토리의 한줄 설명', controller: _summaryController),
-                      ),
-                      SizedBox(
-                        height: 15.0,
                       ),
                       SizedBox(
                         width: double.infinity,

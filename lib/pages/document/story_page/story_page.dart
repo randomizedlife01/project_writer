@@ -52,34 +52,44 @@ class StoryPage extends StatelessWidget {
   }
 
   Widget summaryScreen() {
-    return Obx(
-      () => ListView.separated(
-        shrinkWrap: true,
-        controller: _scrollController,
-        itemCount: storySummaryController.summaries.length,
-        separatorBuilder: (context, index) => Divider(),
-        itemBuilder: (context, index) {
-          return Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return ListView.separated(
+      shrinkWrap: true,
+      controller: _scrollController,
+      itemCount: storySummaryController.summaries.length + 1,
+      separatorBuilder: (context, index) => Divider(),
+      itemBuilder: (context, index) {
+        final widgetItem = index == storySummaryController.summaries.length
+            ? AddButtonBar(
+                getDocId: documentId,
+                context: context,
+                scrollController: _scrollController,
+                onAddSentenceTap: () {
+                  // storySummaryController.createSummary(length: state.summaries.length);
+                  // scrollController.animateTo(0.0, duration: Duration(microseconds: 1000), curve: Curves.easeInOut);
+                },
+                onAddTalkTap: () {},
+                onImportTap: () {},
+              )
+            : Column(
                 children: [
-                  Text(storySummaryController.summaries[index].time),
-                  SizedBox(width: 5.0),
-                  Text(storySummaryController.summaries[index].space),
-                  SizedBox(width: 5.0),
-                  Text(storySummaryController.summaries[index].weather),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(storySummaryController.summaries[index].time),
+                      SizedBox(width: 5.0),
+                      Text(storySummaryController.summaries[index].space),
+                      SizedBox(width: 5.0),
+                      Text(storySummaryController.summaries[index].weather),
+                    ],
+                  ),
+                  Text(storySummaryController.summaries[index].storySummary),
                 ],
-              ),
-              Text(storySummaryController.summaries[index].storySummary),
-            ],
-          );
-        },
-      ),
+              );
+        return widgetItem;
+      },
     );
   }
 
-  //TODO: 디버그 - 기능 구현중.
   @override
   Widget build(BuildContext context) {
     storySummaryController.readStorySummaries(getDocumentId: documentId);
@@ -91,7 +101,7 @@ class StoryPage extends StatelessWidget {
         ),
       ),
       body: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(20.0),
         child: Obx(() => Container(child: storySummaryController.summaries.isEmpty ? emptyScreen(context: context) : summaryScreen())),
       ),
       floatingActionButton: Visibility(

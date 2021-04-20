@@ -205,3 +205,106 @@ class DocInputForm extends StatelessWidget {
     return inputForm(hintText: hintText, labelText: labelText, controller: controller);
   }
 }
+
+class AddButtonBar extends StatelessWidget {
+  final BuildContext context;
+  final String getDocId;
+  final ScrollController scrollController;
+
+  final VoidCallback onAddSentenceTap;
+  final VoidCallback onAddTalkTap;
+  final VoidCallback onImportTap;
+
+  const AddButtonBar({
+    Key key,
+    this.getDocId,
+    this.scrollController,
+    this.context,
+    this.onAddSentenceTap,
+    this.onAddTalkTap,
+    this.onImportTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 20.0,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            DocNormalButton(
+              icon: FontAwesomeIcons.solidCircle,
+              buttonName: '문장 추가',
+              onPressed: onAddSentenceTap,
+            ),
+            Container(
+              height: 30.0,
+              child: VerticalDivider(
+                width: 1.0,
+                color: Color(0xFF8785a2),
+              ),
+            ),
+            DocNormalButton(
+              icon: FontAwesomeIcons.quoteRight,
+              buttonName: '대화 추가',
+              onPressed: onAddTalkTap,
+            ),
+            Container(
+              height: 30.0,
+              child: VerticalDivider(
+                width: 1.0,
+                color: Color(0xFF8785a2),
+              ),
+            ),
+            DocNormalButton(
+              icon: FontAwesomeIcons.ellipsisH,
+              buttonName: '문장 가져오기',
+              onPressed: onImportTap,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class DocNormalButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  final IconData icon;
+  final String buttonName;
+
+  const DocNormalButton({Key key, this.onPressed, this.icon, this.buttonName}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: onPressed,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          FaIcon(
+            icon,
+            size: 20.0,
+            color: Color(0xFFa8e6cf),
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          Text(
+            buttonName,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 10.0,
+              fontFamily: 'GothicA1',
+              fontWeight: FontWeight.w500,
+              color: Color(0xFFa8e6cf),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
