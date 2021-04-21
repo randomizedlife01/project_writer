@@ -45,16 +45,18 @@ class StorySummaryController extends GetxController {
     }
   }
 
-  createSummary({String id, String storySummary, String space, String time, String weather}) async {
+  createSummary({String id, String setDocumentId, String storySummary, String space, String time, String weather}) async {
     try {
       final data = await storySummaryRepository.createStorySummary(
         id: id,
+        documentId: documentId(setDocumentId),
         storySummary: storySummary,
         space: space,
         time: time,
         weather: weather,
       );
       summaries.add(data);
+      print(summaries);
     } catch (e) {
       print(e);
     }

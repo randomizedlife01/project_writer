@@ -4,11 +4,10 @@ import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/services/controller/intro_page_controller.dart';
 import 'package:project_writer_v04/services/controller/story_summary_controller.dart';
 
+@immutable
 class StorySummaryCreatePopUp extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final _storySummaryController = StorySummaryController.to;
-
-  int _lastIdeaIdNum = 0;
 
   final _timeList = ['새벽', '아침', '낮', '오후', '저녁', '밤', '늦은 밤'];
   final _weatherList = ['미정', '맑음', '비', '눈', '흐림', '갬'];
@@ -18,6 +17,7 @@ class StorySummaryCreatePopUp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int _lastIdeaIdNum = 0;
     return AlertDialog(
       content: SingleChildScrollView(
         child: Container(

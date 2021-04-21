@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
-import 'package:project_writer_v04/pages/document/intro_page/component/intro_parts.dart';
 import 'package:project_writer_v04/pages/document/story_page/component/story_summary_create_pop.dart';
-import 'package:project_writer_v04/services/controller/intro_page_controller.dart';
 import 'package:project_writer_v04/services/controller/story_summary_controller.dart';
-
-//TODO: 스토리 페이지 진행. 우선 시공간과 요약 문장부터.
 
 class StoryPage extends StatelessWidget {
   final String documentId;
@@ -51,6 +47,7 @@ class StoryPage extends StatelessWidget {
     );
   }
 
+  //TODO: 저장되서 로드가 안됨.
   Widget summaryScreen() {
     return ListView.separated(
       shrinkWrap: true,

@@ -2,10 +2,6 @@ import 'package:amplify_flutter/amplify.dart';
 import 'package:project_writer_v04/models/ModelProvider.dart';
 
 class StorySummaryRepository {
-  final String documentId;
-
-  const StorySummaryRepository({this.documentId});
-
   Future<List<StorySummary>> readStorySummary({String documentId}) async {
     try {
       final summaries = await Amplify.DataStore.query(
@@ -20,7 +16,8 @@ class StorySummaryRepository {
     }
   }
 
-  Future<StorySummary> createStorySummary({String id, String storySummary, String space, String time, String weather}) async {
+  Future<StorySummary> createStorySummary(
+      {String id, String documentId, String storySummary, String space, String time, String weather}) async {
     try {
       final summaryObject = StorySummary(
         documentID: documentId,
