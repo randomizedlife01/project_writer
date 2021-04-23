@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/services/controller/free_write_controller.dart';
 
+@immutable
 class FreeWriteCreatePop extends StatelessWidget {
   final String descLabelText;
   final String nameLabelText;
@@ -16,10 +17,9 @@ class FreeWriteCreatePop extends StatelessWidget {
   final _memoController = TextEditingController();
   final _tagsController = TextEditingController();
 
-  int _lastIdeaIdNum = 0;
-
   @override
   Widget build(BuildContext context) {
+    int _lastIdeaIdNum = 0;
     return GetBuilder<FreeWriteController>(
       builder: (controller) {
         return AlertDialog(
@@ -83,8 +83,6 @@ class FreeWriteCreatePop extends StatelessWidget {
                                               tag: _tagsController.text ?? '',
                                               id: 'idea_' + (_lastIdeaIdNum + 1).toString(),
                                             );
-
-                                            controller.createTag(tag: _tagsController.text);
 
                                             Navigator.pop(context);
                                           }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/component/free_write_parts.dart';
-import 'package:project_writer_v04/pages/document/free_write_page/component/search_bar.dart';
 import 'package:project_writer_v04/services/controller/free_write_controller.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/component/free_write_create_pop.dart';
 
@@ -46,18 +44,7 @@ class FreeWritePage extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: GetBuilder<FreeWriteController>(
-          builder: (controller) {
-            return SearchBarView(
-              title: controller.ideaMemo,
-              //TODO: 가로 태그 리스트 진행중...
-              //tagList: controller.ideaMemo,
-              itemCount: null,
-              searchTerm: '',
-              onTap: () {},
-            );
-          },
-        ),
+        child: SearchBar(),
       ),
       floatingActionButton: BasicFloatingButton(
         icon: Icons.add,

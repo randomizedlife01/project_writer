@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
-import 'package:project_writer_v04/pages/document/free_write_page/component/free_write_parts.dart';
 import 'package:project_writer_v04/services/controller/free_write_controller.dart';
 import 'package:project_writer_v04/services/controller/my_life_controller.dart';
 
@@ -32,29 +31,25 @@ class _ImportPageState extends State<ImportPage> with SingleTickerProviderStateM
   }
 
   Widget freeWritePage() {
-    return Column(
-      children: [
-        Expanded(
-          child: Container(
-            padding: EdgeInsets.all(20.0),
-            child: Center(
-              child: ListView.builder(
-                itemCount: freeWriteController.ideaMemo.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      TextButton(
-                        onPressed: () => print(freeWriteController.ideaMemo[index].memo),
-                        child: Text(freeWriteController.ideaMemo[index].memo),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ),
+    return Container(
+      padding: EdgeInsets.all(20.0),
+      child: Center(
+        child: ListView.builder(
+          itemCount: freeWriteController.ideaMemo.length,
+          itemBuilder: (context, index) {
+            return Column(
+              children: [
+                Obx(
+                  () => TextButton(
+                    onPressed: () => print(freeWriteController.ideaMemo[index].memo),
+                    child: Text(freeWriteController.ideaMemo[index].memo),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
-      ],
+      ),
     );
   }
 

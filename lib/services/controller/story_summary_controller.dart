@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:project_writer_v04/models/StorySummary.dart';
 import 'package:project_writer_v04/services/controller/story_summary_repository.dart';
 
 class StorySummaryController extends GetxController {

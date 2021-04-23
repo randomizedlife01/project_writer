@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_writer_v04/pages/document/intro_page/component/intro_doc_delete_pop.dart';
-import 'package:project_writer_v04/pages/document/story_page/story_page.dart';
 import 'package:unicorndial/unicorndial.dart';
 
 class ScreenArguments {

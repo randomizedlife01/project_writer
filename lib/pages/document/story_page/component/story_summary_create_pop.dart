@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
-import 'package:project_writer_v04/services/controller/intro_page_controller.dart';
 import 'package:project_writer_v04/services/controller/story_summary_controller.dart';
 
 @immutable

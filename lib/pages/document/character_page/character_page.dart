@@ -3,11 +3,10 @@ import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/services/controller/character_controller.dart';
 
+@immutable
 class CharactersPage extends StatelessWidget {
   final characterController = CharactersController.to;
-  var cardIndex = 0;
-
-  ScrollController scrollController = ScrollController();
+  final ScrollController scrollController = ScrollController();
 
   Widget nothingInMyLifeStory({BuildContext context}) {
     return Center(

@@ -3,16 +3,15 @@ import 'package:get/get.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/services/controller/intro_page_controller.dart';
 
+@immutable
 class DocCreatePopUp extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
-
-  int _lastIdeaIdNum = 0;
-
   final _docNameController = TextEditingController();
   final _docDescController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    int _lastIdeaIdNum = 0;
     return AlertDialog(
       content: SingleChildScrollView(
         child: Container(

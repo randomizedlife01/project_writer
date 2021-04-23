@@ -6,11 +6,10 @@ import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/component/my_life_create_pop.dart';
 import 'package:project_writer_v04/services/controller/my_life_controller.dart';
 
+@immutable
 class MyLifePage extends StatelessWidget {
   final _scrollController = ScrollController();
   final myLifeController = MyLifeStoryController.to;
-
-  String seasonToHangul = '';
 
   Widget nothingInMyLifeStory({BuildContext context}) {
     return Center(
@@ -49,6 +48,7 @@ class MyLifePage extends StatelessWidget {
   }
 
   Widget myLifeStory({BuildContext context}) {
+    String seasonToHangul = '';
     return Obx(() {
       var years = [];
       myLifeController.myLifeStory.forEach((element) {
