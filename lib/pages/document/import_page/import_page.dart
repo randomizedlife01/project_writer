@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
+import 'package:project_writer_v04/pages/document/free_write_page/component/free_search_bar.dart';
+import 'package:project_writer_v04/pages/document/my_life_page/parts/component/my_life_body.dart';
+import 'package:project_writer_v04/pages/document/my_life_page/parts/my_life_page.dart';
 import 'package:project_writer_v04/services/controller/free_write_controller.dart';
 import 'package:project_writer_v04/services/controller/my_life_controller.dart';
 
@@ -28,29 +31,6 @@ class _ImportPageState extends State<ImportPage> with SingleTickerProviderStateM
   void dispose() {
     super.dispose();
     ctr.dispose();
-  }
-
-  Widget freeWritePage() {
-    return Container(
-      padding: EdgeInsets.all(20.0),
-      child: Center(
-        child: ListView.builder(
-          itemCount: freeWriteController.ideaMemo.length,
-          itemBuilder: (context, index) {
-            return Column(
-              children: [
-                Obx(
-                  () => TextButton(
-                    onPressed: () => print(freeWriteController.ideaMemo[index].memo),
-                    child: Text(freeWriteController.ideaMemo[index].memo),
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-      ),
-    );
   }
 
   Widget myLifePage() {
@@ -88,8 +68,8 @@ class _ImportPageState extends State<ImportPage> with SingleTickerProviderStateM
       body: new TabBarView(
         controller: ctr,
         children: <Widget>[
-          freeWritePage(),
-          myLifePage(),
+          SearchBarView(isVisible: true, isEnabled: false),
+          MyLifePageBody(),
         ],
       ),
       bottomNavigationBar: new Material(

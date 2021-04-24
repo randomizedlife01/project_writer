@@ -47,7 +47,10 @@ class StoryPage extends StatelessWidget {
     );
   }
 
-  //TODO: 저장되서 로드가 안됨.
+  Widget dropDownData() {
+    return Placeholder();
+  }
+
   Widget summaryScreen() {
     return ListView.separated(
       shrinkWrap: true,
@@ -56,36 +59,56 @@ class StoryPage extends StatelessWidget {
       separatorBuilder: (context, index) => Divider(),
       itemBuilder: (context, index) {
         final widgetItem = index == storySummaryController.summaries.length
-            ? AddButtonBar(
-                getDocId: documentId,
-                context: context,
-                scrollController: _scrollController,
-                //TODO: 문장 추가 버튼
-                onAddSentenceTap: () {
-                  // storySummaryController.createSummary(length: state.summaries.length);
-                  // scrollController.animateTo(0.0, duration: Duration(microseconds: 1000), curve: Curves.easeInOut);
-                },
-                //TODO: 대화 추가 버튼.
-                onAddTalkTap: () {},
-                //TODO: 메모 가져오기 버튼.
-                onImportTap: () {
-                  Navigator.of(context).pushNamed('/import_page');
-                },
+            ? Visibility(
+                visible: storySummaryController.summaries.isEmpty ? false : true,
+                child: AddButtonBar(
+                  getDocId: documentId,
+                  context: context,
+                  scrollController: _scrollController,
+                  //TODO: 문장 추가 버튼
+                  onAddSentenceTap: () => showDialog(
+                    context: context,
+                    builder: (_) {
+                      return StorySummaryCreatePopUp(documentId: documentId);
+                    },
+                  ),
+                  //TODO: 대화 추가 버튼.
+                  onAddTalkTap: () {},
+                  onImportTap: () {
+                    Navigator.of(context).pushNamed('/import_page');
+                  },
+                ),
               )
-            : Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            : InkWell(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Column(
                     children: [
-                      Text(storySummaryController.summaries[index].time),
-                      SizedBox(width: 5.0),
-                      Text(storySummaryController.summaries[index].space),
-                      SizedBox(width: 5.0),
-                      Text(storySummaryController.summaries[index].weather),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(storySummaryController.summaries[index].time),
+                          SizedBox(width: 5.0),
+                          Text(storySummaryController.summaries[index].space),
+                          SizedBox(width: 5.0),
+                          Text(storySummaryController.summaries[index].weather),
+                        ],
+                      ),
+                      Text(storySummaryController.summaries[index].storySummary),
+                      //TODO: 드롭다운 부분 작성중....
+                      SizedBox(height: 10.0),
+                      Obx(
+                        () => Visibility(
+                          visible: storySummaryController.setDropDownVisible.value,
+                          child: dropDownData(),
+                        ),
+                      ),
                     ],
                   ),
-                  Text(storySummaryController.summaries[index].storySummary),
-                ],
+                ),
+                onTap: () {
+                  storySummaryController.selectDropDownVisible(isVisible: !storySummaryController.setDropDownVisible.value);
+                },
               );
         return widgetItem;
       },
@@ -94,6 +117,8 @@ class StoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //print(storySummaryController.summaries);
+    //storySummaryController.deleteSummary(id: 'my_summary_100000');
     storySummaryController.readStorySummaries(getDocumentId: documentId);
     return Scaffold(
       appBar: PreferredSize(
@@ -105,18 +130,6 @@ class StoryPage extends StatelessWidget {
       body: Padding(
         padding: EdgeInsets.all(20.0),
         child: Obx(() => Container(child: storySummaryController.summaries.isEmpty ? emptyScreen(context: context) : summaryScreen())),
-      ),
-      floatingActionButton: Visibility(
-        visible: storySummaryController.summaries.isEmpty ? false : true,
-        child: BasicFloatingButton(
-          icon: Icons.add,
-          onPressed: () => showDialog(
-            context: context,
-            builder: (_) {
-              return StorySummaryCreatePopUp();
-            },
-          ),
-        ),
       ),
     );
   }

@@ -5,6 +5,8 @@ import 'package:project_writer_v04/services/controller/story_summary_controller.
 
 @immutable
 class StorySummaryCreatePopUp extends StatelessWidget {
+  final documentId;
+
   final _formKey = GlobalKey<FormState>();
   final _storySummaryController = StorySummaryController.to;
 
@@ -13,6 +15,8 @@ class StorySummaryCreatePopUp extends StatelessWidget {
 
   final _spaceController = TextEditingController();
   final _summaryController = TextEditingController();
+
+  StorySummaryCreatePopUp({Key key, this.documentId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +121,8 @@ class StorySummaryCreatePopUp extends StatelessWidget {
                                         }
 
                                         controller.createSummary(
-                                          id: 'my_summary_' + (_lastIdeaIdNum + 1).toString(),
+                                          id: 'my_summary_' + (_lastIdeaIdNum + 100000).toString(),
+                                          documentId: _storySummaryController.setDocumentId.value,
                                           storySummary: _summaryController.text ?? '미입력',
                                           space: _spaceController.text ?? '미입력',
                                           time: _storySummaryController.selectTimes.value,

@@ -8,6 +8,7 @@ import 'package:project_writer_v04/pages/document/intro_page/component/intro_doc
 import 'package:project_writer_v04/pages/document/intro_page/component/intro_parts.dart';
 import 'package:project_writer_v04/pages/document/story_page/story_page.dart';
 import 'package:project_writer_v04/services/controller/intro_page_controller.dart';
+import 'package:project_writer_v04/services/controller/story_summary_controller.dart';
 
 class IntroPage extends StatelessWidget {
   final VoidCallback shouldLogOut;

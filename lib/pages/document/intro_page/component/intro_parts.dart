@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:project_writer_v04/pages/document/intro_page/component/intro_doc_delete_pop.dart';
+import 'package:project_writer_v04/services/controller/story_summary_controller.dart';
 import 'package:unicorndial/unicorndial.dart';
 
 class ScreenArguments {
@@ -15,7 +16,9 @@ class IntroDocumentButton extends StatelessWidget {
   final String documentId;
   final String docName;
 
-  const IntroDocumentButton({Key key, this.index, this.documentId, this.docName}) : super(key: key);
+  IntroDocumentButton({Key key, this.index, this.documentId, this.docName}) : super(key: key);
+
+  final storyController = StorySummaryController.to;
 
   //도튜멘트 팝업 메뉴버튼
   List<UnicornButton> docMenuButtons({BuildContext context}) {
@@ -35,6 +38,7 @@ class IntroDocumentButton extends StatelessWidget {
             size: 16.0,
           ),
           onPressed: () {
+            storyController.selectDocumentId(documentId: documentId);
             Navigator.pushNamed(context, '/story_page', arguments: ScreenArguments(documentId, docName));
           },
         ),

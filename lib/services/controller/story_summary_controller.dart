@@ -2,12 +2,13 @@ import 'package:get/get.dart';
 import 'package:project_writer_v04/services/controller/story_summary_repository.dart';
 
 class StorySummaryController extends GetxController {
-  final documentId = ''.obs;
   final summaries = [].obs;
   final isVisible = false.obs;
   final selectTimes = '새벽'.obs;
   final spaceList = ''.obs;
   final selectWeathers = '맑음'.obs;
+  final setDocumentId = ''.obs;
+  final setDropDownVisible = true.obs;
 
   final StorySummaryRepository storySummaryRepository = StorySummaryRepository();
 
@@ -16,6 +17,14 @@ class StorySummaryController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+  }
+
+  selectDropDownVisible({bool isVisible}) {
+    setDropDownVisible(isVisible);
+  }
+
+  selectDocumentId({String documentId}) {
+    setDocumentId(documentId);
   }
 
   selectTime({String timeValue}) {
@@ -38,30 +47,29 @@ class StorySummaryController extends GetxController {
 
   readStorySummaries({String getDocumentId}) async {
     try {
-      summaries(await storySummaryRepository.readStorySummary(documentId: documentId(getDocumentId)));
+      summaries(await storySummaryRepository.readStorySummary(documentId: getDocumentId));
     } catch (e) {
       print(e);
     }
   }
 
-  createSummary({String id, String setDocumentId, String storySummary, String space, String time, String weather}) async {
+  createSummary({String id, String documentId, String storySummary, String space, String time, String weather}) async {
     try {
       final data = await storySummaryRepository.createStorySummary(
-        id: id,
-        documentId: documentId(setDocumentId),
-        storySummary: storySummary,
-        space: space,
-        time: time,
-        weather: weather,
+        id: id ?? '',
+        documentId: documentId ?? '',
+        storySummary: storySummary ?? '',
+        space: space ?? '',
+        time: time ?? '',
+        weather: weather ?? '',
       );
       summaries.add(data);
-      print(summaries);
     } catch (e) {
       print(e);
     }
   }
 
-  updateDoc({String id, String storySummary}) async {
+  updateSummary({String id, String storySummary}) async {
     try {
       await storySummaryRepository.updateStorySummary(storySummaryId: id, storySummary: storySummary);
       readStorySummaries();
@@ -70,7 +78,7 @@ class StorySummaryController extends GetxController {
     }
   }
 
-  deleteDoc({String id}) async {
+  deleteSummary({String id}) async {
     try {
       final data = await storySummaryRepository.deleteStorySummary(storySummaryId: id);
       summaries.remove(data);

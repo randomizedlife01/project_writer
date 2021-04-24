@@ -3,10 +3,16 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:project_writer_v04/services/controller/free_write_controller.dart';
+import 'package:project_writer_v04/services/controller/story_summary_controller.dart';
 
 class SearchBarView extends StatelessWidget {
+  final bool isVisible;
+  final bool isEnabled;
+
   final controller = FloatingSearchBarController();
   final freeWriteController = FreeWriteController.to;
+
+  SearchBarView({Key key, this.isVisible, this.isEnabled}) : super(key: key);
 
   Widget buildFloatingSearchBar() {
     return FloatingSearchBar(
@@ -131,7 +137,7 @@ class SearchBarView extends StatelessWidget {
           ),
         );
       },
-      body: SearchResultsListView(),
+      body: SearchResultsListView(isVisible: isVisible, isEnabled: isEnabled),
     );
   }
 
@@ -143,6 +149,14 @@ class SearchBarView extends StatelessWidget {
 
 //검색 결과 리스트 뷰
 class SearchResultsListView extends StatelessWidget {
+  final bool isVisible;
+  final bool isEnabled;
+
+  SearchResultsListView({Key key, this.isVisible, this.isEnabled}) : super(key: key);
+
+  final freeController = FreeWriteController.to;
+  final storyController = StorySummaryController.to;
+
   @override
   Widget build(BuildContext context) {
     final fsb = FloatingSearchBar.of(context);
@@ -167,7 +181,7 @@ class SearchResultsListView extends StatelessWidget {
               final tags = freeController.ideaMemo[toIndex].tags.split(" ");
               return Slidable(
                 actionPane: SlidableStrechActionPane(),
-                enabled: true,
+                enabled: isEnabled,
                 secondaryActions: [
                   IconSlideAction(
                     caption: '미정',
@@ -186,9 +200,39 @@ class SearchResultsListView extends StatelessWidget {
                 ],
                 //RxDart 데이터 리스트타일
                 child: ListTile(
-                  title: Text(
-                    freeController.ideaMemo.isNotEmpty ? freeController.ideaMemo[toIndex].memo : '',
-                    style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w400),
+                  title: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          freeController.ideaMemo.isNotEmpty ? freeController.ideaMemo[toIndex].memo : '',
+                          style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                      Visibility(
+                        visible: isVisible,
+                        child: IconButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () {
+                            //TODO: 문장 가져오기 기능..
+                            int _lastIdeaIdNum = 0;
+
+                            if (storyController.summaries.isNotEmpty) {
+                              final lastId = storyController.summaries.last.id;
+                              final number = lastId.split("_").last;
+                              _lastIdeaIdNum = int.parse(number);
+                            }
+
+                            storyController.createSummary(
+                              storySummary: freeController.ideaMemo[toIndex].memo ?? '',
+                              id: 'my_summary_' + (_lastIdeaIdNum + 1).toString(),
+                              documentId: storyController.setDocumentId.value,
+                            );
+
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                   //아이디어 메모당 태그 리스트(가로)
                   subtitle: Container(
