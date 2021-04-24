@@ -9,6 +9,7 @@ import 'package:project_writer_v04/pages/document/free_write_page/free_write_pag
 import 'package:project_writer_v04/pages/document/import_page/import_page.dart';
 import 'package:project_writer_v04/pages/document/intro_page/component/intro_parts.dart';
 import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
+import 'package:project_writer_v04/pages/document/story_page/story_detail_page.dart';
 import 'package:project_writer_v04/services/controller/auth_bloc.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/my_life_page.dart';
 import 'package:project_writer_v04/pages/document/story_page/story_page.dart';
@@ -72,6 +73,9 @@ class AppRouter {
         break;
       case '/import_page':
         return MaterialPageRoute(builder: (_) => ImportPage());
+        break;
+      case '/story_detail_page':
+        return MaterialPageRoute(builder: (_) => StoryDetailPage());
         break;
       default:
         return null;

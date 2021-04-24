@@ -47,8 +47,17 @@ class StoryPage extends StatelessWidget {
     );
   }
 
-  Widget dropDownData() {
-    return Placeholder();
+  Widget dropDownButton(BuildContext context, String id, String summary, String storyDetail) {
+    return DropDownButtons(
+      getDocId: documentId,
+      context: context,
+      onAddDetailTap: () {
+        storySummaryController.getSummaryData(id: id, summary: summary, storyDetail: storyDetail);
+        Navigator.of(context).pushNamed('/story_detail_page');
+      },
+      onImportTap: () => Navigator.of(context).pushNamed('/import_page'),
+      onDeleteTap: () => storySummaryController.deleteSummary(id: id),
+    );
   }
 
   Widget summaryScreen() {
@@ -82,28 +91,36 @@ class StoryPage extends StatelessWidget {
             : InkWell(
                 child: Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(storySummaryController.summaries[index].time),
-                          SizedBox(width: 5.0),
-                          Text(storySummaryController.summaries[index].space),
-                          SizedBox(width: 5.0),
-                          Text(storySummaryController.summaries[index].weather),
-                        ],
-                      ),
-                      Text(storySummaryController.summaries[index].storySummary),
-                      //TODO: 드롭다운 부분 작성중....
-                      SizedBox(height: 10.0),
-                      Obx(
-                        () => Visibility(
-                          visible: storySummaryController.setDropDownVisible.value,
-                          child: dropDownData(),
+                  child: Obx(
+                    () => Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(storySummaryController.summaries[index].time),
+                            SizedBox(width: 5.0),
+                            Text(storySummaryController.summaries[index].space),
+                            SizedBox(width: 5.0),
+                            Text(storySummaryController.summaries[index].weather),
+                          ],
                         ),
-                      ),
-                    ],
+                        Text(storySummaryController.summaries.value[index].storySummary),
+                        SizedBox(height: 10.0),
+                        Text(storySummaryController.summaries.value[index].storyDetail ?? ''),
+                        SizedBox(height: 10.0),
+                        Obx(
+                          () => Visibility(
+                            visible: storySummaryController.setDropDownVisible.value,
+                            child: dropDownButton(
+                              context,
+                              storySummaryController.summaries[index].id,
+                              storySummaryController.summaries[index].storySummary,
+                              storySummaryController.summaries[index].storyDetail ?? '',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 onTap: () {
@@ -117,8 +134,6 @@ class StoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //print(storySummaryController.summaries);
-    //storySummaryController.deleteSummary(id: 'my_summary_100000');
     storySummaryController.readStorySummaries(getDocumentId: documentId);
     return Scaffold(
       appBar: PreferredSize(

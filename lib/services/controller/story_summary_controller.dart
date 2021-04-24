@@ -9,6 +9,9 @@ class StorySummaryController extends GetxController {
   final selectWeathers = '맑음'.obs;
   final setDocumentId = ''.obs;
   final setDropDownVisible = true.obs;
+  final getSummary = ''.obs;
+  final summaryId = ''.obs;
+  final storyDetails = ''.obs;
 
   final StorySummaryRepository storySummaryRepository = StorySummaryRepository();
 
@@ -17,6 +20,16 @@ class StorySummaryController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+  }
+
+  getSummaryId({String id}) {
+    summaryId(id);
+  }
+
+  getSummaryData({String id, String summary, String storyDetail}) {
+    summaryId(id);
+    getSummary(summary);
+    storyDetails(storyDetail);
   }
 
   selectDropDownVisible({bool isVisible}) {
@@ -53,7 +66,7 @@ class StorySummaryController extends GetxController {
     }
   }
 
-  createSummary({String id, String documentId, String storySummary, String space, String time, String weather}) async {
+  createSummary({String id, String documentId, String storySummary, String space, String time, String weather, String storyDetail}) async {
     try {
       final data = await storySummaryRepository.createStorySummary(
         id: id ?? '',
@@ -62,6 +75,7 @@ class StorySummaryController extends GetxController {
         space: space ?? '',
         time: time ?? '',
         weather: weather ?? '',
+        storyDetail: storyDetail ?? '',
       );
       summaries.add(data);
     } catch (e) {
@@ -69,10 +83,10 @@ class StorySummaryController extends GetxController {
     }
   }
 
-  updateSummary({String id, String storySummary}) async {
+  updateSummary({String id, String storyDetail}) async {
     try {
-      await storySummaryRepository.updateStorySummary(storySummaryId: id, storySummary: storySummary);
-      readStorySummaries();
+      final updateData = await storySummaryRepository.updateStorySummary(storySummaryId: id, storyDetail: storyDetail);
+      summaries[summaries.indexWhere((element) => element.id == updateData.id)] = updateData;
     } catch (e) {
       print(e);
     }

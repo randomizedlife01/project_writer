@@ -206,6 +206,62 @@ class DocInputForm extends StatelessWidget {
   }
 }
 
+class DropDownButtons extends StatelessWidget {
+  final BuildContext context;
+  final String getDocId;
+
+  final VoidCallback onAddDetailTap;
+  final VoidCallback onImportTap;
+  final VoidCallback onDeleteTap;
+
+  const DropDownButtons({Key key, this.onAddDetailTap, this.onImportTap, this.context, this.getDocId, this.onDeleteTap}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 20.0,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            DocNormalButton(
+              icon: FontAwesomeIcons.arrowsAltH,
+              buttonName: '스토리 만들기',
+              onPressed: onAddDetailTap,
+            ),
+            Container(
+              height: 30.0,
+              child: VerticalDivider(
+                width: 1.0,
+                color: Color(0xFF8785a2),
+              ),
+            ),
+            DocNormalButton(
+              icon: FontAwesomeIcons.plus,
+              buttonName: '메모 가져오기',
+              onPressed: onImportTap,
+            ),
+            Container(
+              height: 30.0,
+              child: VerticalDivider(
+                width: 1.0,
+                color: Color(0xFF8785a2),
+              ),
+            ),
+            DocNormalButton(
+              icon: FontAwesomeIcons.minus,
+              buttonName: '메모/스토리 삭제',
+              onPressed: onDeleteTap,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
 class AddButtonBar extends StatelessWidget {
   final BuildContext context;
   final String getDocId;

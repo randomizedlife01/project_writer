@@ -28,6 +28,7 @@ class StorySummary extends Model {
   final String space;
   final String time;
   final String weather;
+  final String storyDetail;
 
   @override
   getInstanceType() => classType;
@@ -43,7 +44,8 @@ class StorySummary extends Model {
       this.documentID,
       this.space,
       this.time,
-      this.weather});
+      this.weather,
+      this.storyDetail});
 
   factory StorySummary(
       {String id,
@@ -51,14 +53,16 @@ class StorySummary extends Model {
       String documentID,
       String space,
       String time,
-      String weather}) {
+      String weather,
+      String storyDetail}) {
     return StorySummary._internal(
         id: id == null ? UUID.getUUID() : id,
         storySummary: storySummary,
         documentID: documentID,
         space: space,
         time: time,
-        weather: weather);
+        weather: weather,
+        storyDetail: storyDetail);
   }
 
   bool equals(Object other) {
@@ -74,7 +78,8 @@ class StorySummary extends Model {
         documentID == other.documentID &&
         space == other.space &&
         time == other.time &&
-        weather == other.weather;
+        weather == other.weather &&
+        storyDetail == other.storyDetail;
   }
 
   @override
@@ -90,7 +95,8 @@ class StorySummary extends Model {
     buffer.write("documentID=" + "$documentID" + ", ");
     buffer.write("space=" + "$space" + ", ");
     buffer.write("time=" + "$time" + ", ");
-    buffer.write("weather=" + "$weather");
+    buffer.write("weather=" + "$weather" + ", ");
+    buffer.write("storyDetail=" + "$storyDetail");
     buffer.write("}");
 
     return buffer.toString();
@@ -102,14 +108,16 @@ class StorySummary extends Model {
       String documentID,
       String space,
       String time,
-      String weather}) {
+      String weather,
+      String storyDetail}) {
     return StorySummary(
         id: id ?? this.id,
         storySummary: storySummary ?? this.storySummary,
         documentID: documentID ?? this.documentID,
         space: space ?? this.space,
         time: time ?? this.time,
-        weather: weather ?? this.weather);
+        weather: weather ?? this.weather,
+        storyDetail: storyDetail ?? this.storyDetail);
   }
 
   StorySummary.fromJson(Map<String, dynamic> json)
@@ -118,7 +126,8 @@ class StorySummary extends Model {
         documentID = json['documentID'],
         space = json['space'],
         time = json['time'],
-        weather = json['weather'];
+        weather = json['weather'],
+        storyDetail = json['storyDetail'];
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -126,7 +135,8 @@ class StorySummary extends Model {
         'documentID': documentID,
         'space': space,
         'time': time,
-        'weather': weather
+        'weather': weather,
+        'storyDetail': storyDetail
       };
 
   static final QueryField ID = QueryField(fieldName: "storySummary.id");
@@ -135,6 +145,7 @@ class StorySummary extends Model {
   static final QueryField SPACE = QueryField(fieldName: "space");
   static final QueryField TIME = QueryField(fieldName: "time");
   static final QueryField WEATHER = QueryField(fieldName: "weather");
+  static final QueryField STORYDETAIL = QueryField(fieldName: "storyDetail");
   static var schema =
       Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "StorySummary";
@@ -173,6 +184,11 @@ class StorySummary extends Model {
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: StorySummary.WEATHER,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: StorySummary.STORYDETAIL,
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
   });
