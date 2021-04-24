@@ -1,3 +1,4 @@
+import 'package:amplify_flutter/amplify.dart';
 import 'package:get/get.dart';
 import 'package:project_writer_v04/models/ModelProvider.dart';
 import 'package:project_writer_v04/services/controller/intro_page_repository.dart';
@@ -48,6 +49,20 @@ class IntroDocumentController extends GetxController {
   deleteDoc({String id}) async {
     try {
       final data = await introDocumentRepository.deleteIdea(id: id);
+
+      List<StorySummary> listData = await Amplify.DataStore.query(
+        StorySummary.classType,
+        where: StorySummary.DOCUMENTID.eq(
+          id,
+        ),
+      );
+
+      listData.forEach(
+        (element) {
+          Amplify.DataStore.delete(element);
+        },
+      );
+
       document.remove(data);
       update();
     } catch (e) {

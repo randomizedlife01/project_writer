@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
+import 'package:project_writer_v04/pages/document/story_page/component/story_delete_pop.dart';
 import 'package:project_writer_v04/pages/document/story_page/component/story_summary_create_pop.dart';
 import 'package:project_writer_v04/services/controller/story_summary_controller.dart';
 
@@ -56,7 +57,13 @@ class StoryPage extends StatelessWidget {
         Navigator.of(context).pushNamed('/story_detail_page');
       },
       onImportTap: () => Navigator.of(context).pushNamed('/import_page'),
-      onDeleteTap: () => storySummaryController.deleteSummary(id: id),
+      onDeleteTap: () {
+        showDialog(
+            context: context,
+            builder: (_) {
+              return StoryDeletePopup(id: id);
+            });
+      },
     );
   }
 
@@ -74,14 +81,12 @@ class StoryPage extends StatelessWidget {
                   getDocId: documentId,
                   context: context,
                   scrollController: _scrollController,
-                  //TODO: 문장 추가 버튼
                   onAddSentenceTap: () => showDialog(
                     context: context,
                     builder: (_) {
                       return StorySummaryCreatePopUp(documentId: documentId);
                     },
                   ),
-                  //TODO: 대화 추가 버튼.
                   onAddTalkTap: () {},
                   onImportTap: () {
                     Navigator.of(context).pushNamed('/import_page');

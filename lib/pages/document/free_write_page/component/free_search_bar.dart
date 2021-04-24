@@ -213,7 +213,6 @@ class SearchResultsListView extends StatelessWidget {
                         child: IconButton(
                           icon: Icon(Icons.add),
                           onPressed: () {
-                            //TODO: 문장 가져오기 기능..
                             int _lastIdeaIdNum = 0;
 
                             if (storyController.summaries.isNotEmpty) {

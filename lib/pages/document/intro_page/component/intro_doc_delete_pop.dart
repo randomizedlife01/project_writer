@@ -7,10 +7,10 @@ class DocDeletePopUp extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final _docDeleteKeyController = TextEditingController();
 
-  final FocusNode focusNode;
+  final String documentId;
   final int index;
 
-  DocDeletePopUp({Key key, this.focusNode, this.index}) : super(key: key);
+  DocDeletePopUp({Key key, this.documentId, this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
