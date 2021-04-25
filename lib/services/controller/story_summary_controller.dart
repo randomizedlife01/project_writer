@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:project_writer_v04/services/controller/story_summary_repository.dart';
 
@@ -31,7 +32,7 @@ class StorySummaryController extends GetxController {
   }
 
   addCharacterName({String name}) {
-    storyDetails(storyDetails + name);
+    storyDetails('$storyDetails\n' + name);
   }
 
   getSummaryData({String id, String summary, String storyDetail}) {

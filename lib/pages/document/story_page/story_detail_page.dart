@@ -6,13 +6,30 @@ import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/services/controller/character_controller.dart';
 import 'package:project_writer_v04/services/controller/story_summary_controller.dart';
 
-class StoryDetailPage extends StatelessWidget {
+class StoryDetailPage extends StatefulWidget {
+  @override
+  _StoryDetailPageState createState() => _StoryDetailPageState();
+}
+
+class _StoryDetailPageState extends State<StoryDetailPage> {
   final storySummaryController = StorySummaryController.to;
+
   final focusNode = FocusNode();
+
   final custom1Notifier = ValueNotifier<String>("0");
 
   final characterController = CharactersController.to;
+
   final scrollController = ScrollController();
+
+  TextEditingController storyDetailController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    characterController.readMyCharacters();
+    storyDetailController = TextEditingController(text: storySummaryController.storyDetails.value ?? '');
+  }
 
   Widget characterListBar(String id) {
     return ListView.builder(
@@ -22,9 +39,9 @@ class StoryDetailPage extends StatelessWidget {
       itemBuilder: (context, index) {
         return TextButton(
           onPressed: () {
-            //TODO: 이름 클릭하면 자동으로 입력창에 이름 들어가고 대화체 생성...
-            storySummaryController.addCharacterName(name: characterController.myCharacters[index].name);
-            print('2 : ${storySummaryController.storyDetails.value}');
+            setState(() {
+              storyDetailController.text = ('${storyDetailController.text}\n' + characterController.myCharacters[index].name + ' : ');
+            });
           },
           child: Text(characterController.myCharacters[index].name),
         );
@@ -54,7 +71,7 @@ class StoryDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final storyDetailController = TextEditingController(text: storySummaryController.storyDetails.value ?? '');
+    storyDetailController.selection = TextSelection.fromPosition(TextPosition(offset: storyDetailController.text.length));
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(50.0),
@@ -67,12 +84,10 @@ class StoryDetailPage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Obx(
-              () => Text(
-                storySummaryController.getSummary.value,
-                maxLines: null,
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
+            Text(
+              storySummaryController.getSummary.value,
+              maxLines: null,
+              style: Theme.of(context).textTheme.bodyText2,
             ),
             SizedBox(height: 10.0),
             Expanded(
@@ -89,8 +104,9 @@ class StoryDetailPage extends StatelessWidget {
                     return null;
                   },
                   onChanged: (value) {
-                    storySummaryController.addSummaryDetail(value: value);
-                    print('1 : ${storySummaryController.storyDetails.value}');
+                    setState(() {
+                      storyDetailController.text = value;
+                    });
                   },
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
