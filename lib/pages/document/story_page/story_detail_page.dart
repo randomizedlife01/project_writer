@@ -14,7 +14,7 @@ class StoryDetailPage extends StatelessWidget {
   final characterController = CharactersController.to;
   final scrollController = ScrollController();
 
-  Widget characterListBar() {
+  Widget characterListBar(String id) {
     return ListView.builder(
       controller: scrollController,
       scrollDirection: Axis.horizontal,
@@ -23,7 +23,8 @@ class StoryDetailPage extends StatelessWidget {
         return TextButton(
           onPressed: () {
             //TODO: 이름 클릭하면 자동으로 입력창에 이름 들어가고 대화체 생성...
-            print(storySummaryController.storyDetails + characterController.myCharacters[index].name);
+            storySummaryController.addCharacterName(name: characterController.myCharacters[index].name);
+            print('2 : ${storySummaryController.storyDetails.value}');
           },
           child: Text(characterController.myCharacters[index].name),
         );
@@ -31,7 +32,7 @@ class StoryDetailPage extends StatelessWidget {
     );
   }
 
-  KeyboardActionsConfig _buildConfig(BuildContext context) {
+  KeyboardActionsConfig _buildConfig(BuildContext context, String id) {
     return KeyboardActionsConfig(
       keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
       keyboardBarColor: Colors.grey[200],
@@ -43,7 +44,7 @@ class StoryDetailPage extends StatelessWidget {
               child: SizedBox(
                   height: 40,
                   child: Center(
-                    child: characterListBar(),
+                    child: characterListBar(id),
                   )),
               preferredSize: Size.fromHeight(40)),
         ),
@@ -54,7 +55,6 @@ class StoryDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final storyDetailController = TextEditingController(text: storySummaryController.storyDetails.value ?? '');
-    characterController.readMyCharacters();
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(50.0),
@@ -77,7 +77,7 @@ class StoryDetailPage extends StatelessWidget {
             SizedBox(height: 10.0),
             Expanded(
               child: KeyboardActions(
-                config: _buildConfig(context),
+                config: _buildConfig(context, storySummaryController.summaryId.value),
                 child: TextFormField(
                   controller: storyDetailController,
                   focusNode: focusNode,
@@ -87,6 +87,10 @@ class StoryDetailPage extends StatelessWidget {
                       return '디테일한 스토리는 비울 수 없습니다 :(';
                     }
                     return null;
+                  },
+                  onChanged: (value) {
+                    storySummaryController.addSummaryDetail(value: value);
+                    print('1 : ${storySummaryController.storyDetails.value}');
                   },
                   keyboardType: TextInputType.multiline,
                   maxLines: null,

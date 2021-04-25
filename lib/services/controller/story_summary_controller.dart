@@ -26,6 +26,14 @@ class StorySummaryController extends GetxController {
     summaryId(id);
   }
 
+  addSummaryDetail({String value}) {
+    storyDetails(value);
+  }
+
+  addCharacterName({String name}) {
+    storyDetails(storyDetails + name);
+  }
+
   getSummaryData({String id, String summary, String storyDetail}) {
     summaryId(id);
     getSummary(summary);
