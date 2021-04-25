@@ -36,10 +36,25 @@ class CharactersController extends GetxController {
     }
   }
 
-  createMyCharacter({String id, String motivation, String year, int tendency, String description}) async {
+  createMyCharacter({
+    String id,
+    String motivation,
+    String name,
+    int tendency,
+    String description,
+    String age,
+    String gender,
+  }) async {
     try {
-      final data =
-          await myCharacterRepository.createCharacter(id: id, motivation: motivation, tendency: tendency, description: description);
+      final data = await myCharacterRepository.createCharacter(
+        id: id,
+        name: name,
+        age: age,
+        gender: gender,
+        motivation: motivation,
+        tendency: tendency,
+        description: description,
+      );
       myCharacters.add(data);
       update();
     } catch (e) {

@@ -16,6 +16,8 @@ class _CharacterWritePageState extends State<CharacterWritePage> {
   final _motiveController = TextEditingController();
   final _descController = TextEditingController();
 
+  final scrollController = ScrollController();
+
   String genderValue = '여성';
 
   int _lastMyCharacterIdNum = 0;
@@ -131,77 +133,85 @@ class _CharacterWritePageState extends State<CharacterWritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              nameBar(),
-              SizedBox(
-                height: 10,
-              ),
-              genderAndAge(),
-              SizedBox(
-                height: 40,
-              ),
-              motivationForm(),
-              SizedBox(
-                height: 10,
-              ),
-              descriptionForm(),
-              tendencySlider(),
-              SizedBox(
-                height: 40,
-              ),
-              SizedBox(
-                width: double.infinity,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(backgroundColor: Colors.transparent),
-                        child: Text("취 소"),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                      child: GetBuilder<CharactersController>(
-                        builder: (controller) {
-                          return ElevatedButton(
-                            child: Text("저 장"),
-                            onPressed: () {
-                              if (_characterKey.currentState.validate()) {
-                                _characterKey.currentState.save();
+      body: SingleChildScrollView(
+        controller: scrollController,
+        child: Form(
+          key: _characterKey,
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  nameBar(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  genderAndAge(),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  motivationForm(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  descriptionForm(),
+                  tendencySlider(),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(backgroundColor: Colors.transparent),
+                            child: Text("취 소"),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: GetBuilder<CharactersController>(
+                            builder: (controller) {
+                              return ElevatedButton(
+                                child: Text("저 장"),
+                                onPressed: () {
+                                  if (_characterKey.currentState.validate()) {
+                                    _characterKey.currentState.save();
 
-                                if (controller.myCharacters.isNotEmpty) {
-                                  final lastId = controller.myCharacters.last.id;
-                                  final number = lastId.split("_").last;
-                                  _lastMyCharacterIdNum = int.parse(number);
-                                }
+                                    if (controller.myCharacters.isNotEmpty) {
+                                      final lastId = controller.myCharacters.last.id;
+                                      final number = lastId.split("_").last;
+                                      _lastMyCharacterIdNum = int.parse(number);
+                                    }
 
-                                controller.createMyCharacter(
-                                  id: 'my_character_' + (_lastMyCharacterIdNum + 1).toString(),
-                                  motivation: _motiveController.text,
-                                  description: _descController.text,
-                                  year: _ageController.text,
-                                  tendency: tendencyValue.toInt(),
-                                );
+                                    controller.createMyCharacter(
+                                      id: 'my_character_' + (_lastMyCharacterIdNum + 1).toString(),
+                                      motivation: _motiveController.text,
+                                      description: _descController.text,
+                                      name: _nameController.text,
+                                      gender: genderValue,
+                                      age: _ageController.text,
+                                      tendency: tendencyValue.toInt(),
+                                    );
 
-                                Navigator.pop(context);
-                              }
+                                    Navigator.pop(context);
+                                  }
+                                },
+                              );
                             },
-                          );
-                        },
-                      ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              )
-            ],
+                  )
+                ],
+              ),
+            ),
           ),
         ),
       ),

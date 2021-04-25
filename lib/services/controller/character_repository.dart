@@ -12,16 +12,26 @@ class CharactersRepository {
     }
   }
 
-  Future<CharacterData> createCharacter({String id, String name, String motivation, int tendency, String description}) async {
-    final myCharacter = CharacterData(
-      id: id,
-      name: name,
-      motivation: motivation,
-      tendency: tendency,
-      description: description,
-    );
-
+  Future<CharacterData> createCharacter({
+    String id,
+    String name,
+    String motivation,
+    int tendency,
+    String description,
+    String gender,
+    String age,
+  }) async {
     try {
+      final myCharacter = CharacterData(
+        id: id,
+        name: name ?? '미정',
+        motivation: motivation ?? '미정',
+        tendency: tendency ?? '미정',
+        description: description ?? '미입력',
+        gender: gender ?? '미정',
+        age: age ?? '미정',
+      );
+
       await Amplify.DataStore.save(myCharacter);
 
       return myCharacter;

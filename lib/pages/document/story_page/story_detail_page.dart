@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
 import 'package:keyboard_actions/keyboard_actions_config.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
+import 'package:project_writer_v04/services/controller/character_controller.dart';
 import 'package:project_writer_v04/services/controller/story_summary_controller.dart';
 
 class StoryDetailPage extends StatelessWidget {
@@ -10,9 +11,24 @@ class StoryDetailPage extends StatelessWidget {
   final focusNode = FocusNode();
   final custom1Notifier = ValueNotifier<String>("0");
 
-  //TODO: 캐릭터 가져와서 리스트 바에 뿌리기..
+  final characterController = CharactersController.to;
+  final scrollController = ScrollController();
+
   Widget characterListBar() {
-    return Row();
+    return ListView.builder(
+      controller: scrollController,
+      scrollDirection: Axis.horizontal,
+      itemCount: characterController.myCharacters.length,
+      itemBuilder: (context, index) {
+        return TextButton(
+          onPressed: () {
+            //TODO: 이름 클릭하면 자동으로 입력창에 이름 들어가고 대화체 생성...
+            print(storySummaryController.storyDetails + characterController.myCharacters[index].name);
+          },
+          child: Text(characterController.myCharacters[index].name),
+        );
+      },
+    );
   }
 
   KeyboardActionsConfig _buildConfig(BuildContext context) {
@@ -27,7 +43,7 @@ class StoryDetailPage extends StatelessWidget {
               child: SizedBox(
                   height: 40,
                   child: Center(
-                    child: Text('Custom Footer'),
+                    child: characterListBar(),
                   )),
               preferredSize: Size.fromHeight(40)),
         ),
@@ -38,6 +54,7 @@ class StoryDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final storyDetailController = TextEditingController(text: storySummaryController.storyDetails.value ?? '');
+    characterController.readMyCharacters();
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(50.0),
