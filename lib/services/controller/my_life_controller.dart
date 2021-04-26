@@ -3,7 +3,7 @@ import 'package:project_writer_v04/models/ModelProvider.dart';
 import 'package:project_writer_v04/services/controller/my_life_repository.dart';
 
 class MyLifeStoryController extends GetxController {
-  final myLifeStory = <MyLifeStory>[].obs;
+  final myLifeStory = [].obs;
 
   final MyLifeRepository myLifeRepository = MyLifeRepository();
 
@@ -12,6 +12,7 @@ class MyLifeStoryController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    readMyStory();
   }
 
   changeSeasonToInt() async {}

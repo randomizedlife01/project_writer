@@ -13,6 +13,7 @@ class MyLifePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    myLifeController.readMyStory();
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(50.0),

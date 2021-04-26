@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:project_writer_v04/services/controller/character_controller.dart';
 import 'package:project_writer_v04/services/controller/story_summary_repository.dart';
 
 class StorySummaryController extends GetxController {
@@ -23,16 +24,12 @@ class StorySummaryController extends GetxController {
     super.onInit();
   }
 
-  getSummaryId({String id}) {
-    summaryId(id);
-  }
-
-  addSummaryDetail({String value}) {
+  changeSummaryDetail({String value}) {
     storyDetails(value);
   }
 
-  addCharacterName({String name}) {
-    storyDetails('$storyDetails\n' + name);
+  addCharacterName({CharactersController charactersController, int index}) {
+    return storyDetails('${storyDetails.value}\n' + charactersController.myCharacters[index].name + ' : ');
   }
 
   getSummaryData({String id, String summary, String storyDetail}) {

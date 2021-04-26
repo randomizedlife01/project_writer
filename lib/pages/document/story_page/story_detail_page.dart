@@ -12,38 +12,33 @@ class StoryDetailPage extends StatefulWidget {
 }
 
 class _StoryDetailPageState extends State<StoryDetailPage> {
-  final storySummaryController = StorySummaryController.to;
-
-  final focusNode = FocusNode();
-
-  final custom1Notifier = ValueNotifier<String>("0");
-
-  final characterController = CharactersController.to;
-
-  final scrollController = ScrollController();
+  final _storySummaryController = StorySummaryController.to;
+  final _focusNode = FocusNode();
+  final _characterController = CharactersController.to;
+  final _scrollController = ScrollController();
 
   TextEditingController storyDetailController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    characterController.readMyCharacters();
-    storyDetailController = TextEditingController(text: storySummaryController.storyDetails.value ?? '');
+    _characterController.readMyCharacters();
+    storyDetailController = TextEditingController(text: _storySummaryController.storyDetails.value ?? '');
   }
 
   Widget characterListBar(String id) {
     return ListView.builder(
-      controller: scrollController,
+      controller: _scrollController,
       scrollDirection: Axis.horizontal,
-      itemCount: characterController.myCharacters.length,
+      itemCount: _characterController.myCharacters.length,
       itemBuilder: (context, index) {
         return TextButton(
           onPressed: () {
-            setState(() {
-              storyDetailController.text = ('${storyDetailController.text}\n' + characterController.myCharacters[index].name + ' : ');
-            });
+            storyDetailController.text = _storySummaryController.addCharacterName(charactersController: _characterController, index: index);
+            print(storyDetailController.text);
+            storyDetailController.selection = TextSelection.fromPosition(TextPosition(offset: storyDetailController.text.length));
           },
-          child: Text(characterController.myCharacters[index].name),
+          child: Text(_characterController.myCharacters[index].name),
         );
       },
     );
@@ -56,7 +51,7 @@ class _StoryDetailPageState extends State<StoryDetailPage> {
       nextFocus: true,
       actions: [
         KeyboardActionsItem(
-          focusNode: focusNode,
+          focusNode: _focusNode,
           footerBuilder: (_) => PreferredSize(
               child: SizedBox(
                   height: 40,
@@ -71,7 +66,6 @@ class _StoryDetailPageState extends State<StoryDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    storyDetailController.selection = TextSelection.fromPosition(TextPosition(offset: storyDetailController.text.length));
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(50.0),
@@ -85,17 +79,17 @@ class _StoryDetailPageState extends State<StoryDetailPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              storySummaryController.getSummary.value,
+              _storySummaryController.getSummary.value,
               maxLines: null,
               style: Theme.of(context).textTheme.bodyText2,
             ),
             SizedBox(height: 10.0),
             Expanded(
               child: KeyboardActions(
-                config: _buildConfig(context, storySummaryController.summaryId.value),
+                config: _buildConfig(context, _storySummaryController.summaryId.value),
                 child: TextFormField(
                   controller: storyDetailController,
-                  focusNode: focusNode,
+                  focusNode: _focusNode,
                   autocorrect: false,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -104,9 +98,8 @@ class _StoryDetailPageState extends State<StoryDetailPage> {
                     return null;
                   },
                   onChanged: (value) {
-                    setState(() {
-                      storyDetailController.text = value;
-                    });
+                    _storySummaryController.changeSummaryDetail(value: value);
+                    print(_storySummaryController.storyDetails);
                   },
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
@@ -140,7 +133,7 @@ class _StoryDetailPageState extends State<StoryDetailPage> {
                         child: Text("저 장"),
                         onPressed: () {
                           controller.updateSummary(
-                            id: storySummaryController.summaryId.value,
+                            id: _storySummaryController.summaryId.value,
                             storyDetail: storyDetailController.text,
                           );
 
@@ -156,5 +149,12 @@ class _StoryDetailPageState extends State<StoryDetailPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _storySummaryController.onClose();
+    _characterController.onClose();
+    super.dispose();
   }
 }

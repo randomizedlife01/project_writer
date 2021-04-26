@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
-import 'package:project_writer_v04/pages/document/story_page/component/story_delete_pop.dart';
 import 'package:project_writer_v04/pages/document/story_page/component/story_summary_create_pop.dart';
 import 'package:project_writer_v04/services/controller/story_summary_controller.dart';
 
@@ -61,7 +60,13 @@ class StoryPage extends StatelessWidget {
         showDialog(
             context: context,
             builder: (_) {
-              return StoryDeletePopup(id: id);
+              return DeletePopup(
+                id: id,
+                delete: () {
+                  storySummaryController.deleteSummary(id: id);
+                  Navigator.pop(context);
+                },
+              );
             });
       },
     );

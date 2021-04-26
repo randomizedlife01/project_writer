@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project_writer_v04/landing_page.dart';
+import 'package:project_writer_v04/models/CharacterData.dart';
 import 'package:project_writer_v04/pages/auth_pages/login_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/signup_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/verification_page.dart';
@@ -13,6 +14,19 @@ import 'package:project_writer_v04/pages/document/story_page/story_detail_page.d
 import 'package:project_writer_v04/services/controller/auth_bloc.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/my_life_page.dart';
 import 'package:project_writer_v04/pages/document/story_page/story_page.dart';
+
+class ScreenArguments {
+  final String documentId;
+  final String docName;
+
+  ScreenArguments(this.documentId, this.docName);
+}
+
+class CharacterArgument {
+  final CharacterData characterData;
+
+  CharacterArgument(this.characterData);
+}
 
 class AppRouter {
   final _authService = AuthService();
@@ -69,7 +83,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => CharactersPage());
         break;
       case '/character_write_page':
-        return MaterialPageRoute(builder: (_) => CharacterWritePage());
+        final CharacterData args = routeSettings.arguments as CharacterData;
+        return MaterialPageRoute(builder: (_) => CharacterWritePage(characterData: args));
         break;
       case '/import_page':
         return MaterialPageRoute(builder: (_) => ImportPage());

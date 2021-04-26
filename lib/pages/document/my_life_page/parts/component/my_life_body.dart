@@ -131,7 +131,6 @@ class MyLifePageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    myLifeController.readMyStory();
     return Container(
       padding: EdgeInsets.all(15.0),
       child: myLifeController.myLifeStory.isEmpty ? nothingInMyLifeStory(context: context) : myLifeStory(context: context),

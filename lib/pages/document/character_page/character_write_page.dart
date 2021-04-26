@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:project_writer_v04/models/CharacterData.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/services/controller/character_controller.dart';
 
 class CharacterWritePage extends StatefulWidget {
+  final CharacterData characterData;
+
+  const CharacterWritePage({Key key, this.characterData}) : super(key: key);
+
   @override
   _CharacterWritePageState createState() => _CharacterWritePageState();
 }
@@ -27,6 +32,10 @@ class _CharacterWritePageState extends State<CharacterWritePage> {
   @override
   void initState() {
     super.initState();
+    _nameController.text = widget.characterData.name ?? '';
+    _ageController.text = widget.characterData.age ?? '';
+    _motiveController.text = widget.characterData.motivation ?? '';
+    _descController.text = widget.characterData.description ?? '';
   }
 
   Widget imageProfile() {

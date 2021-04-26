@@ -45,7 +45,7 @@ class CharactersPage extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
+                padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 5.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -61,23 +61,48 @@ class CharactersPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          character.gender,
+                          '성별 :' + character.gender,
                           maxLines: 1,
                         ),
                         SizedBox(height: 8.0),
                         Text(
-                          character.age,
+                          '나이 :' + character.age,
                           maxLines: 1,
                         ),
                         SizedBox(height: 8.0),
                         Text(
-                          character.motivation,
+                          '모티브 :\n' + character.motivation,
+                          maxLines: null,
                         ),
                       ],
                     ),
                   ],
                 ),
               ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                //TODO: 캐릭터 편집 버튼, 페이지 이동시에 데이터 그대로 갖고 이동하기...
+                IconButton(
+                  onPressed: () => Navigator.of(context).pushNamed('/character_write_page', arguments: character),
+                  icon: Icon(Icons.edit),
+                ),
+                IconButton(
+                  onPressed: () => showDialog(
+                      context: context,
+                      builder: (_) {
+                        return DeletePopup(
+                          id: character.id,
+                          delete: () {
+                            characterController.deleteMyCharacter(id: character.id);
+                            Navigator.pop(context);
+                          },
+                        );
+                      }),
+                  icon: Icon(Icons.clear),
+                ),
+              ],
             ),
           ],
         ),
@@ -88,6 +113,7 @@ class CharactersPage extends StatelessWidget {
   Widget characterCards({BuildContext context}) {
     return GridView.count(
       crossAxisCount: 2,
+      childAspectRatio: 1 / 1.6,
       padding: EdgeInsets.all(10.0),
       scrollDirection: Axis.vertical,
       controller: scrollController,
