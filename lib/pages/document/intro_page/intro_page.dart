@@ -22,6 +22,7 @@ class IntroPage extends StatelessWidget {
 
   Widget documentView({BuildContext context, IntroDocumentController state, int index}) {
     return Container(
+      color: Color(0xFFebe4db),
       child: Stack(
         children: [
           // IntroDocumentImage(
@@ -111,6 +112,7 @@ class IntroPage extends StatelessWidget {
       builder: (controller) {
         if (controller.document.isNotEmpty) {
           return Container(
+            color: Colors.transparent,
             child: CarouselSlider.builder(
               options: CarouselOptions(
                 aspectRatio: 2.0,
@@ -208,15 +210,88 @@ class IntroPage extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Container(
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                userInfo(),
-                Expanded(child: noteListView(context)),
-                bottomButtonList(context),
-              ],
-            ),
+          child: Stack(
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                ),
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  userInfo(),
+                  Expanded(child: noteListView(context)),
+                  bottomButtonList(context),
+                ],
+              ),
+            ],
           ),
         ),
       ),
