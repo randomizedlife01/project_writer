@@ -118,6 +118,7 @@ class _MyLifeCreatePopState extends State<MyLifeCreatePop> {
     );
   }
 
+  //TODO: 새 데이터 모델 쓰기 수정 중....
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

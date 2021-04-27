@@ -5,6 +5,7 @@ import 'package:project_writer_v04/models/MyLifeStory.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/component/my_life_create_pop.dart';
 import 'package:project_writer_v04/services/controller/my_life_controller.dart';
 
+//TODO: 새 데이터 모델 읽어오기 수정 중....
 class MyLifePageBody extends StatelessWidget {
   final _scrollController = ScrollController();
   final myLifeController = MyLifeStoryController.to;
@@ -26,7 +27,7 @@ class MyLifePageBody extends StatelessWidget {
           ),
           OutlinedButton(
             style: Theme.of(context).outlinedButtonTheme.style.copyWith(
-                  backgroundColor: MaterialStateProperty.all(Color(0xFF3b4445)),
+                  backgroundColor: MaterialStateProperty.all(Color(0xFFebe4db)),
                 ),
             onPressed: () {
               showDialog(
@@ -137,10 +138,24 @@ class MyLifePageBody extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        seasonList[memoIndex].lifeMemo ?? '',
-                                        style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 20.0, fontWeight: FontWeight.w400),
-                                        textAlign: TextAlign.start,
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              seasonList[memoIndex].lifeMemo ?? '',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1
+                                                  .copyWith(fontSize: 20.0, fontWeight: FontWeight.w400),
+                                              textAlign: TextAlign.start,
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: Icon(Icons.clear),
+                                            onPressed: () =>
+                                                myLifeController.deleteMyStory(id: myLifeController.myLifeStory[memoIndex].lifeMemo),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   );
@@ -164,6 +179,8 @@ class MyLifePageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(myLifeController.myLifeStory);
+    //myLifeController.deleteMyStory(id: 'my_life_4');
     return Container(
       padding: EdgeInsets.all(15.0),
       child: myLifeController.myLifeStory.isEmpty ? nothingInMyLifeStory(context: context) : myLifeStory(context: context),

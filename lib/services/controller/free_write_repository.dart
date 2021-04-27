@@ -26,13 +26,13 @@ class FreeWriteRepository {
   }
 
   Future<IdeaMemo> createIdea({String memo, String tags, String id}) async {
-    final ideaObject = IdeaMemo(
-      id: id,
-      memo: memo,
-      tags: tags,
-    );
-
     try {
+      final ideaObject = IdeaMemo(
+        id: id,
+        memo: memo,
+        tags: tags,
+      );
+
       await Amplify.DataStore.save(ideaObject);
 
       return ideaObject;

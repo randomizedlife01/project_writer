@@ -14,7 +14,6 @@ class SearchBarView extends StatelessWidget {
 
   SearchBarView({Key key, this.isVisible, this.isEnabled}) : super(key: key);
 
-  //TODO: 서치바 디자인 변경중...
   Widget buildFloatingSearchBar(BuildContext context) {
     return FloatingSearchBar(
       hint: 'Search...',

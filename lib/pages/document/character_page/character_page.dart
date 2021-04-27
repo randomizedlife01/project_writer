@@ -91,7 +91,6 @@ class CharactersPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                //TODO: 캐릭터 편집 버튼, 페이지 이동시에 데이터 그대로 갖고 이동하기...
                 IconButton(
                   onPressed: () => Navigator.of(context).pushNamed('/character_write_page', arguments: character),
                   icon: Icon(Icons.edit),

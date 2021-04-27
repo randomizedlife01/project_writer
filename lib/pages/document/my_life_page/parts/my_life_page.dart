@@ -21,6 +21,7 @@ class MyLifePage extends StatelessWidget {
       ),
       body: MyLifePageBody(),
       floatingActionButton: Visibility(
+        //TODO: 새 데이터 모델 읽어오기 수정 후 가져오기....
         visible: myLifeController.myLifeStory.isEmpty ? false : true,
         child: BasicFloatingButton(
           icon: Icons.add,

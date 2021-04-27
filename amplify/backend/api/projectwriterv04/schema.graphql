@@ -1,3 +1,16 @@
+type MyLifeSeason @model @auth(rules: [{allow: public}]) @key(name: "byMyLifeYear", fields: ["mylifeyearID"]) {
+  id: ID!
+  season: String
+  mylifeyearID: ID
+  MyLifeDetails: [MyLifeDetail] @connection(keyName: "byMyLifeSeason", fields: ["id"])
+}
+
+type MyLifeYear @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  year: String
+  MyLifeSeasons: [MyLifeSeason] @connection(keyName: "byMyLifeYear", fields: ["id"])
+}
+
 type CharacterData @model @auth(rules: [{allow: public}]) {
   id: ID!
   motivation: String
@@ -25,13 +38,12 @@ type Document @model @auth(rules: [{allow: public}]) {
   StorySummaries: [StorySummary] @connection(keyName: "byDocument", fields: ["id"])
 }
 
-type MyLifeStory @model @auth(rules: [{allow: public}]) {
+type MyLifeDetail @model @auth(rules: [{allow: public}]) @key(name: "byMyLifeSeason", fields: ["mylifeseasonID"]) {
   id: ID!
   lifeMemo: String!
-  year: String!
   date: String
-  season: String!
   month: String
+  mylifeseasonID: ID
 }
 
 type SearchHistory @model @auth(rules: [{allow: public}]) {

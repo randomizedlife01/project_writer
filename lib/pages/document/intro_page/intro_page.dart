@@ -134,7 +134,7 @@ class IntroPage extends StatelessWidget {
                 child: Text(
                   '아직 저장된\n데이터가 없습니다.',
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w100),
+                  style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w300),
                 ),
               ),
               SizedBox(
@@ -142,7 +142,7 @@ class IntroPage extends StatelessWidget {
               ),
               OutlinedButton(
                 style: Theme.of(context).outlinedButtonTheme.style.copyWith(
-                      backgroundColor: MaterialStateProperty.all(Color(0xFF3b4445)),
+                      backgroundColor: MaterialStateProperty.all(Color(0xFFebe4db)),
                     ),
                 onPressed: () {
                   showDialog(
@@ -204,93 +204,130 @@ class IntroPage extends StatelessWidget {
     );
   }
 
+  Widget backButton({
+    String buttonName,
+    BuildContext context,
+    IconData icon,
+    CrossAxisAlignment crossAlignment,
+    MainAxisAlignment mainAxisAlignment,
+  }) {
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Color(0xFF111f4d)),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisAlignment: mainAxisAlignment,
+            crossAxisAlignment: crossAlignment,
+            children: [
+              Icon(
+                icon,
+                size: 15.0,
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              Text(
+                buttonName,
+                style: Theme.of(context).textTheme.headline4.copyWith(fontSize: 15.0),
+                textAlign: TextAlign.start,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget backLayout(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                backButton(
+                  buttonName: '자유롭게 쓰기',
+                  context: context,
+                  icon: FontAwesomeIcons.fileAlt,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAlignment: CrossAxisAlignment.start,
+                ),
+                backButton(
+                  buttonName: '내 삶의 연표',
+                  context: context,
+                  icon: FontAwesomeIcons.calendar,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAlignment: CrossAxisAlignment.end,
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xFF111f4d)),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xFF111f4d)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                backButton(
+                  buttonName: '캐릭터 만들기',
+                  context: context,
+                  icon: FontAwesomeIcons.users,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAlignment: CrossAxisAlignment.start,
+                ),
+                backButton(
+                  buttonName: '설정(진행중)',
+                  context: context,
+                  icon: FontAwesomeIcons.cog,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAlignment: CrossAxisAlignment.end,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      decoration: BoxDecoration(
+        border: Border.all(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Stack(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                decoration: BoxDecoration(
-                  border: Border.all(),
-                ),
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  userInfo(),
-                  Expanded(child: noteListView(context)),
-                  bottomButtonList(context),
-                ],
-              ),
+              userInfo(),
+              Expanded(child: noteListView(context)),
+              bottomButtonList(context),
             ],
           ),
         ),
