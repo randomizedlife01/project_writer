@@ -69,20 +69,32 @@ class _CharacterWritePageState extends State<CharacterWritePage> {
     return Row(
       children: [
         Expanded(
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton(
-              value: genderValue,
-              onChanged: (String newValue) {
-                setState(() {
-                  genderValue = newValue;
-                });
-              },
-              items: <String>['남성', '여성', '기타'].map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
+          child: Container(
+            height: 44,
+            margin: EdgeInsets.symmetric(vertical: 3.0, horizontal: 0.0),
+            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(
+                color: Color(0xFF020205),
+              ),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton(
+                value: genderValue,
+                style: Theme.of(context).textTheme.bodyText2,
+                onChanged: (String newValue) {
+                  setState(() {
+                    genderValue = newValue;
+                  });
+                },
+                items: <String>['남성', '여성', '기타'].map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
             ),
           ),
         ),
@@ -110,16 +122,18 @@ class _CharacterWritePageState extends State<CharacterWritePage> {
   Widget tendencySlider() {
     return Column(
       children: [
-        Text('성향'),
+        Text('성향', style: Theme.of(context).textTheme.headline4),
         Row(
           children: [
-            Text('선'),
+            Text('선', style: Theme.of(context).textTheme.headline4),
             SizedBox(
               width: 10.0,
             ),
             Expanded(
               child: Slider(
                 value: tendencyValue,
+                activeColor: Color(0xFF020205),
+                inactiveColor: Color(0xFF2B2B57),
                 min: 0,
                 max: 100,
                 onChanged: (newValue) {
@@ -132,7 +146,7 @@ class _CharacterWritePageState extends State<CharacterWritePage> {
             SizedBox(
               width: 10.0,
             ),
-            Text('악'),
+            Text('악', style: Theme.of(context).textTheme.headline4),
           ],
         ),
       ],
@@ -142,83 +156,87 @@ class _CharacterWritePageState extends State<CharacterWritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        controller: scrollController,
-        child: Form(
-          key: _characterKey,
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  nameBar(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  genderAndAge(),
-                  SizedBox(
-                    height: 40,
-                  ),
-                  motivationForm(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  descriptionForm(),
-                  tendencySlider(),
-                  SizedBox(
-                    height: 40,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(backgroundColor: Colors.transparent),
-                            child: Text("취 소"),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: GetBuilder<CharactersController>(
-                            builder: (controller) {
-                              return ElevatedButton(
-                                child: Text("저 장"),
-                                onPressed: () {
-                                  if (_characterKey.currentState.validate()) {
-                                    _characterKey.currentState.save();
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            controller: scrollController,
+            child: Form(
+              key: _characterKey,
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      nameBar(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      genderAndAge(),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      motivationForm(),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      descriptionForm(),
+                      tendencySlider(),
+                      SizedBox(
+                        height: 40,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton(
+                                style: OutlinedButton.styleFrom(backgroundColor: Colors.transparent),
+                                child: Text("취 소"),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: GetBuilder<CharactersController>(
+                                builder: (controller) {
+                                  return ElevatedButton(
+                                    child: Text("저 장"),
+                                    onPressed: () {
+                                      if (_characterKey.currentState.validate()) {
+                                        _characterKey.currentState.save();
 
-                                    if (controller.myCharacters.isNotEmpty) {
-                                      final lastId = controller.myCharacters.last.id;
-                                      final number = lastId.split("_").last;
-                                      _lastMyCharacterIdNum = int.parse(number);
-                                    }
+                                        if (controller.myCharacters.isNotEmpty) {
+                                          final lastId = controller.myCharacters.last.id;
+                                          final number = lastId.split("_").last;
+                                          _lastMyCharacterIdNum = int.parse(number);
+                                        }
 
-                                    controller.createMyCharacter(
-                                      id: 'my_character_' + (_lastMyCharacterIdNum + 1).toString(),
-                                      motivation: _motiveController.text,
-                                      description: _descController.text,
-                                      name: _nameController.text,
-                                      gender: genderValue,
-                                      age: _ageController.text,
-                                      tendency: tendencyValue.toInt(),
-                                    );
+                                        controller.createMyCharacter(
+                                          id: 'my_character_' + (_lastMyCharacterIdNum + 1).toString(),
+                                          motivation: _motiveController.text,
+                                          description: _descController.text,
+                                          name: _nameController.text,
+                                          gender: genderValue,
+                                          age: _ageController.text,
+                                          tendency: tendencyValue.toInt(),
+                                        );
 
-                                    Navigator.pop(context);
-                                  }
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                  );
                                 },
-                              );
-                            },
-                          ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  )
-                ],
+                      )
+                    ],
+                  ),
+                ),
               ),
             ),
           ),

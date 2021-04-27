@@ -14,16 +14,22 @@ class SearchBarView extends StatelessWidget {
 
   SearchBarView({Key key, this.isVisible, this.isEnabled}) : super(key: key);
 
-  Widget buildFloatingSearchBar() {
+  //TODO: 서치바 디자인 변경중...
+  Widget buildFloatingSearchBar(BuildContext context) {
     return FloatingSearchBar(
       hint: 'Search...',
+      hintStyle: Theme.of(context).textTheme.bodyText1,
+      queryStyle: Theme.of(context).textTheme.bodyText1,
       controller: controller,
       scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
       transitionDuration: const Duration(milliseconds: 800),
       transitionCurve: Curves.easeInOut,
       physics: const BouncingScrollPhysics(),
+      backgroundColor: Color(0xFFebe4db),
+      elevation: 0.0,
       openAxisAlignment: 0.0,
       debounceDelay: const Duration(milliseconds: 500),
+      border: BorderSide(),
       onQueryChanged: (query) {
         freeWriteController.filterSearchTerms(query: query);
       },
@@ -37,7 +43,7 @@ class SearchBarView extends StatelessWidget {
         FloatingSearchBarAction(
           showIfOpened: false,
           child: CircularButton(
-            icon: const Icon(Icons.place),
+            icon: const Icon(Icons.search),
             onPressed: () {},
           ),
         ),
@@ -49,8 +55,8 @@ class SearchBarView extends StatelessWidget {
         return ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Material(
-            color: Colors.white,
-            elevation: 4.0,
+            color: Color(0xFFf2f4f7),
+            elevation: 0.0,
             child: GetBuilder<FreeWriteController>(
               builder: (writeController) {
                 return Builder(
@@ -77,16 +83,16 @@ class SearchBarView extends StatelessWidget {
                                   term.searchHistory,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context).textTheme.bodyText2.copyWith(color: Color(0xFF3b4445)),
+                                  style: Theme.of(context).textTheme.bodyText2,
                                 ),
                                 leading: const Icon(
                                   Icons.search,
-                                  color: Color(0xFF3b4445),
+                                  color: Color(0xFF111f4d),
                                 ),
                                 trailing: IconButton(
                                   icon: Icon(
                                     Icons.clear,
-                                    color: Color(0xFF3b4445),
+                                    color: Color(0xFF111f4d),
                                   ),
                                   onPressed: () {
                                     writeController.deleteTag(id: term.id);
@@ -143,7 +149,7 @@ class SearchBarView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return buildFloatingSearchBar();
+    return buildFloatingSearchBar(context);
   }
 }
 
@@ -172,7 +178,7 @@ class SearchResultsListView extends StatelessWidget {
             separatorBuilder: (context, index) {
               return Divider(
                 height: 50.0,
-                color: Colors.white,
+                color: Color(0xFF111f4d),
                 indent: 150.0,
                 endIndent: 150.0,
               );
@@ -244,15 +250,15 @@ class SearchResultsListView extends StatelessWidget {
                         if (tags.isNotEmpty) {
                           return Container(
                             margin: const EdgeInsets.only(top: 15.0, right: 10.0),
-                            padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 15.0),
+                            padding: const EdgeInsets.fromLTRB(7, 3, 7, 3),
                             decoration: BoxDecoration(
-                              border: Border.all(color: Color(0xFF6c5c7a)),
-                              color: Color(0xFF6c5c7a),
-                              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                              border: Border.all(color: Color(0xFF111f4d)),
+                              //color: Color(0xFF111f4d),
+                              borderRadius: BorderRadius.all(Radius.circular(13.0)),
                             ),
                             child: Text(
                               '#' + tags[index],
-                              style: Theme.of(context).textTheme.bodyText2.copyWith(color: Color(0xFFfae3da), fontSize: 14.0),
+                              style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 13.0),
                             ),
                           );
                         } else {

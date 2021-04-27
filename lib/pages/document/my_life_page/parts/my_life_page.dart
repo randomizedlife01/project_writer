@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:project_writer_v04/models/ModelProvider.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/component/my_life_body.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/component/my_life_create_pop.dart';

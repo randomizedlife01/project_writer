@@ -6,9 +6,7 @@ import 'package:get/get.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/pages/document/intro_page/component/intro_doc_create_pop.dart';
 import 'package:project_writer_v04/pages/document/intro_page/component/intro_parts.dart';
-import 'package:project_writer_v04/pages/document/story_page/story_page.dart';
 import 'package:project_writer_v04/services/controller/intro_page_controller.dart';
-import 'package:project_writer_v04/services/controller/story_summary_controller.dart';
 
 class IntroPage extends StatelessWidget {
   final VoidCallback shouldLogOut;
@@ -26,32 +24,35 @@ class IntroPage extends StatelessWidget {
     return Container(
       child: Stack(
         children: [
-          IntroDocumentImage(
-            imagePath: 'assets/images/basic_book_cover.jpg',
-          ),
+          // IntroDocumentImage(
+          //   imagePath: 'assets/images/basic_book_cover.jpg',
+          // ),
           Container(
-            foregroundDecoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                  'assets/images/basic_book_cover.jpg',
-                ),
-                fit: BoxFit.cover,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.5),
-                  spreadRadius: 2,
-                  blurRadius: 5,
-                  offset: Offset(5, 5),
-                ),
-              ],
+            decoration: BoxDecoration(
+              border: Border.all(color: Color(0xFF1D407F), width: 4.0),
+              color: Colors.transparent, //add it here
             ),
-            alignment: Alignment.center,
+            // foregroundDecoration: BoxDecoration(
+            //   image: DecorationImage(
+            //     image: AssetImage(
+            //       'assets/images/basic_book_cover.jpg',
+            //     ),
+            //     fit: BoxFit.cover,
+            //   ),
+            //   boxShadow: [
+            //     BoxShadow(
+            //       color: Colors.black.withOpacity(0.5),
+            //       spreadRadius: 2,
+            //       blurRadius: 5,
+            //       offset: Offset(5, 5),
+            //     ),
+            //   ],
+            // ),
+            // alignment: Alignment.center,
           ),
           Container(
             padding: EdgeInsets.all(15.0),
             child: Container(
-              color: Colors.black.withOpacity(0.8),
               width: double.infinity,
               child: Padding(
                 padding: EdgeInsets.all(10.0),
@@ -61,25 +62,33 @@ class IntroPage extends StatelessWidget {
                   children: [
                     Text(
                       state.document[index].docName,
-                      style: Theme.of(context).textTheme.headline1,
+                      style: Theme.of(context).textTheme.headline1.copyWith(color: Color(0xFF1D407F)),
                     ),
                     SizedBox(
                       height: 10.0,
                     ),
                     Text(
                       'by',
-                      style: Theme.of(context).textTheme.subtitle1,
+                      style: Theme.of(context).textTheme.headline2.copyWith(color: Color(0xFF1D407F)),
                     ),
                     Text(
                       'Username',
-                      style: Theme.of(context).textTheme.subtitle1,
+                      style: Theme.of(context).textTheme.headline2.copyWith(color: Color(0xFF1D407F)),
                     ),
                     SizedBox(
                       height: 8.0,
                     ),
-                    Text(state.document[index].docDesc),
-                    SizedBox(
-                      height: 15.0,
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Text(
+                            state.document[index].docDesc,
+                            style: Theme.of(context).textTheme.subtitle1.copyWith(color: Color(0xFF1D407F)),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),

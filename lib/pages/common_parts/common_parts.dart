@@ -63,7 +63,7 @@ class BasicAppBar extends StatelessWidget {
       ),
       title: Text(
         appBarTitle,
-        style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w200, fontSize: 20.0),
+        style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w400, fontSize: 20.0),
       ),
     );
   }
@@ -85,32 +85,33 @@ class BasicFloatingButton extends StatelessWidget {
         onPressed: onPressed,
         child: Center(
           child: Container(
-            width: 45,
-            height: 45,
+            width: 50,
+            height: 50,
             child: Icon(
               icon,
-              size: 25.0,
+              size: 40.0,
+              color: Color(0xFF111f4d),
             ),
-            decoration: BoxDecoration(
-              color: Color(0xFF3b4445),
-              borderRadius: BorderRadius.all(
-                Radius.circular(40),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Color(0xFF181c1c),
-                  offset: Offset(4.0, 4.0),
-                  blurRadius: 15.0,
-                  spreadRadius: 1.0,
-                ),
-                BoxShadow(
-                  color: Color(0xFF596769),
-                  offset: Offset(-4.0, -4.0),
-                  blurRadius: 15.0,
-                  spreadRadius: 1.0,
-                ),
-              ],
-            ),
+            // decoration: BoxDecoration(
+            //   color: Color(0xFF111f4d),
+            //   borderRadius: BorderRadius.all(
+            //     Radius.circular(40),
+            //   ),
+            //   // boxShadow: [
+            //   //   BoxShadow(
+            //   //     color: Color(0xFF181c1c),
+            //   //     offset: Offset(4.0, 4.0),
+            //   //     blurRadius: 15.0,
+            //   //     spreadRadius: 1.0,
+            //   //   ),
+            //   //   BoxShadow(
+            //   //     color: Color(0xFF596769),
+            //   //     offset: Offset(-4.0, -4.0),
+            //   //     blurRadius: 15.0,
+            //   //     spreadRadius: 1.0,
+            //   //   ),
+            //   // ],
+            // ),
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -127,7 +128,7 @@ class BasicVerticalLine extends StatelessWidget {
     return VerticalDivider(
       indent: 40.0,
       endIndent: 40.0,
-      color: Color(0xFFc4d6cb),
+      color: Color(0xFF020205),
       width: 8.0,
     );
   }
@@ -174,12 +175,12 @@ class DocInputForm extends StatelessWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFFe23e57),
+            color: Color(0xFF020205),
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
-            color: Color(0xFFe23e57),
+            color: Color(0xFF020205),
           ),
         ),
         hintText: hintText,
@@ -193,7 +194,7 @@ class DocInputForm extends StatelessWidget {
         labelStyle: TextStyle(
           fontSize: 12.0,
           fontFamily: 'GothicA1',
-          color: Color(0xFFc06c84),
+          color: Color(0xFF34346F),
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -402,8 +403,8 @@ class DeletePopup extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12.0,
                         fontFamily: 'GothicA1',
-                        fontWeight: FontWeight.w200,
-                        color: Color(0xFFe23e57),
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF020205),
                       ),
                     ),
                     SizedBox(

@@ -23,12 +23,13 @@ class IntroDocumentButton extends StatelessWidget {
         hasLabel: true,
         labelText: "스토리 속으로",
         currentButton: FloatingActionButton(
+          elevation: 0.0,
           //heroTag: "doc-add",
-          backgroundColor: Color(0xFFF8FEE9),
+          backgroundColor: Color(0xFF1C4998),
           mini: true,
           child: Icon(
             FontAwesomeIcons.book,
-            color: Color(0xFF252a34),
+            color: Color(0xFFebe4db),
             size: 16.0,
           ),
           onPressed: () {
@@ -37,7 +38,7 @@ class IntroDocumentButton extends StatelessWidget {
           },
         ),
         labelBackgroundColor: Colors.transparent,
-        labelColor: Color(0xFFF8FEE9),
+        labelColor: Color(0xFF1C4998),
         labelHasShadow: false,
       ),
     );
@@ -46,12 +47,13 @@ class IntroDocumentButton extends StatelessWidget {
         hasLabel: true,
         labelText: "표지 편집",
         currentButton: FloatingActionButton(
+          elevation: 0.0,
           heroTag: "doc-edit",
-          backgroundColor: Color(0xFFF8FEE9),
+          backgroundColor: Color(0xFF1C4998),
           mini: true,
           child: Icon(
             FontAwesomeIcons.edit,
-            color: Color(0xFF252a34),
+            color: Color(0xFFebe4db),
             size: 16.0,
           ),
           onPressed: () {
@@ -60,7 +62,7 @@ class IntroDocumentButton extends StatelessWidget {
           },
         ),
         labelBackgroundColor: Colors.transparent,
-        labelColor: Color(0xFFF8FEE9),
+        labelColor: Color(0xFF1C4998),
         labelHasShadow: false,
       ),
     );
@@ -69,8 +71,9 @@ class IntroDocumentButton extends StatelessWidget {
         hasLabel: true,
         labelText: "문서 삭제",
         currentButton: FloatingActionButton(
+          elevation: 0.0,
           heroTag: "doc-delete",
-          backgroundColor: Color(0xFFF8FEE9),
+          backgroundColor: Color(0xFF1C4998),
           mini: true,
           child: Icon(
             FontAwesomeIcons.trashAlt,
@@ -104,7 +107,8 @@ class IntroDocumentButton extends StatelessWidget {
       child: SizedBox(
         height: MediaQuery.of(context).size.height * 0.65,
         child: UnicornDialer(
-            backgroundColor: Color.fromRGBO(0, 0, 0, 0.8),
+            parentButtonBackground: Color(0xFF1D407F),
+            //backgroundColor: Color(0xFF1D407F),
             orientation: UnicornOrientation.VERTICAL,
             parentButton: Icon(
               Icons.list,

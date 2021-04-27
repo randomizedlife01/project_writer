@@ -8,7 +8,6 @@ import 'package:project_writer_v04/pages/document/character_page/character_page.
 import 'package:project_writer_v04/pages/document/character_page/character_write_page.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/free_write_page.dart';
 import 'package:project_writer_v04/pages/document/import_page/import_page.dart';
-import 'package:project_writer_v04/pages/document/intro_page/component/intro_parts.dart';
 import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
 import 'package:project_writer_v04/pages/document/story_page/story_detail_page.dart';
 import 'package:project_writer_v04/services/controller/auth_bloc.dart';

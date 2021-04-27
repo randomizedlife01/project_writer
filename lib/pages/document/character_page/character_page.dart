@@ -38,8 +38,13 @@ class CharactersPage extends StatelessWidget {
   List<Card> _buildCharacterList(BuildContext context) {
     return characterController.myCharacters.map((character) {
       return Card(
-        color: Color(0xFFF8FEE9),
+        shadowColor: Colors.transparent,
+        color: Colors.transparent,
         clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          side: BorderSide(color: Color(0xFF111f4d), width: 1),
+          borderRadius: BorderRadius.circular(8),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -52,7 +57,7 @@ class CharactersPage extends StatelessWidget {
                     Expanded(
                       child: Text(
                         character.name,
-                        style: Theme.of(context).textTheme.headline2.copyWith(color: Color(0xFF3b4445)),
+                        style: Theme.of(context).textTheme.headline2.copyWith(color: Color(0xFF111f4d), fontWeight: FontWeight.w500),
                       ),
                     ),
                     SizedBox(height: 20.0),
@@ -63,16 +68,19 @@ class CharactersPage extends StatelessWidget {
                         Text(
                           '성별 :' + character.gender,
                           maxLines: 1,
+                          style: Theme.of(context).textTheme.bodyText2,
                         ),
                         SizedBox(height: 8.0),
                         Text(
                           '나이 :' + character.age,
                           maxLines: 1,
+                          style: Theme.of(context).textTheme.bodyText2,
                         ),
                         SizedBox(height: 8.0),
                         Text(
                           '모티브 :\n' + character.motivation,
                           maxLines: null,
+                          style: Theme.of(context).textTheme.bodyText2,
                         ),
                       ],
                     ),

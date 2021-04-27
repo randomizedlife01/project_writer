@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:project_writer_v04/services/controller/character_controller.dart';
 import 'package:project_writer_v04/services/controller/story_summary_repository.dart';

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/pages/document/free_write_page/component/free_search_bar.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/component/my_life_body.dart';
-import 'package:project_writer_v04/pages/document/my_life_page/parts/my_life_page.dart';
 import 'package:project_writer_v04/services/controller/free_write_controller.dart';
 import 'package:project_writer_v04/services/controller/my_life_controller.dart';
 

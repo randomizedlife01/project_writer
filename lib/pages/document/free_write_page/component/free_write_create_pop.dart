@@ -58,7 +58,7 @@ class FreeWriteCreatePop extends StatelessWidget {
                                   Expanded(
                                     child: OutlinedButton(
                                       child: Text("취 소"),
-                                      onPressed: () {},
+                                      onPressed: () => Navigator.pop(context),
                                     ),
                                   ),
                                   SizedBox(

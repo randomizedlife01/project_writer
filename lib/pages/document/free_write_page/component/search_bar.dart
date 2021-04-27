@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
-import 'package:project_writer_v04/pages/document/free_write_page/component/free_write_parts.dart';
 
 class SearchBarView<T> extends StatefulWidget {
   final String searchTerm;

@@ -40,7 +40,7 @@ class IntroDocumentController extends GetxController {
 
   updateDoc({String id, String docName, String docDesc}) async {
     try {
-      final data = await introDocumentRepository.update(id: id, docName: docName, docDesc: docDesc);
+      await introDocumentRepository.update(id: id, docName: docName, docDesc: docDesc);
     } catch (e) {
       print(e);
     }
