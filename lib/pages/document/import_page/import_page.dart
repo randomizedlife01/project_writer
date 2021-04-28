@@ -43,8 +43,8 @@ class _ImportPageState extends State<ImportPage> with SingleTickerProviderStateM
               () => Column(
                 children: [
                   TextButton(
-                    onPressed: () => print(myLifeController.myLifeStory.value[index].lifeMemo),
-                    child: Text(myLifeController.myLifeStory.value[index].lifeMemo),
+                    onPressed: () => print(myLifeController.myLifeStory[index].lifeMemo),
+                    child: Text(myLifeController.myLifeStory[index].lifeMemo),
                   )
                 ],
               ),
