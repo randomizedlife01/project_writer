@@ -19,32 +19,26 @@ import 'package:amplify_datastore_plugin_interface/amplify_datastore_plugin_inte
 import 'CharacterData.dart';
 import 'Document.dart';
 import 'IdeaMemo.dart';
-import 'MyLifeDetail.dart';
-import 'MyLifeSeason.dart';
-import 'MyLifeYear.dart';
+import 'MyLifeStory.dart';
 import 'SearchHistory.dart';
 import 'StorySummary.dart';
 
 export 'CharacterData.dart';
 export 'Document.dart';
 export 'IdeaMemo.dart';
-export 'MyLifeDetail.dart';
-export 'MyLifeSeason.dart';
-export 'MyLifeYear.dart';
+export 'MyLifeStory.dart';
 export 'SearchHistory.dart';
 export 'StorySummary.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "3e5b294e5263d04e3134dc8af0746269";
+  String version = "06a5aa78c0d369931938957b5474a52b";
   @override
   List<ModelSchema> modelSchemas = [
     CharacterData.schema,
     Document.schema,
     IdeaMemo.schema,
-    MyLifeDetail.schema,
-    MyLifeSeason.schema,
-    MyLifeYear.schema,
+    MyLifeStory.schema,
     SearchHistory.schema,
     StorySummary.schema
   ];
@@ -69,19 +63,9 @@ class ModelProvider implements ModelProviderInterface {
           return IdeaMemo.classType;
         }
         break;
-      case "MyLifeDetail":
+      case "MyLifeStory":
         {
-          return MyLifeDetail.classType;
-        }
-        break;
-      case "MyLifeSeason":
-        {
-          return MyLifeSeason.classType;
-        }
-        break;
-      case "MyLifeYear":
-        {
-          return MyLifeYear.classType;
+          return MyLifeStory.classType;
         }
         break;
       case "SearchHistory":

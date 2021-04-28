@@ -25,8 +25,8 @@ class MyLifeStory extends Model {
   final String id;
   final String lifeMemo;
   final String year;
-  final String date;
   final String season;
+  final String date;
   final String month;
 
   @override
@@ -40,24 +40,24 @@ class MyLifeStory extends Model {
   const MyLifeStory._internal(
       {@required this.id,
       @required this.lifeMemo,
-      @required this.year,
+      this.year,
+      this.season,
       this.date,
-      @required this.season,
       this.month});
 
   factory MyLifeStory(
       {String id,
       @required String lifeMemo,
-      @required String year,
+      String year,
+      String season,
       String date,
-      @required String season,
       String month}) {
     return MyLifeStory._internal(
         id: id == null ? UUID.getUUID() : id,
         lifeMemo: lifeMemo,
         year: year,
-        date: date,
         season: season,
+        date: date,
         month: month);
   }
 
@@ -72,8 +72,8 @@ class MyLifeStory extends Model {
         id == other.id &&
         lifeMemo == other.lifeMemo &&
         year == other.year &&
-        date == other.date &&
         season == other.season &&
+        date == other.date &&
         month == other.month;
   }
 
@@ -88,8 +88,8 @@ class MyLifeStory extends Model {
     buffer.write("id=" + "$id" + ", ");
     buffer.write("lifeMemo=" + "$lifeMemo" + ", ");
     buffer.write("year=" + "$year" + ", ");
-    buffer.write("date=" + "$date" + ", ");
     buffer.write("season=" + "$season" + ", ");
+    buffer.write("date=" + "$date" + ", ");
     buffer.write("month=" + "$month");
     buffer.write("}");
 
@@ -100,15 +100,15 @@ class MyLifeStory extends Model {
       {String id,
       String lifeMemo,
       String year,
-      String date,
       String season,
+      String date,
       String month}) {
     return MyLifeStory(
         id: id ?? this.id,
         lifeMemo: lifeMemo ?? this.lifeMemo,
         year: year ?? this.year,
-        date: date ?? this.date,
         season: season ?? this.season,
+        date: date ?? this.date,
         month: month ?? this.month);
   }
 
@@ -116,24 +116,24 @@ class MyLifeStory extends Model {
       : id = json['id'],
         lifeMemo = json['lifeMemo'],
         year = json['year'],
-        date = json['date'],
         season = json['season'],
+        date = json['date'],
         month = json['month'];
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'lifeMemo': lifeMemo,
         'year': year,
-        'date': date,
         'season': season,
+        'date': date,
         'month': month
       };
 
   static final QueryField ID = QueryField(fieldName: "myLifeStory.id");
   static final QueryField LIFEMEMO = QueryField(fieldName: "lifeMemo");
   static final QueryField YEAR = QueryField(fieldName: "year");
-  static final QueryField DATE = QueryField(fieldName: "date");
   static final QueryField SEASON = QueryField(fieldName: "season");
+  static final QueryField DATE = QueryField(fieldName: "date");
   static final QueryField MONTH = QueryField(fieldName: "month");
   static var schema =
       Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
@@ -158,17 +158,17 @@ class MyLifeStory extends Model {
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: MyLifeStory.YEAR,
-        isRequired: true,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: MyLifeStory.DATE,
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: MyLifeStory.SEASON,
-        isRequired: true,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: MyLifeStory.DATE,
+        isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(

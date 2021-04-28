@@ -5,7 +5,6 @@ import 'package:project_writer_v04/models/MyLifeStory.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/component/my_life_create_pop.dart';
 import 'package:project_writer_v04/services/controller/my_life_controller.dart';
 
-//TODO: 새 데이터 모델 읽어오기 수정 중....
 class MyLifePageBody extends StatelessWidget {
   final _scrollController = ScrollController();
   final myLifeController = MyLifeStoryController.to;
@@ -72,9 +71,14 @@ class MyLifePageBody extends StatelessWidget {
         scrollDirection: Axis.vertical,
         itemCount: years.length,
         itemBuilder: (context, yearIndex) {
-          List<MyLifeStory> yearList = myLifeController.myLifeStory.value
-              .where((element) => element.year == myLifeController.myLifeStory.value[yearIndex].year)
-              .toList();
+          var yearData = myLifeController.myLifeStory.value.where((element) => element.year == years[yearIndex]).toList();
+          var seasons = [];
+          yearData.forEach((element) {
+            if (!seasons.contains(element.season)) {
+              seasons.add(element.season);
+            }
+          });
+          print('1 : ${seasons.length}');
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 0.0),
             child: ListTile(
@@ -105,18 +109,27 @@ class MyLifePageBody extends StatelessWidget {
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     scrollDirection: Axis.vertical,
-                    itemCount: yearList.length,
+                    itemCount: seasons.length,
                     itemBuilder: (context, seasonIndex) {
-                      List<MyLifeStory> seasonList = yearList.where((element) => element.season == yearList[seasonIndex].season).toList();
-                      if (yearList[seasonIndex].season == '1') {
-                        seasonToHangul = '봄';
-                      } else if (yearList[seasonIndex].season == '2') {
-                        seasonToHangul = '여름';
-                      } else if (yearList[seasonIndex].season == '3') {
-                        seasonToHangul = '가을';
-                      } else {
-                        seasonToHangul = '겨울';
-                      }
+                      //TODO: 시즌 길이가 안 맞음... 왜?
+                      var seasonData = yearData.where((element) => element.season == seasons[seasonIndex]).toList();
+                      print('2 : $seasonData');
+                      //print('index : ${seasonIndex}');
+                      // if (seasonData[seasonIndex].season == '1') {
+                      //   seasonToHangul = '봄';
+                      // } else if (seasonData[seasonIndex].season == '2') {
+                      //   seasonToHangul = '여름';
+                      // } else if (seasonData[seasonIndex].season == '3') {
+                      //   seasonToHangul = '가을';
+                      // } else {
+                      //   seasonToHangul = '겨울';
+                      // }
+                      var lifeMemo = [];
+                      seasonData.forEach((element) {
+                        if (!lifeMemo.contains(element.lifeMemo)) {
+                          lifeMemo.add(element.lifeMemo);
+                        }
+                      });
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -132,7 +145,7 @@ class MyLifePageBody extends StatelessWidget {
                             Expanded(
                               child: ListView.builder(
                                 shrinkWrap: true,
-                                itemCount: seasonList.length,
+                                itemCount: lifeMemo.length,
                                 itemBuilder: (context, memoIndex) {
                                   return Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
@@ -142,7 +155,7 @@ class MyLifePageBody extends StatelessWidget {
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              seasonList[memoIndex].lifeMemo ?? '',
+                                              lifeMemo[memoIndex] ?? '',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyText1
@@ -165,7 +178,6 @@ class MyLifePageBody extends StatelessWidget {
                           ],
                         ),
                       );
-                      //return Text(yearList[seasonIndex].season.toString());
                     },
                   ),
                 ],
@@ -179,8 +191,7 @@ class MyLifePageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(myLifeController.myLifeStory);
-    //myLifeController.deleteMyStory(id: 'my_life_4');
+    //myLifeController.deleteMyStory(id: 'my_life_6');
     return Container(
       padding: EdgeInsets.all(15.0),
       child: myLifeController.myLifeStory.isEmpty ? nothingInMyLifeStory(context: context) : myLifeStory(context: context),
