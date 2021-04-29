@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project_writer_v04/landing_page.dart';
 import 'package:project_writer_v04/models/CharacterData.dart';
+import 'package:project_writer_v04/models/ModelProvider.dart';
 import 'package:project_writer_v04/pages/auth_pages/login_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/signup_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/verification_page.dart';
@@ -9,6 +10,7 @@ import 'package:project_writer_v04/pages/document/character_page/character_write
 import 'package:project_writer_v04/pages/document/free_write_page/free_write_page.dart';
 import 'package:project_writer_v04/pages/document/import_page/import_page.dart';
 import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
+import 'package:project_writer_v04/pages/document/my_life_page/parts/my_life_write_page.dart';
 import 'package:project_writer_v04/pages/document/story_page/story_detail_page.dart';
 import 'package:project_writer_v04/services/controller/auth_bloc.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/my_life_page.dart';
@@ -25,6 +27,12 @@ class CharacterArgument {
   final CharacterData characterData;
 
   CharacterArgument(this.characterData);
+}
+
+class MyLifeStoryArgument {
+  final MyLifeStory myLifeStory;
+
+  MyLifeStoryArgument(this.myLifeStory);
 }
 
 class AppRouter {
@@ -90,6 +98,10 @@ class AppRouter {
         break;
       case '/story_detail_page':
         return MaterialPageRoute(builder: (_) => StoryDetailPage());
+        break;
+      case '/my_life_detail_page':
+        final MyLifeStory args = routeSettings.arguments as MyLifeStory;
+        return MaterialPageRoute(builder: (_) => MyLifeDetailPage(myLifeStory: args));
         break;
       default:
         return null;

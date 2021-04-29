@@ -4,7 +4,7 @@ import 'package:project_writer_v04/models/ModelProvider.dart';
 import 'package:project_writer_v04/services/controller/my_life_repository.dart';
 
 class MyLifeStoryController extends GetxController {
-  List<MyLifeStory> myLifeStory = [];
+  final myLifeStory = [].obs;
 
   final MyLifeRepository myLifeRepository = MyLifeRepository();
 
@@ -18,8 +18,7 @@ class MyLifeStoryController extends GetxController {
 
   readMyStory() async {
     try {
-      myLifeStory = await myLifeRepository.readMyStory();
-      update();
+      myLifeStory(await myLifeRepository.readMyStory());
     } catch (e) {
       print(e);
     }
@@ -44,7 +43,6 @@ class MyLifeStoryController extends GetxController {
         day: day,
       );
       myLifeStory.add(data);
-      update();
     } catch (e) {
       print(e);
     }
@@ -60,7 +58,6 @@ class MyLifeStoryController extends GetxController {
     try {
       final data = await myLifeRepository.deleteMyStory(id: id);
       myLifeStory.remove(data);
-      update();
     } catch (e) {
       print(e);
     }

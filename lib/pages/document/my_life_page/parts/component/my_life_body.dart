@@ -48,7 +48,7 @@ class MyLifePageBody extends StatelessWidget {
   Widget myLifeStory({BuildContext context}) {
     String seasonToHangul = '';
     var years = [];
-    myLifeController.myLifeStory.forEach((element) {
+    myLifeController.myLifeStory.value.forEach((element) {
       if (!years.contains(element.year)) {
         years.add(element.year);
       }
@@ -71,7 +71,7 @@ class MyLifePageBody extends StatelessWidget {
       scrollDirection: Axis.vertical,
       itemCount: years.length,
       itemBuilder: (context, yearIndex) {
-        yearData = myLifeController.myLifeStory.where((element) => element.year == years[yearIndex]).toList();
+        yearData = myLifeController.myLifeStory.value.where((element) => element.year == years[yearIndex]).toList();
         var seasons = [];
         yearData.forEach((element) {
           if (!seasons.contains(element.season)) {
@@ -119,7 +119,6 @@ class MyLifePageBody extends StatelessWidget {
                     } else {
                       seasonToHangul = '겨울';
                     }
-                    //TODO: 돌겠군....
                     final seasonData = yearData.where((element) => element.season == seasons[seasonIndex]).toList();
                     var lifeMemo = [];
                     seasonData.forEach((element) {
@@ -158,7 +157,13 @@ class MyLifePageBody extends StatelessWidget {
                                   ),
                                   IconButton(
                                     icon: Icon(Icons.clear),
-                                    onPressed: () => myLifeController.deleteMyStory(id: myLifeController.myLifeStory[memoIndex].id),
+                                    onPressed: () {
+                                      final data = myLifeController.myLifeStory.value
+                                          .where((element) => element.lifeMemo == lifeMemo[memoIndex])
+                                          .toList();
+
+                                      myLifeController.deleteMyStory(id: data.first.id);
+                                    },
                                   ),
                                 ],
                               );
@@ -182,7 +187,9 @@ class MyLifePageBody extends StatelessWidget {
     //myLifeController.deleteMyStory(id: 'my_life_6');
     return Container(
       padding: EdgeInsets.all(15.0),
-      child: myLifeController.myLifeStory.isEmpty ? nothingInMyLifeStory(context: context) : myLifeStory(context: context),
+      child: myLifeController.myLifeStory.isEmpty
+          ? Obx(() => nothingInMyLifeStory(context: context))
+          : Obx(() => myLifeStory(context: context)),
     );
   }
 }
