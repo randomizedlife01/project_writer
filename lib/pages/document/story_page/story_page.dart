@@ -47,12 +47,19 @@ class StoryPage extends StatelessWidget {
     );
   }
 
-  Widget dropDownButton(BuildContext context, String id, String summary, String storyDetail) {
+  Widget dropDownButton({BuildContext context, String id, String summary, String storyDetail, String time, String space, String weather}) {
     return DropDownButtons(
       getDocId: documentId,
       context: context,
       onAddDetailTap: () {
-        storySummaryController.getSummaryData(id: id, summary: summary, storyDetail: storyDetail);
+        storySummaryController.getSummaryData(
+          id: id,
+          summary: summary,
+          storyDetail: storyDetail,
+          time: time,
+          space: space,
+          weather: weather,
+        );
         Navigator.of(context).pushNamed('/story_detail_page');
       },
       onImportTap: () => Navigator.of(context).pushNamed('/import_page'),
@@ -77,7 +84,7 @@ class StoryPage extends StatelessWidget {
       shrinkWrap: true,
       controller: _scrollController,
       itemCount: storySummaryController.summaries.length + 1,
-      separatorBuilder: (context, index) => Divider(),
+      separatorBuilder: (context, index) => Divider(color: Color(0xFF111f4d)),
       itemBuilder: (context, index) {
         final widgetItem = index == storySummaryController.summaries.length
             ? Visibility(
@@ -96,6 +103,9 @@ class StoryPage extends StatelessWidget {
                   onImportTap: () {
                     Navigator.of(context).pushNamed('/import_page');
                   },
+                  onSwitchingTap: () {
+                    storySummaryController.changeSummaryVisible(isVisible: !storySummaryController.summaryVisible.value);
+                  },
                 ),
               )
             : InkWell(
@@ -104,28 +114,76 @@ class StoryPage extends StatelessWidget {
                   child: Obx(
                     () => Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(storySummaryController.summaries[index].time),
-                            SizedBox(width: 5.0),
-                            Text(storySummaryController.summaries[index].space),
-                            SizedBox(width: 5.0),
-                            Text(storySummaryController.summaries[index].weather),
-                          ],
+                        Visibility(
+                          visible: storySummaryController.summaryVisible.value,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 50.0,
+                                child: Text(
+                                  storySummaryController.summaries[index].time,
+                                  style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 14.0),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Container(height: 20.0, child: BasicVerticalLine(width: 5.0)),
+                              Expanded(
+                                child: Text(
+                                  storySummaryController.summaries[index].space,
+                                  style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 14.0),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Container(height: 20.0, child: BasicVerticalLine(width: 5.0)),
+                              Container(
+                                width: 50.0,
+                                child: Text(
+                                  storySummaryController.summaries[index].weather,
+                                  style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 14.0),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        Text(storySummaryController.summaries.value[index].storySummary),
+                        SizedBox(height: 15.0),
+                        Visibility(
+                          visible: storySummaryController.summaryVisible.value,
+                          child: Text(
+                            storySummaryController.summaries.value[index].storySummary,
+                            style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 14.0),
+                          ),
+                        ),
                         SizedBox(height: 10.0),
-                        Text(storySummaryController.summaries.value[index].storyDetail ?? ''),
+                        Visibility(
+                          visible: storySummaryController.summaryVisible.value,
+                          child: Divider(
+                            height: 20.0,
+                            color: Color(0xFF020205),
+                            indent: 150.0,
+                            endIndent: 150.0,
+                          ),
+                        ),
+                        Text(
+                          storySummaryController.summaries.value[index].storyDetail ?? '',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText2
+                              .copyWith(fontFamily: 'NotoSerifKR', fontSize: 18.0, fontWeight: FontWeight.w300),
+                        ),
                         SizedBox(height: 10.0),
                         Obx(
                           () => Visibility(
                             visible: storySummaryController.setDropDownVisible.value,
                             child: dropDownButton(
-                              context,
-                              storySummaryController.summaries[index].id,
-                              storySummaryController.summaries[index].storySummary,
-                              storySummaryController.summaries[index].storyDetail ?? '',
+                              context: context,
+                              id: storySummaryController.summaries[index].id,
+                              summary: storySummaryController.summaries[index].storySummary,
+                              storyDetail: storySummaryController.summaries[index].storyDetail ?? '',
+                              time: storySummaryController.summaries[index].time ?? '',
+                              space: storySummaryController.summaries[index].space ?? '',
+                              weather: storySummaryController.summaries[index].weather ?? '',
                             ),
                           ),
                         ),

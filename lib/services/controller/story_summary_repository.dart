@@ -58,9 +58,16 @@ class StorySummaryRepository {
     }
   }
 
-  Future<StorySummary> updateStorySummary({String storySummaryId, String storyDetail}) async {
+  Future<StorySummary> updateStorySummary(
+      {String storySummaryId, String storyDetail, String storySummary, String time, String space, String weather}) async {
     final summaryObject = await readByIdStorySummary(storySummaryId: storySummaryId);
-    final updateSummary = summaryObject.copyWith(storyDetail: storyDetail ?? '');
+    final updateSummary = summaryObject.copyWith(
+      storyDetail: storyDetail ?? '',
+      storySummary: storySummary,
+      space: space,
+      time: time,
+      weather: weather,
+    );
 
     await Amplify.DataStore.save(updateSummary);
 

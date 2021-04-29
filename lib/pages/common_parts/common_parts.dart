@@ -123,13 +123,19 @@ class BasicFloatingButton extends StatelessWidget {
 
 //버튼 가로 리스트 나눌 때 선
 class BasicVerticalLine extends StatelessWidget {
+  final double indent;
+  final double endIndent;
+  final double width;
+
+  const BasicVerticalLine({Key key, this.indent, this.endIndent, this.width}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return VerticalDivider(
-      indent: 40.0,
-      endIndent: 40.0,
+      indent: indent,
+      endIndent: endIndent,
       color: Color(0xFF020205),
-      width: 8.0,
+      width: width,
     );
   }
 }
@@ -271,6 +277,7 @@ class AddButtonBar extends StatelessWidget {
   final VoidCallback onAddSentenceTap;
   final VoidCallback onAddTalkTap;
   final VoidCallback onImportTap;
+  final VoidCallback onSwitchingTap;
 
   const AddButtonBar({
     Key key,
@@ -280,6 +287,7 @@ class AddButtonBar extends StatelessWidget {
     this.onAddSentenceTap,
     this.onAddTalkTap,
     this.onImportTap,
+    this.onSwitchingTap,
   }) : super(key: key);
 
   @override
@@ -321,6 +329,18 @@ class AddButtonBar extends StatelessWidget {
               buttonName: '문장 가져오기',
               onPressed: onImportTap,
             ),
+            Container(
+              height: 30.0,
+              child: VerticalDivider(
+                width: 1.0,
+                color: Color(0xFF8785a2),
+              ),
+            ),
+            DocNormalButton(
+              icon: FontAwesomeIcons.toggleOn,
+              buttonName: '요약/스토리',
+              onPressed: onSwitchingTap,
+            ),
           ],
         ),
       ],
@@ -345,7 +365,7 @@ class DocNormalButton extends StatelessWidget {
           FaIcon(
             icon,
             size: 20.0,
-            color: Color(0xFFa8e6cf),
+            color: Color(0xFF111f4d),
           ),
           SizedBox(
             height: 10.0,
@@ -357,7 +377,7 @@ class DocNormalButton extends StatelessWidget {
               fontSize: 10.0,
               fontFamily: 'GothicA1',
               fontWeight: FontWeight.w500,
-              color: Color(0xFFa8e6cf),
+              color: Color(0xFF111f4d),
             ),
           ),
         ],

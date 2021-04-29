@@ -13,6 +13,7 @@ class StorySummaryController extends GetxController {
   final getSummary = ''.obs;
   final summaryId = ''.obs;
   final storyDetails = ''.obs;
+  final summaryVisible = true.obs;
 
   final StorySummaryRepository storySummaryRepository = StorySummaryRepository();
 
@@ -27,14 +28,25 @@ class StorySummaryController extends GetxController {
     storyDetails(value);
   }
 
+  changeSummary({String value}) {
+    getSummary(value);
+  }
+
+  changeSpace({String value}) {
+    spaceList(value);
+  }
+
   addCharacterName({CharactersController charactersController, int index}) {
     return storyDetails('${storyDetails.value}\n' + charactersController.myCharacters[index].name + ' : ');
   }
 
-  getSummaryData({String id, String summary, String storyDetail}) {
+  getSummaryData({String id, String summary, String storyDetail, String time, String space, String weather}) {
     summaryId(id);
     getSummary(summary);
     storyDetails(storyDetail);
+    selectTimes(time);
+    spaceList(space);
+    selectWeathers(weather);
   }
 
   selectDropDownVisible({bool isVisible}) {
@@ -55,6 +67,10 @@ class StorySummaryController extends GetxController {
 
   selectWeather({String weatherValue}) {
     selectWeathers(weatherValue);
+  }
+
+  changeSummaryVisible({bool isVisible}) {
+    summaryVisible(isVisible);
   }
 
   getDocumentName() async {
@@ -88,9 +104,16 @@ class StorySummaryController extends GetxController {
     }
   }
 
-  updateSummary({String id, String storyDetail}) async {
+  updateSummary({String id, String storyDetail, String storySummary, String time, String space, String weather}) async {
     try {
-      final updateData = await storySummaryRepository.updateStorySummary(storySummaryId: id, storyDetail: storyDetail);
+      final updateData = await storySummaryRepository.updateStorySummary(
+        storySummaryId: id,
+        storyDetail: storyDetail,
+        storySummary: storySummary,
+        time: time,
+        space: space,
+        weather: weather,
+      );
       summaries[summaries.indexWhere((element) => element.id == updateData.id)] = updateData;
     } catch (e) {
       print(e);

@@ -1,7 +1,6 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:project_writer_v04/models/MyLifeStory.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/component/my_life_create_pop.dart';
 import 'package:project_writer_v04/services/controller/my_life_controller.dart';
 
