@@ -53,6 +53,7 @@ class MyLifePageBody extends StatelessWidget {
         years.add(element.year);
       }
     });
+    var yearData = [];
     return ListView.separated(
       separatorBuilder: (context, index) => DottedLine(
         direction: Axis.horizontal,
@@ -70,10 +71,11 @@ class MyLifePageBody extends StatelessWidget {
       scrollDirection: Axis.vertical,
       itemCount: years.length,
       itemBuilder: (context, yearIndex) {
-        var season = [];
-        myLifeController.myLifeStory.forEach((element) {
-          if (element.year.contains(myLifeController.myLifeStory[yearIndex].year)) {
-            season.add(element);
+        yearData = myLifeController.myLifeStory.where((element) => element.year == years[yearIndex]).toList();
+        var seasons = [];
+        yearData.forEach((element) {
+          if (!seasons.contains(element.season)) {
+            seasons.add(element.season);
           }
         });
         return Padding(
@@ -106,32 +108,30 @@ class MyLifePageBody extends StatelessWidget {
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   scrollDirection: Axis.vertical,
-                  itemCount: season.length,
+                  itemCount: seasons.length,
                   itemBuilder: (context, seasonIndex) {
-                    //TODO: 시즌 길이가 안 맞음... 왜?
-                    var season = [];
-                    myLifeController.myLifeStory.forEach((element) {
-                      if (!years.contains(element.season)) {
-                        season.add(element.season);
-                      }
-                    });
-                    if (season[seasonIndex] == '1') {
+                    if (seasons[seasonIndex] == '1') {
                       seasonToHangul = '봄';
-                    } else if (season[seasonIndex] == '2') {
+                    } else if (seasons[seasonIndex] == '2') {
                       seasonToHangul = '여름';
-                    } else if (season[seasonIndex] == '3') {
+                    } else if (seasons[seasonIndex] == '3') {
                       seasonToHangul = '가을';
                     } else {
                       seasonToHangul = '겨울';
                     }
                     //TODO: 돌겠군....
+                    final seasonData = yearData.where((element) => element.season == seasons[seasonIndex]).toList();
                     var lifeMemo = [];
-                    final data = myLifeController.myLifeStory.where((element) => season.contains(element.season)).toList();
-                    print(data);
+                    seasonData.forEach((element) {
+                      if (!lifeMemo.contains(element.lifeMemo)) {
+                        lifeMemo.add(element.lifeMemo);
+                      }
+                    });
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             seasonToHangul ?? '',
@@ -140,36 +140,29 @@ class MyLifePageBody extends StatelessWidget {
                           SizedBox(
                             width: 20.0,
                           ),
-                          Expanded(
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: data.length,
-                              itemBuilder: (context, memoIndex) {
-                                return Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            data[memoIndex].lifeMemo ?? '',
-                                            style:
-                                                Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 20.0, fontWeight: FontWeight.w400),
-                                            textAlign: TextAlign.start,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: Icon(Icons.clear),
-                                          onPressed: () =>
-                                              myLifeController.deleteMyStory(id: myLifeController.myLifeStory[memoIndex].lifeMemo),
-                                        ),
-                                      ],
+                          ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: lifeMemo.length,
+                            itemBuilder: (context, memoIndex) {
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      lifeMemo[memoIndex] ?? '',
+                                      style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 20.0, fontWeight: FontWeight.w400),
+                                      textAlign: TextAlign.start,
                                     ),
-                                  ],
-                                );
-                              },
-                            ),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.clear),
+                                    onPressed: () => myLifeController.deleteMyStory(id: myLifeController.myLifeStory[memoIndex].id),
+                                  ),
+                                ],
+                              );
+                            },
                           ),
                         ],
                       ),
