@@ -113,6 +113,7 @@ class StoryPage extends StatelessWidget {
                   padding: EdgeInsets.all(8.0),
                   child: Obx(
                     () => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Visibility(
                           visible: storySummaryController.summaryVisible.value,
@@ -123,7 +124,7 @@ class StoryPage extends StatelessWidget {
                                 width: 50.0,
                                 child: Text(
                                   storySummaryController.summaries[index].time,
-                                  style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 14.0),
+                                  style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 14.0, fontWeight: FontWeight.w500),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -131,7 +132,7 @@ class StoryPage extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   storySummaryController.summaries[index].space,
-                                  style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 14.0),
+                                  style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 14.0, fontWeight: FontWeight.w500),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -140,7 +141,7 @@ class StoryPage extends StatelessWidget {
                                 width: 50.0,
                                 child: Text(
                                   storySummaryController.summaries[index].weather,
-                                  style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 14.0),
+                                  style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 14.0, fontWeight: FontWeight.w500),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -150,21 +151,23 @@ class StoryPage extends StatelessWidget {
                         SizedBox(height: 15.0),
                         Visibility(
                           visible: storySummaryController.summaryVisible.value,
-                          child: Text(
-                            storySummaryController.summaries.value[index].storySummary,
-                            style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 14.0),
-                          ),
+                          child: DashedSeparator(color: Color(0xFF111f4d)),
                         ),
-                        SizedBox(height: 10.0),
+                        SizedBox(height: 15.0),
                         Visibility(
                           visible: storySummaryController.summaryVisible.value,
-                          child: Divider(
-                            height: 20.0,
-                            color: Color(0xFF020205),
-                            indent: 150.0,
-                            endIndent: 150.0,
+                          child: Text(
+                            '요약 : ⌈' + storySummaryController.summaries.value[index].storySummary + '⌋',
+                            style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 14.0, fontWeight: FontWeight.w500),
+                            textAlign: TextAlign.start,
                           ),
                         ),
+                        SizedBox(height: 16.0),
+                        Visibility(
+                          visible: storySummaryController.summaryVisible.value,
+                          child: DashedSeparator(color: Color(0xFF111f4d)),
+                        ),
+                        SizedBox(height: 16.0),
                         Text(
                           storySummaryController.summaries.value[index].storyDetail ?? '',
                           style: Theme.of(context)
