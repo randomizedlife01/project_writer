@@ -219,23 +219,25 @@ class DropDownButtons extends StatelessWidget {
 
   final VoidCallback onAddDetailTap;
   final VoidCallback onImportTap;
+  final VoidCallback onEnvAddTap;
   final VoidCallback onDeleteTap;
 
-  const DropDownButtons({Key key, this.onAddDetailTap, this.onImportTap, this.context, this.getDocId, this.onDeleteTap}) : super(key: key);
+  const DropDownButtons({Key key, this.onAddDetailTap, this.onImportTap, this.context, this.getDocId, this.onDeleteTap, this.onEnvAddTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         SizedBox(
-          height: 20.0,
+          height: 8.0,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             DocNormalButton(
               icon: FontAwesomeIcons.arrowsAltH,
-              buttonName: '스토리 만들기',
+              buttonName: '스토리 편집',
               onPressed: onAddDetailTap,
             ),
             Container(
@@ -259,7 +261,7 @@ class DropDownButtons extends StatelessWidget {
             ),
             DocNormalButton(
               icon: FontAwesomeIcons.minus,
-              buttonName: '메모/스토리 삭제',
+              buttonName: '문단 삭제',
               onPressed: onDeleteTap,
             ),
           ],
@@ -364,7 +366,7 @@ class DocNormalButton extends StatelessWidget {
         children: [
           FaIcon(
             icon,
-            size: 20.0,
+            size: 18.0,
             color: Color(0xFF111f4d),
           ),
           SizedBox(
@@ -374,7 +376,7 @@ class DocNormalButton extends StatelessWidget {
             buttonName,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 10.0,
+              fontSize: 11.0,
               fontFamily: 'GothicA1',
               fontWeight: FontWeight.w500,
               color: Color(0xFF111f4d),

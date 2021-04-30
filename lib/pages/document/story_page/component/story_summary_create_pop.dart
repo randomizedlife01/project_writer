@@ -10,8 +10,8 @@ class StorySummaryCreatePopUp extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final _storySummaryController = StorySummaryController.to;
 
-  final _timeList = ['새벽', '아침', '낮', '오후', '저녁', '밤', '늦은 밤'];
-  final _weatherList = ['미정', '맑음', '비', '눈', '흐림', '갬'];
+  final _timeList = ['없음', '새벽', '아침', '낮', '오후', '저녁', '밤', '늦은 밤'];
+  final _weatherList = ['없음', '맑음', '비', '눈', '흐림', '갬'];
 
   final _spaceController = TextEditingController();
   final _summaryController = TextEditingController();

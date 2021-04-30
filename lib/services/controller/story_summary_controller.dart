@@ -5,9 +5,9 @@ import 'package:project_writer_v04/services/controller/story_summary_repository.
 class StorySummaryController extends GetxController {
   final summaries = [].obs;
   final isVisible = false.obs;
-  final selectTimes = '새벽'.obs;
+  final selectTimes = '없음'.obs;
   final spaceList = ''.obs;
-  final selectWeathers = '맑음'.obs;
+  final selectWeathers = '없음'.obs;
   final setDocumentId = ''.obs;
   final setDropDownVisible = true.obs;
   final getSummary = ''.obs;

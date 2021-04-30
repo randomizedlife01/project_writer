@@ -63,6 +63,7 @@ class StoryPage extends StatelessWidget {
         Navigator.of(context).pushNamed('/story_detail_page');
       },
       onImportTap: () => Navigator.of(context).pushNamed('/import_page'),
+      onEnvAddTap: () {},
       onDeleteTap: () {
         showDialog(
             context: context,
@@ -120,29 +121,42 @@ class StoryPage extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Container(
-                                width: 50.0,
-                                child: Text(
-                                  storySummaryController.summaries[index].time,
-                                  style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 14.0, fontWeight: FontWeight.w500),
-                                  textAlign: TextAlign.center,
+                              Visibility(
+                                visible: storySummaryController.summaries[index].time != '없음',
+                                child: Container(
+                                  width: 50.0,
+                                  child: Text(
+                                    storySummaryController.summaries[index].time,
+                                    style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 14.0, fontWeight: FontWeight.w500),
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
                               ),
-                              Container(height: 20.0, child: BasicVerticalLine(width: 5.0)),
-                              Expanded(
-                                child: Text(
-                                  storySummaryController.summaries[index].space,
-                                  style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 14.0, fontWeight: FontWeight.w500),
-                                  textAlign: TextAlign.center,
+                              Visibility(
+                                  visible: storySummaryController.summaries[index].time != '없음',
+                                  child: Container(height: 20.0, child: BasicVerticalLine(width: 5.0))),
+                              Visibility(
+                                visible: storySummaryController.summaries[index].space != '',
+                                child: Expanded(
+                                  child: Text(
+                                    storySummaryController.summaries[index].space,
+                                    style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 14.0, fontWeight: FontWeight.w500),
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
                               ),
-                              Container(height: 20.0, child: BasicVerticalLine(width: 5.0)),
-                              Container(
-                                width: 50.0,
-                                child: Text(
-                                  storySummaryController.summaries[index].weather,
-                                  style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 14.0, fontWeight: FontWeight.w500),
-                                  textAlign: TextAlign.center,
+                              Visibility(
+                                  visible: storySummaryController.summaries[index].weather != '없음',
+                                  child: Container(height: 20.0, child: BasicVerticalLine(width: 5.0))),
+                              Visibility(
+                                visible: storySummaryController.summaries[index].weather != '없음',
+                                child: Container(
+                                  width: 50.0,
+                                  child: Text(
+                                    storySummaryController.summaries[index].weather,
+                                    style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 14.0, fontWeight: FontWeight.w500),
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
                               ),
                             ],
@@ -150,7 +164,10 @@ class StoryPage extends StatelessWidget {
                         ),
                         SizedBox(height: 15.0),
                         Visibility(
-                          visible: storySummaryController.summaryVisible.value,
+                          visible: storySummaryController.summaryVisible.value &&
+                              storySummaryController.summaries[index].time != '없음' &&
+                              storySummaryController.summaries[index].space != '' &&
+                              storySummaryController.summaries[index].weather != '없음',
                           child: DashedSeparator(color: Color(0xFF111f4d)),
                         ),
                         SizedBox(height: 15.0),
@@ -169,11 +186,16 @@ class StoryPage extends StatelessWidget {
                         ),
                         SizedBox(height: 16.0),
                         Text(
-                          storySummaryController.summaries.value[index].storyDetail ?? '',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyText2
-                              .copyWith(fontFamily: 'NotoSerifKR', fontSize: 18.0, fontWeight: FontWeight.w300),
+                          storySummaryController.summaries.value[index].storyDetail == ''
+                              ? '아직 스토리가 없네요 :)'
+                              : storySummaryController.summaries.value[index].storyDetail,
+                          style: storySummaryController.summaries.value[index].storyDetail != ''
+                              ? Theme.of(context)
+                                  .textTheme
+                                  .bodyText2
+                                  .copyWith(fontFamily: 'NotoSerifKR', fontSize: 17.0, fontWeight: FontWeight.w300)
+                              : Theme.of(context).textTheme.bodyText2.copyWith(
+                                  fontFamily: 'NotoSerifKR', fontSize: 17.0, fontWeight: FontWeight.w100, color: Color(0xff435590)),
                         ),
                         SizedBox(height: 10.0),
                         Obx(
