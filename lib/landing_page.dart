@@ -7,6 +7,7 @@ import 'package:get/instance_manager.dart';
 import 'package:project_writer_v04/pages/auth_pages/login_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/signup_page.dart';
 import 'package:project_writer_v04/pages/auth_pages/verification_page.dart';
+import 'package:project_writer_v04/pages/instruction_page/instruction_page.dart';
 import 'package:project_writer_v04/services/controller/my_life_controller.dart';
 import 'package:project_writer_v04/services/controller/character_controller.dart';
 import 'package:project_writer_v04/services/controller/free_write_controller.dart';
@@ -16,6 +17,7 @@ import 'package:project_writer_v04/services/controller/intro_page_controller.dar
 import 'package:project_writer_v04/services/controller/story_summary_controller.dart';
 import 'package:project_writer_v04/services/route/app_route.dart';
 import 'package:project_writer_v04/amplifyconfiguration.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/ModelProvider.dart';
 
@@ -30,6 +32,8 @@ class _LandingPageState extends State<LandingPage> {
   final _authService = AuthService();
   final _amplify = Amplify;
 
+  bool isEnabled;
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +45,15 @@ class _LandingPageState extends State<LandingPage> {
     Get.put(IntroDocumentController());
     Get.put(MyLifeStoryController());
     Get.put(StorySummaryController());
+
+    _getInstructionState();
+  }
+
+  _getInstructionState() async {
+    //SharedPreferences.setMockInitialValues({'instructionEnabled': true});
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    isEnabled = prefs.getBool('instructionEnabled') ?? true;
+    print('Instruction Enabled : $isEnabled');
   }
 
   void _configureAmplify() async {
@@ -90,12 +103,15 @@ class _LandingPageState extends State<LandingPage> {
                     child: VerificationPage(didProvideVerificationCode: _authService.verifyCode),
                   ),
                 if (snapshot.data.authFlowStatus == AuthFlowStatus.session)
-                  MaterialPage(
-                    name: '/intro_page',
-                    child: IntroPage(
-                      shouldLogOut: _authService.logOut,
-                    ),
-                  ),
+                  isEnabled
+                      ? MaterialPage(
+                          name: '/instruction_page',
+                          child: InstructionPage(),
+                        )
+                      : MaterialPage(
+                          name: '/intro_page',
+                          child: IntroPage(),
+                        )
               ],
               onPopPage: (route, result) => route.didPop(result),
             );

@@ -50,6 +50,8 @@ dependencies:
   get:
   keyboard_actions: ^3.4.0
   dotted_line: ^3.0.0
+  introduction_screen: ^2.1.0
+  shared_preferences: ^2.0.5
 
 
 

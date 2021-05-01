@@ -12,6 +12,7 @@ import 'package:project_writer_v04/pages/document/import_page/import_page.dart';
 import 'package:project_writer_v04/pages/document/intro_page/intro_page.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/my_life_write_page.dart';
 import 'package:project_writer_v04/pages/document/story_page/story_detail_page.dart';
+import 'package:project_writer_v04/pages/instruction_page/instruction_page.dart';
 import 'package:project_writer_v04/services/controller/auth_bloc.dart';
 import 'package:project_writer_v04/pages/document/my_life_page/parts/my_life_page.dart';
 import 'package:project_writer_v04/pages/document/story_page/story_page.dart';
@@ -102,6 +103,9 @@ class AppRouter {
       case '/my_life_detail_page':
         final MyLifeStory args = routeSettings.arguments as MyLifeStory;
         return MaterialPageRoute(builder: (_) => MyLifeDetailPage(myLifeStory: args));
+        break;
+      case '/instruction_page':
+        return MaterialPageRoute(builder: (_) => InstructionPage());
         break;
       default:
         return null;
