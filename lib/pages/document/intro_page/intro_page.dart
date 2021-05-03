@@ -6,14 +6,23 @@ import 'package:get/get.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/pages/document/intro_page/component/intro_doc_create_pop.dart';
 import 'package:project_writer_v04/pages/document/intro_page/component/intro_parts.dart';
+import 'package:project_writer_v04/services/controller/character_controller.dart';
+import 'package:project_writer_v04/services/controller/free_write_controller.dart';
 import 'package:project_writer_v04/services/controller/intro_page_controller.dart';
+import 'package:project_writer_v04/services/controller/my_life_controller.dart';
+import 'package:project_writer_v04/services/controller/story_summary_controller.dart';
 
-class IntroPage extends StatelessWidget {
+class IntroPage extends StatefulWidget {
   final VoidCallback shouldLogOut;
   final AmplifyAuthCognito auth;
 
   IntroPage({Key key, this.shouldLogOut, this.auth}) : super(key: key);
 
+  @override
+  _IntroPageState createState() => _IntroPageState();
+}
+
+class _IntroPageState extends State<IntroPage> {
   final introController = IntroDocumentController.to;
 
   Widget userInfo() {
@@ -160,7 +169,6 @@ class IntroPage extends StatelessWidget {
     );
   }
 
-  //메뉴 리스트
   Widget bottomButtonList(BuildContext context) {
     return Align(
       alignment: FractionalOffset.bottomCenter,
@@ -196,7 +204,7 @@ class IntroPage extends StatelessWidget {
             BasicMenuButton(
               icon: FontAwesomeIcons.sitemap,
               buttonText: '로그아웃\n임시',
-              onPressed: () => shouldLogOut(),
+              onPressed: () => widget.auth.signOut(request: null),
             ),
           ],
         ),
@@ -314,6 +322,18 @@ class IntroPage extends StatelessWidget {
         border: Border.all(),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    Get.put(FreeWriteController());
+    Get.put(CharactersController());
+    Get.put(IntroDocumentController());
+    Get.put(MyLifeStoryController());
+    Get.put(StorySummaryController());
   }
 
   @override

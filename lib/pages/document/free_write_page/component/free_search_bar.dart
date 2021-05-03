@@ -170,6 +170,11 @@ class SearchResultsListView extends StatelessWidget {
       child: GetBuilder<FreeWriteController>(
         builder: (freeController) {
           return ListView.separated(
+            // gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            //   crossAxisCount: 2,
+            //   crossAxisSpacing: 10,
+            //   mainAxisSpacing: 10,
+            // ),
             padding: EdgeInsets.only(top: fsb.value.height + fsb.value.margins.vertical),
             shrinkWrap: true,
             physics: ScrollPhysics(),
@@ -206,11 +211,13 @@ class SearchResultsListView extends StatelessWidget {
                 //RxDart 데이터 리스트타일
                 child: ListTile(
                   title: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: Text(
                           freeController.ideaMemo.isNotEmpty ? freeController.ideaMemo[toIndex].memo : '',
-                          style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w400),
+                          style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.w300, fontSize: 18.0),
                         ),
                       ),
                       Visibility(

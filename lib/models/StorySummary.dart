@@ -24,11 +24,11 @@ class StorySummary extends Model {
   static const classType = const _StorySummaryModelType();
   final String id;
   final String storySummary;
-  final String documentID;
   final String space;
   final String time;
   final String weather;
   final String storyDetail;
+  final String documentID;
 
   @override
   getInstanceType() => classType;
@@ -41,28 +41,28 @@ class StorySummary extends Model {
   const StorySummary._internal(
       {@required this.id,
       this.storySummary,
-      this.documentID,
       this.space,
       this.time,
       this.weather,
-      this.storyDetail});
+      this.storyDetail,
+      this.documentID});
 
   factory StorySummary(
       {String id,
       String storySummary,
-      String documentID,
       String space,
       String time,
       String weather,
-      String storyDetail}) {
+      String storyDetail,
+      String documentID}) {
     return StorySummary._internal(
         id: id == null ? UUID.getUUID() : id,
         storySummary: storySummary,
-        documentID: documentID,
         space: space,
         time: time,
         weather: weather,
-        storyDetail: storyDetail);
+        storyDetail: storyDetail,
+        documentID: documentID);
   }
 
   bool equals(Object other) {
@@ -75,11 +75,11 @@ class StorySummary extends Model {
     return other is StorySummary &&
         id == other.id &&
         storySummary == other.storySummary &&
-        documentID == other.documentID &&
         space == other.space &&
         time == other.time &&
         weather == other.weather &&
-        storyDetail == other.storyDetail;
+        storyDetail == other.storyDetail &&
+        documentID == other.documentID;
   }
 
   @override
@@ -92,11 +92,11 @@ class StorySummary extends Model {
     buffer.write("StorySummary {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("storySummary=" + "$storySummary" + ", ");
-    buffer.write("documentID=" + "$documentID" + ", ");
     buffer.write("space=" + "$space" + ", ");
     buffer.write("time=" + "$time" + ", ");
     buffer.write("weather=" + "$weather" + ", ");
-    buffer.write("storyDetail=" + "$storyDetail");
+    buffer.write("storyDetail=" + "$storyDetail" + ", ");
+    buffer.write("documentID=" + "$documentID");
     buffer.write("}");
 
     return buffer.toString();
@@ -105,47 +105,47 @@ class StorySummary extends Model {
   StorySummary copyWith(
       {String id,
       String storySummary,
-      String documentID,
       String space,
       String time,
       String weather,
-      String storyDetail}) {
+      String storyDetail,
+      String documentID}) {
     return StorySummary(
         id: id ?? this.id,
         storySummary: storySummary ?? this.storySummary,
-        documentID: documentID ?? this.documentID,
         space: space ?? this.space,
         time: time ?? this.time,
         weather: weather ?? this.weather,
-        storyDetail: storyDetail ?? this.storyDetail);
+        storyDetail: storyDetail ?? this.storyDetail,
+        documentID: documentID ?? this.documentID);
   }
 
   StorySummary.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         storySummary = json['storySummary'],
-        documentID = json['documentID'],
         space = json['space'],
         time = json['time'],
         weather = json['weather'],
-        storyDetail = json['storyDetail'];
+        storyDetail = json['storyDetail'],
+        documentID = json['documentID'];
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'storySummary': storySummary,
-        'documentID': documentID,
         'space': space,
         'time': time,
         'weather': weather,
-        'storyDetail': storyDetail
+        'storyDetail': storyDetail,
+        'documentID': documentID
       };
 
   static final QueryField ID = QueryField(fieldName: "storySummary.id");
   static final QueryField STORYSUMMARY = QueryField(fieldName: "storySummary");
-  static final QueryField DOCUMENTID = QueryField(fieldName: "documentID");
   static final QueryField SPACE = QueryField(fieldName: "space");
   static final QueryField TIME = QueryField(fieldName: "time");
   static final QueryField WEATHER = QueryField(fieldName: "weather");
   static final QueryField STORYDETAIL = QueryField(fieldName: "storyDetail");
+  static final QueryField DOCUMENTID = QueryField(fieldName: "documentID");
   static var schema =
       Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "StorySummary";
@@ -168,11 +168,6 @@ class StorySummary extends Model {
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-        key: StorySummary.DOCUMENTID,
-        isRequired: false,
-        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
-
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: StorySummary.SPACE,
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
@@ -189,6 +184,11 @@ class StorySummary extends Model {
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: StorySummary.STORYDETAIL,
+        isRequired: false,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+        key: StorySummary.DOCUMENTID,
         isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
   });

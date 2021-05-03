@@ -1,6 +1,6 @@
 {
   "auth": {
-    "projectwriterv04c6239c4d": {
+    "projectwriterv04": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],

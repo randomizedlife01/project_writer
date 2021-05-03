@@ -1,23 +1,3 @@
-type CharacterData @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  motivation: String
-  tendency: Int
-  description: String
-  gender: String
-  age: String
-  name: String!
-}
-
-type StorySummary @model @auth(rules: [{allow: public}]) @key(name: "byDocument", fields: ["documentID"]) {
-  id: ID!
-  storySummary: String
-  documentID: ID
-  space: String
-  time: String
-  weather: String
-  storyDetail: String
-}
-
 type Document @model @auth(rules: [{allow: public}]) {
   id: ID!
   docName: String
@@ -25,9 +5,29 @@ type Document @model @auth(rules: [{allow: public}]) {
   StorySummaries: [StorySummary] @connection(keyName: "byDocument", fields: ["id"])
 }
 
+type CharacterData @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  motivation: String
+  tendency: Int
+  description: String
+  gender: String
+  age: String
+  name: String
+}
+
+type StorySummary @model @auth(rules: [{allow: public}]) @key(name: "byDocument", fields: ["documentID"]) {
+  id: ID!
+  storySummary: String
+  space: String
+  time: String
+  weather: String
+  storyDetail: String
+  documentID: ID
+}
+
 type MyLifeStory @model @auth(rules: [{allow: public}]) {
   id: ID!
-  lifeMemo: String!
+  lifeMemo: String
   year: String
   season: String
   date: String
@@ -44,4 +44,3 @@ type IdeaMemo @model @auth(rules: [{allow: public}]) {
   memo: String
   tags: String
 }
-  

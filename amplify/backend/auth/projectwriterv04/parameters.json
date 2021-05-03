@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "projectwriterv04c6239c4d_identitypool_c6239c4d",
-    "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "projecc6239c4d",
-    "userPoolName": "projectwriterv04c6239c4d_userpool_c6239c4d",
+    "identityPoolName": "testAuthIdentityPool",
+    "allowUnauthenticatedIdentities": true,
+    "resourceNameTruncated": "projec9c1ee586",
+    "userPoolName": "projectwriterv04",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -12,11 +12,16 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Your verification code",
-    "emailVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Forgot password code: {####}",
+    "emailVerificationMessage": "Forgot password code: {####}",
     "defaultPasswordPolicy": false,
     "passwordPolicyMinLength": 8,
-    "passwordPolicyCharacters": [],
+    "passwordPolicyCharacters": [
+        "Requires Lowercase",
+        "Requires Numbers",
+        "Requires Symbols",
+        "Requires Uppercase"
+    ],
     "requiredAttributes": [
         "email"
     ],
@@ -24,10 +29,10 @@
     "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientWriteAttributes": [],
     "userpoolClientReadAttributes": [],
-    "userpoolClientLambdaRole": "projecc6239c4d_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "projec9c1ee586_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "c6239c4d",
-    "resourceName": "projectwriterv04c6239c4d",
+    "sharedId": "9c1ee586",
+    "resourceName": "projectwriterv04",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
@@ -41,24 +46,24 @@
             "Arn"
         ]
     },
-    "useDefault": "manual",
-    "hostedUI": true,
+    "serviceName": "Cognito",
     "usernameAttributes": [
         "email"
     ],
-    "hostedUIDomainName": "projectwriterv04c6239c4d-c6239c4d",
+    "useDefault": "manual",
+    "userPoolGroups": false,
+    "userPoolGroupList": [],
+    "adminQueries": false,
+    "thirdPartyAuth": false,
+    "authProviders": [],
+    "hostedUI": true,
+    "hostedUIDomainName": "stm5f4n2ie79",
     "authProvidersUserPool": [
         "Facebook",
         "Google"
     ],
     "hostedUIProviderMeta": "[{\"ProviderName\":\"Facebook\",\"authorize_scopes\":\"email,public_profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"id\"}},{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
     "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"myapp://\"],\"LogoutURLs\":[\"myapp://\"]}",
-    "userPoolGroupList": [],
-    "serviceName": "Cognito",
     "usernameCaseSensitive": false,
-    "dependsOn": [],
-    "userPoolGroups": false,
-    "adminQueries": false,
-    "thirdPartyAuth": false,
-    "authProviders": []
+    "dependsOn": []
 }

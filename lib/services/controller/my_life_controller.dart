@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:project_writer_v04/models/ModelProvider.dart';
 import 'package:project_writer_v04/services/controller/my_life_repository.dart';
 
 class MyLifeStoryController extends GetxController {

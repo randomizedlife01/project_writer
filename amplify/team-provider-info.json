@@ -1,19 +1,19 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-projectwriterv04-dev-73627-authRole",
-      "UnauthRoleArn": "arn:aws:iam::758198971469:role/amplify-projectwriterv04-dev-73627-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::758198971469:role/amplify-projectwriterv04-dev-73627-authRole",
+      "AuthRoleName": "amplify-projectwriterv04-dev-205157-authRole",
+      "UnauthRoleArn": "arn:aws:iam::758198971469:role/amplify-projectwriterv04-dev-205157-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::758198971469:role/amplify-projectwriterv04-dev-205157-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-projectwriterv04-dev-73627-deployment",
-      "UnauthRoleName": "amplify-projectwriterv04-dev-73627-unauthRole",
-      "StackName": "amplify-projectwriterv04-dev-73627",
-      "StackId": "arn:aws:cloudformation:us-east-1:758198971469:stack/amplify-projectwriterv04-dev-73627/0e0f3f00-86a8-11eb-9492-0ede49f38865",
-      "AmplifyAppId": "d2qpwas8dcly8s"
+      "DeploymentBucketName": "amplify-projectwriterv04-dev-205157-deployment",
+      "UnauthRoleName": "amplify-projectwriterv04-dev-205157-unauthRole",
+      "StackName": "amplify-projectwriterv04-dev-205157",
+      "StackId": "arn:aws:cloudformation:us-east-1:758198971469:stack/amplify-projectwriterv04-dev-205157/f93583e0-ac05-11eb-a5ac-120290f41bcd",
+      "AmplifyAppId": "d2x6h8wehr4gdx"
     },
     "categories": {
       "auth": {
-        "projectwriterv04c6239c4d": {}
+        "projectwriterv04": {}
       }
     }
   }

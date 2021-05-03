@@ -6,8 +6,9 @@ import 'package:project_writer_v04/services/controller/my_life_controller.dart';
 
 class MyLifeDetailPage extends StatefulWidget {
   final MyLifeStory myLifeStory;
+  final int index;
 
-  const MyLifeDetailPage({Key key, this.myLifeStory}) : super(key: key);
+  const MyLifeDetailPage({Key key, this.myLifeStory, this.index}) : super(key: key);
 
   @override
   _MyLifeDetailPageState createState() => _MyLifeDetailPageState();
@@ -28,12 +29,13 @@ class _MyLifeDetailPageState extends State<MyLifeDetailPage> {
   @override
   void initState() {
     super.initState();
-
-    _storyController.text = widget.myLifeStory.lifeMemo ?? '';
-    _yearController.text = widget.myLifeStory.year ?? '';
-    _seasonController.text = widget.myLifeStory.season ?? '';
-    _monthController.text = widget.myLifeStory.month ?? '';
-    _dayController.text = widget.myLifeStory.date ?? '';
+    if (!widget.myLifeStory.isBlank && widget.index != null) {
+      _storyController.text = widget.myLifeStory.lifeMemo ?? '';
+      _yearController.text = widget.myLifeStory.year ?? '';
+      _seasonController.text = widget.myLifeStory.season ?? '';
+      _monthController.text = widget.myLifeStory.month ?? '';
+      _dayController.text = widget.myLifeStory.date ?? '';
+    }
   }
 
   Widget birthdayForm() {

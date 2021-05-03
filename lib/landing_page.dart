@@ -28,16 +28,13 @@ class LandingPage extends StatefulWidget {
 
 class _LandingPageState extends State<LandingPage> {
   final _appRouter = AppRouter();
-
   final _authService = AuthService();
-  final _amplify = Amplify;
 
   bool isEnabled;
 
   @override
   void initState() {
     super.initState();
-    _configureAmplify();
     _authService.checkAuthStatus();
 
     Get.put(FreeWriteController());
@@ -54,23 +51,6 @@ class _LandingPageState extends State<LandingPage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     isEnabled = prefs.getBool('instructionEnabled') ?? true;
     print('Instruction Enabled : $isEnabled');
-  }
-
-  void _configureAmplify() async {
-    final provider = ModelProvider();
-    final datastorePlugin = AmplifyDataStore(modelProvider: provider);
-
-    _amplify.addPlugins([
-      AmplifyAuthCognito(),
-      AmplifyAnalyticsPinpoint(),
-      datastorePlugin,
-    ]);
-    try {
-      await _amplify.configure(amplifyconfig);
-      print('Successfully configured Amplify 🎉');
-    } catch (e) {
-      print('Could not configure Amplify ☠️');
-    }
   }
 
   @override

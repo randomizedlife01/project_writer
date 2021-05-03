@@ -16,7 +16,7 @@ class LoginPage extends StatefulWidget {
   final ValueChanged<LoginCredentials> didProvideCredentials;
   final VoidCallback shouldShowSignUp;
 
-  LoginPage({Key key, this.shouldShowSignUp, this.didProvideCredentials}) : super(key: key);
+  const LoginPage({Key key, this.didProvideCredentials, this.shouldShowSignUp}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _LoginPageState();
@@ -121,7 +121,8 @@ class _LoginPageState extends State<LoginPage> {
                         //color: Theme.of(context).buttonColor,
                       ),
                       TextButton(
-                        onPressed: widget.shouldShowSignUp,
+                        //TODO: 로그인 이동 다시 교체
+                        onPressed: () {},
                         child: Text(
                           '회원이 아니신가요? 회원가입',
                           style: Theme.of(context).textTheme.caption,

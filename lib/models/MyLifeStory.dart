@@ -39,7 +39,7 @@ class MyLifeStory extends Model {
 
   const MyLifeStory._internal(
       {@required this.id,
-      @required this.lifeMemo,
+      this.lifeMemo,
       this.year,
       this.season,
       this.date,
@@ -47,7 +47,7 @@ class MyLifeStory extends Model {
 
   factory MyLifeStory(
       {String id,
-      @required String lifeMemo,
+      String lifeMemo,
       String year,
       String season,
       String date,
@@ -153,7 +153,7 @@ class MyLifeStory extends Model {
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: MyLifeStory.LIFEMEMO,
-        isRequired: true,
+        isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(

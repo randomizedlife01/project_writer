@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:project_writer_v04/models/CharacterData.dart';
 import 'package:project_writer_v04/pages/common_parts/common_parts.dart';
 import 'package:project_writer_v04/services/controller/character_controller.dart';
 
@@ -25,9 +26,9 @@ class CharactersPage extends StatelessWidget {
           ),
           OutlinedButton(
             style: Theme.of(context).outlinedButtonTheme.style.copyWith(
-                  backgroundColor: MaterialStateProperty.all(Color(0xFF3b4445)),
+                  backgroundColor: MaterialStateProperty.all(Color(0xFFebe4db)),
                 ),
-            onPressed: () => Navigator.of(context).pushNamed('/character_write_page'),
+            onPressed: () => Navigator.of(context).pushNamed('/character_write_page', arguments: CharacterData()),
             child: Text('새로운 캐릭터 만들기'),
           ),
         ],

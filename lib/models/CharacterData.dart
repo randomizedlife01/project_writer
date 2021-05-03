@@ -45,7 +45,7 @@ class CharacterData extends Model {
       this.description,
       this.gender,
       this.age,
-      @required this.name});
+      this.name});
 
   factory CharacterData(
       {String id,
@@ -54,7 +54,7 @@ class CharacterData extends Model {
       String description,
       String gender,
       String age,
-      @required String name}) {
+      String name}) {
     return CharacterData._internal(
         id: id == null ? UUID.getUUID() : id,
         motivation: motivation,
@@ -190,7 +190,7 @@ class CharacterData extends Model {
 
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
         key: CharacterData.NAME,
-        isRequired: true,
+        isRequired: false,
         ofType: ModelFieldType(ModelFieldTypeEnum.string)));
   });
 }

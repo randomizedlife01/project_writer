@@ -23,7 +23,7 @@ class MyLifePage extends StatelessWidget {
         visible: myLifeController.myLifeStory.isEmpty ? false : true,
         child: BasicFloatingButton(
           icon: Icons.add,
-          onPressed: () => Navigator.of(context).pushNamed('/my_life_detail_page', arguments: myLifeController.myLifeStory),
+          onPressed: () => Navigator.of(context).pushNamed('/my_life_detail_page'),
         ),
       ),
     );
